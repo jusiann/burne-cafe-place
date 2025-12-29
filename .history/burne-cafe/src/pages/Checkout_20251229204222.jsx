@@ -1,6 +1,6 @@
 function Checkout() {
     return (
-        <div>Checkout</div>
+        <Text>Checkout</Text>
     )
 }
 

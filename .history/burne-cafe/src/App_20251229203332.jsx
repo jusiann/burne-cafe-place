@@ -1,12 +1,11 @@
 import {BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Menu from './pages/Menu';
-import ProductDetail from './pages/ProductDetail';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import OrderConfirmation from './pages/OrderConfirmation';
-import OrderHistory from './pages/OrderHistory';
-import NotFound from './pages/NotFound';
+import {Home} from './pages/Home';
+import {Menu} from './pages/Menu';
+import {ProductDetail} from './pages/ProductDetail';
+import {Cart} from './pages/Cart';
+import {Checkout} from './pages/Checkout';
+import {OrderConfirmation} from './pages/OrderConfirmation';
+import {OrderHistory} from './pages/OrderHistory';
 
 function App() {
     return (

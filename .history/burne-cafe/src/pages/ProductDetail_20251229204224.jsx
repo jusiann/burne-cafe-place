@@ -1,6 +1,6 @@
 function ProductDetail() {
     return (
-        <div>ProductDetail</div>
+        <Text>ProductDetail</Text>
     )
 }
 

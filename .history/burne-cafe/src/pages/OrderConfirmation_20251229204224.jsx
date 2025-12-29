@@ -1,6 +1,6 @@
 function OrderConfirmation() {
     return (
-      <div>OrderConfirmation</div>
+      <Text>OrderConfirmation</Text>
     )
 }
 
