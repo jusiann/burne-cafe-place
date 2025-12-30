@@ -181,3 +181,36 @@ function Navbar() {
 }
 
 export default Navbar;
+                {item.name}
+              </Link>
+            ))
+          }
+
+          {/* SEPET - MOBILE MENU */}
+          <Link
+            to="/cart"
+            className={cn(
+              'flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300',
+              isActiveRoute('/cart')
+                ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
+                : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+            )}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <div className="flex items-center gap-3">
+              <ShoppingCart className="w-5 h-5" />
+              <span>Sepetim</span>
+            </div>
+            {totalItems > 0 && (
+              <span className="px-2.5 py-1 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
+                {totalItems}
+              </span>
+            )}
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;

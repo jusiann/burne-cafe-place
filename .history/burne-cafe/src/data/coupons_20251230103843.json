@@ -1,0 +1,26 @@
+[
+  {
+    "code": "HOSGELDIN",
+    "discountType": "percentage",
+    "discountValue": 15,
+    "minOrderAmount": 50,
+    "isActive": true,
+    "description": "İlk siparişinize %15 indirim"
+  },
+  {
+    "code": "KAHVE20",
+    "discountType": "percentage",
+    "discountValue": 20,
+    "minOrderAmount": 100,
+    "isActive": true,
+    "description": "100₺ üzeri siparişlerde %20 indirim"
+  },
+  {
+    "code": "BURNE50",
+    "discountType": "fixed",
+    "discountValue": 50,
+    "minOrderAmount": 200,
+    "isActive": true,
+    "description": "200₺ üzeri siparişlerde 50₺ indirim"
+  }
+]

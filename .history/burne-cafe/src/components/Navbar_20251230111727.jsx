@@ -117,31 +117,81 @@ function Navbar() {
           </div>
 
           {/* MOBILE MENU BUTTON */}
-          <button
-            onClick={() => setIsMenuOpen((previous) => !previous)}
-            className="md:hidden p-2 text-[#2B1E17] hover:text-[#C46A2B] transition-colors duration-300"
-            aria-label={isMenuOpen ? "Menüyü Kapat" : "Menüyü Aç"}
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            {/* SEPET - MOBILE HEADER */}
+            <Link
+              to="/cart"
+              className={cn(
+                'relative p-2 rounded-lg transition-all duration-300',
+                isActiveRoute('/cart')
+                  ? 'text-[#C46A2B]'
+                  : 'text-[#2B1E17] hover:text-[#C46A2B]'
+              )}
+              aria-label={`Sepet - ${totalItems} ürün`}
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#C46A2B] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {totalItems > 99 ? '99+' : totalItems}
+                </span>
+              )}
+            </Link>
+
+            {/* HAMBURGER BUTTON */}
+            <button
+              onClick={() => setIsMenuOpen((previous) => !previous)}
+              className="p-2 text-[#2B1E17] hover:text-[#C46A2B] transition-colors duration-300 rounded-lg hover:bg-[#C46A2B]/5"
+              aria-label={isMenuOpen ? "Menüyü Kapat" : "Menüyü Aç"}
+            >
+              <Menu size={24} />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU OVERLAY */}
       <div
         className={cn(
-          "fixed top-16 left-0 right-0 bg-white shadow-lg md:hidden transition-all duration-300 overflow-hidden border-b border-[#E8E0D5]",
-          isMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+          "fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300",
+          isMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setIsMenuOpen(false)}
+      />
+
+      {/* MOBILE MENU MODAL */}
+      <div
+        className={cn(
+          "fixed top-4 right-4 left-4 bg-white rounded-2xl shadow-2xl z-50 md:hidden transition-all duration-300 overflow-hidden",
+          isMenuOpen
+            ? "opacity-100 scale-100 translate-y-0"
+            : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
         )}
       >
-        <div className="px-4 py-3 space-y-1">
+        {/* MODAL HEADER */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E0D5]">
+          <span className="text-lg font-bold text-[#2B1E17]">
+            BURNÉ <span className="text-[#C46A2B]">Coffee</span>
+          </span>
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="p-2 text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5 rounded-lg transition-colors duration-300"
+            aria-label="Menüyü Kapat"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* MODAL NAVIGATION LINKS */}
+        <div className="px-3 py-4 space-y-1">
           {
             navItems.map((item, key) => (
               <Link
                 key={key}
                 to={item.href}
                 className={cn(
-                  'block px-4 py-3 rounded-lg transition-all duration-300',
+                  'flex items-center px-4 py-3 rounded-xl transition-all duration-300',
                   isActiveRoute(item.href)
                     ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
                     : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
@@ -157,19 +207,19 @@ function Navbar() {
           <Link
             to="/cart"
             className={cn(
-              'flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300',
+              'flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300',
               isActiveRoute('/cart')
                 ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
                 : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
             )}
             onClick={() => setIsMenuOpen(false)}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <ShoppingCart className="w-5 h-5" />
               <span>Sepetim</span>
             </div>
             {totalItems > 0 && (
-              <span className="px-2 py-0.5 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
+              <span className="px-2.5 py-1 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
                 {totalItems}
               </span>
             )}

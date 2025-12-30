@@ -1,4 +1,5 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Menu from './pages/Menu';
@@ -8,14 +9,13 @@ import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
 import OrderHistory from './pages/OrderHistory';
 import NotFound from './pages/NotFound';
-import Footer from './components/Footer';
 
 function App() {
     return (
         <BrowserRouter>
-            <div className="min-h-screen flex flex-col">
+            <CartProvider>
                 <Navbar />
-                <main className="pt-20 pb-12 flex-1">
+                <main className="pt-16">
                     <Routes>
                         <Route path='/' element={<Home />} />
                         <Route path='/menu' element={<Menu />} />
@@ -27,8 +27,7 @@ function App() {
                         <Route path='*' element={<NotFound />} />
                     </Routes>
                 </main>
-                <Footer />
-            </div>
+            </CartProvider>
         </BrowserRouter>
     )
 }

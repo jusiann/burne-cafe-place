@@ -8,6 +8,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
+  // TODO: CartContext hazır olduğunda useCart() ile değiştirilecek
   const totalItems = 0;
 
   const navItems = [
@@ -119,61 +120,75 @@ function Navbar() {
           {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setIsMenuOpen((previous) => !previous)}
-            className="md:hidden p-2 text-[#2B1E17] hover:text-[#C46A2B] transition-colors duration-300"
+            className="md:hidden p-2 text-[#2B1E17] z-50 hover:text-[#C46A2B] transition-colors duration-300"
             aria-label={isMenuOpen ? "Menüyü Kapat" : "Menüyü Aç"}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-        </div>
-      </div>
 
-      {/* MOBILE MENU */}
-      <div
-        className={cn(
-          "fixed top-16 left-0 right-0 bg-white shadow-lg md:hidden transition-all duration-300 overflow-hidden border-b border-[#E8E0D5]",
-          isMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
-        )}
-      >
-        <div className="px-4 py-3 space-y-1">
-          {
-            navItems.map((item, key) => (
+          {/* MOBILE NAVIGATION */}
+          <div
+            className={cn(
+              "fixed top-0 right-0 h-screen w-full bg-white/95 backdrop-blur-md z-40 flex flex-col items-center justify-center",
+              "transition-transform duration-300 md:hidden",
+              isMenuOpen
+                ? "translate-x-0"
+                : "translate-x-full"
+            )}
+          >
+
+            {/* MOBILE NAVIGATION LINKS */}
+            <div className="flex flex-col space-y-8 text-xl">
+              {
+                navItems.map((item, key) => (
+                  <Link
+                    key={key}
+                    to={item.href}
+                    className={cn(
+                      'relative px-4 py-2 transition-colors duration-300 group',
+                      isActiveRoute(item.href)
+                        ? 'text-[#C46A2B]'
+                        : 'text-[#2B1E17] hover:text-[#C46A2B]'
+                    )}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {/* ACTIVE INDICATOR - MOBILE */}
+                    <div
+                      className={cn(
+                        'absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#C46A2B] to-transparent transition-transform duration-500',
+                        isActiveRoute(item.href)
+                          ? 'scale-x-100'
+                          : 'scale-x-0 group-hover:scale-x-100'
+                      )}
+                    />
+                    <span className="relative z-10">
+                      {item.name}
+                    </span>
+                  </Link>
+                ))
+              }
+
+              {/* SEPETİM - MOBILE */}
               <Link
-                key={key}
-                to={item.href}
+                to="/cart"
                 className={cn(
-                  'block px-4 py-3 rounded-lg transition-all duration-300',
-                  isActiveRoute(item.href)
-                    ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
-                    : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+                  "relative px-4 py-2 transition-colors duration-300 group flex items-center gap-2",
+                  isActiveRoute('/cart')
+                    ? 'text-[#C46A2B]'
+                    : 'text-[#2B1E17] hover:text-[#C46A2B]'
                 )}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {item.name}
+                <ShoppingCart className="w-5 h-5" />
+                <span>Sepetim</span>
+                {totalItems > 0 && (
+                  <span className="px-2 py-0.5 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
+                    {totalItems}
+                  </span>
+                )}
               </Link>
-            ))
-          }
-
-          {/* SEPET - MOBILE MENU */}
-          <Link
-            to="/cart"
-            className={cn(
-              'flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300',
-              isActiveRoute('/cart')
-                ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
-                : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
-            )}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <div className="flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5" />
-              <span>Sepetim</span>
             </div>
-            {totalItems > 0 && (
-              <span className="px-2 py-0.5 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
-                {totalItems}
-              </span>
-            )}
-          </Link>
+          </div>
         </div>
       </div>
     </nav>

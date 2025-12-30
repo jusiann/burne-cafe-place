@@ -181,3 +181,19 @@ function Navbar() {
 }
 
 export default Navbar;
+              <ShoppingCart className="w-5 h-5" />
+              <span>Sepetim</span>
+            </div>
+            {totalItems > 0 && (
+              <span className="px-2.5 py-1 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
+                {totalItems}
+              </span>
+            )}
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;
