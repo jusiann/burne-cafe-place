@@ -83,7 +83,7 @@ function Navbar() {
         <div className="flex items-center justify-between h-18">
 
           {/* LOGO & SEARCH */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Link
               to="/"
               className="flex flex-col gap-0 text-2xl font-bold text-[#2B1E17] hover:text-[#A85A24] transition-colors duration-300"
@@ -100,56 +100,43 @@ function Navbar() {
             <div className="hidden md:flex items-center">
               <div
                 className={cn(
-                  "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
+                  "flex items-center gap-2 rounded-full border transition-all duration-300 ease-out",
                   isSearchOpen
-                    ? "w-[280px] text-[#C46A2B]"
-                    : "w-auto text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5"
+                    ? "w-[320px] bg-white border-[#C46A2B]/30 shadow-lg px-4 py-2"
+                    : "w-10 h-10 bg-[#C46A2B]/10 border-transparent hover:bg-[#C46A2B]/20 cursor-pointer"
                 )}
               >
-                <Search className="w-5 h-5 flex-shrink-0" />
-
-                {isSearchOpen && (
-                  <form onSubmit={handleSearchSubmit} className="flex-1 min-w-0">
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Ürün ara..."
-                      className="w-full bg-transparent border-none outline-none text-sm text-[#2B1E17] placeholder:text-[#2B1E17]/50"
-                    />
-                  </form>
-                )}
-
-                {!isSearchOpen && (
+                {isSearchOpen ? (
+                  <>
+                    <Search className="w-5 h-5 text-[#C46A2B] flex-shrink-0" />
+                    <form onSubmit={handleSearchSubmit} className="flex-1 min-w-0">
+                      <input
+                        ref={searchInputRef}
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Ürün veya kategori ara..."
+                        className="w-full bg-transparent border-none outline-none text-sm text-[#2B1E17] placeholder:text-[#2B1E17]/50"
+                      />
+                    </form>
+                    <button
+                      type="button"
+                      onClick={handleSearchClose}
+                      className="p-1 hover:bg-[#C46A2B]/10 rounded-full transition-colors flex-shrink-0"
+                      aria-label="Kapat"
+                    >
+                      <X className="w-4 h-4 text-[#2B1E17]/70" />
+                    </button>
+                  </>
+                ) : (
                   <button
                     onClick={() => setIsSearchOpen(true)}
-                    className="absolute inset-0"
+                    className="w-full h-full flex items-center justify-center"
                     aria-label="Ara"
-                  />
-                )}
-
-                {isSearchOpen && (
-                  <button
-                    type="button"
-                    onClick={handleSearchClose}
-                    className="p-1 hover:bg-[#C46A2B]/10 rounded transition-colors flex-shrink-0"
-                    aria-label="Kapat"
                   >
-                    <X className="w-4 h-4 text-[#2B1E17]/70" />
+                    <Search className="w-5 h-5 text-[#C46A2B]" />
                   </button>
                 )}
-
-                {/* BOTTOM INDICATOR */}
-                <div
-                  className={cn(
-                    "absolute bottom-0 left-2 h-0.5 bg-[#C46A2B] rounded-full transition-all duration-300",
-                    isSearchOpen ? "right-2" : "right-2 scale-x-0 group-hover:scale-x-100"
-                  )}
-                  style={{
-                    transformOrigin: 'left'
-                  }}
-                />
               </div>
             </div>
           </div>
@@ -199,13 +186,6 @@ function Navbar() {
                   {totalItems > 99 ? '99+' : totalItems}
                 </span>
               )}
-              {/* ACTIVE INDICATOR */}
-              <div
-                className={cn(
-                  'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
-                  isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
-                )}
-              />
             </Link>
           </div>
 

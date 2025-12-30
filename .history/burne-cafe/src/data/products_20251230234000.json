@@ -1,0 +1,736 @@
+[
+  {
+    "id": 1,
+    "name": "Espresso",
+    "description": "İtalyan usulü, yoğun aromalı özenle çekilmiş espresso",
+    "image": "/images/products/espresso.jpg",
+    "category": "Espresso",
+    "price": 45,
+    "sizes": [
+      {
+        "name": "Tek",
+        "price": 0
+      },
+      {
+        "name": "Çift",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 5,
+      "protein": 0,
+      "carbs": 1,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 2,
+    "name": "Americano",
+    "description": "Espresso ve sıcak su ile hazırlanan klasik lezzet",
+    "image": "/images/products/americano.jpg",
+    "category": "Espresso",
+    "price": 55,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 10
+      },
+      {
+        "name": "Büyük",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 15,
+      "protein": 1,
+      "carbs": 3,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 3,
+    "name": "Cappuccino",
+    "description": "Espresso, buharla ısıtılmış süt ve kadifemsi köpük",
+    "image": "/images/products/cappuccino.jpg",
+    "category": "Sütlü Kahveler",
+    "price": 70,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 15
+      },
+      {
+        "name": "Büyük",
+        "price": 25
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 10
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 120,
+      "protein": 6,
+      "carbs": 10,
+      "fat": 6
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 4,
+    "name": "Latte",
+    "description": "Espresso ve bol buğulu süt ile kremsi bir tat",
+    "image": "/images/products/latte.jpg",
+    "category": "Sütlü Kahveler",
+    "price": 75,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 15
+      },
+      {
+        "name": "Büyük",
+        "price": 25
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 10
+      },
+      {
+        "name": "Yulaf Sütü",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 150,
+      "protein": 8,
+      "carbs": 15,
+      "fat": 6
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 5,
+    "name": "Flat White",
+    "description": "Mikro köpüklü süt ve çift shot espresso",
+    "image": "/images/products/flat-white.jpg",
+    "category": "Sütlü Kahveler",
+    "price": 80,
+    "sizes": [
+      {
+        "name": "Tek",
+        "price": 0
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 110,
+      "protein": 6,
+      "carbs": 9,
+      "fat": 5
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 6,
+    "name": "Mocha",
+    "description": "Espresso, çikolata sosu ve buharla ısıtılmış süt",
+    "image": "/images/products/mocha.jpg",
+    "category": "Sütlü Kahveler",
+    "price": 85,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 15
+      },
+      {
+        "name": "Büyük",
+        "price": 25
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      },
+      {
+        "name": "Krema",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 290,
+      "protein": 10,
+      "carbs": 35,
+      "fat": 12
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 10
+  },
+  {
+    "id": 7,
+    "name": "Türk Kahvesi",
+    "description": "Geleneksel yöntemle pişirilen, köpüklü Türk kahvesi",
+    "image": "/images/products/turk-kahvesi.jpg",
+    "category": "Özel Kahveler",
+    "price": 50,
+    "sizes": [],
+    "extras": [
+      {
+        "name": "Menengiç Kahvesi",
+        "price": 15
+      },
+      {
+        "name": "Lokum",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 25,
+      "protein": 0,
+      "carbs": 5,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 8,
+    "name": "Cold Brew",
+    "description": "24 saat soğuk demleme yöntemiyle hazırlanan kahve",
+    "image": "/images/products/cold-brew.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 75,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Büyük",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Vanilya Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 5,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 9,
+    "name": "Iced Latte",
+    "description": "Espresso, soğuk süt ve buz ile serinletici lezzet",
+    "image": "/images/products/iced-latte.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 80,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Büyük",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 10
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 130,
+      "protein": 7,
+      "carbs": 13,
+      "fat": 5
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 10,
+    "name": "Iced Mocha",
+    "description": "Espresso, çikolata, soğuk süt ve buz",
+    "image": "/images/products/iced-mocha.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 90,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Büyük",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      },
+      {
+        "name": "Krema",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 270,
+      "protein": 9,
+      "carbs": 32,
+      "fat": 11
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 15
+  },
+  {
+    "id": 11,
+    "name": "V60 Pour Over",
+    "description": "El yapımı, filtre kahve severlere özel demleme",
+    "image": "/images/products/v60.jpg",
+    "category": "Özel Kahveler",
+    "price": 85,
+    "sizes": [],
+    "extras": [],
+    "nutrition": {
+      "calories": 5,
+      "protein": 0,
+      "carbs": 1,
+      "fat": 0
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 12,
+    "name": "Macchiato",
+    "description": "Espresso üzerine az miktarda süt köpüğü",
+    "image": "/images/products/macchiato.jpg",
+    "category": "Espresso",
+    "price": 50,
+    "sizes": [
+      {
+        "name": "Tek",
+        "price": 0
+      },
+      {
+        "name": "Çift",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Karamel",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 15,
+      "protein": 1,
+      "carbs": 2,
+      "fat": 1
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 13,
+    "name": "Affogato",
+    "description": "Vanilya dondurması üzerine sıcak espresso",
+    "image": "/images/products/affogato.jpg",
+    "category": "Özel Kahveler",
+    "price": 90,
+    "sizes": [],
+    "extras": [
+      {
+        "name": "Ekstra Dondurma",
+        "price": 25
+      }
+    ],
+    "nutrition": {
+      "calories": 200,
+      "protein": 4,
+      "carbs": 25,
+      "fat": 10
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 14,
+    "name": "Cortado",
+    "description": "Eşit oranda espresso ve ılık süt",
+    "image": "/images/products/cortado.jpg",
+    "category": "Espresso",
+    "price": 60,
+    "sizes": [],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 40,
+      "protein": 2,
+      "carbs": 4,
+      "fat": 2
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 15,
+    "name": "Chai Latte",
+    "description": "Baharatlı çay ve buharla ısıtılmış süt",
+    "image": "/images/products/chai-latte.jpg",
+    "category": "Sıcak İçecekler",
+    "price": 70,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 10
+      },
+      {
+        "name": "Büyük",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Vanilya Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 190,
+      "protein": 6,
+      "carbs": 30,
+      "fat": 5
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 16,
+    "name": "Sıcak Çikolata",
+    "description": "Belçika çikolatası ve kremsi süt",
+    "image": "/images/products/sicak-cikolata.jpg",
+    "category": "Sıcak İçecekler",
+    "price": 65,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 10
+      },
+      {
+        "name": "Büyük",
+        "price": 20
+      }
+    ],
+    "extras": [
+      {
+        "name": "Krema",
+        "price": 10
+      },
+      {
+        "name": "Marshmallow",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 320,
+      "protein": 8,
+      "carbs": 40,
+      "fat": 14
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 17,
+    "name": "Matcha Latte",
+    "description": "Japon yeşil çayı ve kremsi süt karışımı",
+    "image": "/images/products/matcha-latte.jpg",
+    "category": "Sıcak İçecekler",
+    "price": 85,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 15
+      },
+      {
+        "name": "Büyük",
+        "price": 25
+      }
+    ],
+    "extras": [
+      {
+        "name": "Yulaf Sütü",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 160,
+      "protein": 6,
+      "carbs": 20,
+      "fat": 6
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 18,
+    "name": "Caramel Macchiato",
+    "description": "Vanilya şurubu, süt, espresso ve karamel sos",
+    "image": "/images/products/caramel-macchiato.jpg",
+    "category": "Sütlü Kahveler",
+    "price": 90,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 15
+      },
+      {
+        "name": "Büyük",
+        "price": 25
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot",
+        "price": 15
+      },
+      {
+        "name": "Ekstra Karamel",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 250,
+      "protein": 8,
+      "carbs": 35,
+      "fat": 8
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 19,
+    "name": "Filtre Kahve",
+    "description": "Günlük taze çekilen çekirdeklerden demleme kahve",
+    "image": "/images/products/filtre-kahve.jpg",
+    "category": "Özel Kahveler",
+    "price": 45,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 10
+      },
+      {
+        "name": "Büyük",
+        "price": 20
+      }
+    ],
+    "extras": [],
+    "nutrition": {
+      "calories": 5,
+      "protein": 0,
+      "carbs": 1,
+      "fat": 0
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 20,
+    "name": "Ristretto",
+    "description": "Yoğun ve konsantre espresso çeşidi",
+    "image": "/images/products/ristretto.jpg",
+    "category": "Espresso",
+    "price": 45,
+    "sizes": [
+      {
+        "name": "Tek",
+        "price": 0
+      },
+      {
+        "name": "Çift",
+        "price": 20
+      }
+    ],
+    "extras": [],
+    "nutrition": {
+      "calories": 5,
+      "protein": 0,
+      "carbs": 1,
+      "fat": 0
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 21,
+    "name": "Classic Cheeseburger",
+    "description": "200gr sığır eti, cheddar peyniri, marul, domates, turşu ve özel burger sosu ile hazırlanan enfes burger",
+    "image": "/images/products/classic-cheeseburger.jpg",
+    "category": "Burgerler",
+    "price": 185,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 30
+      },
+      {
+        "name": "Büyük",
+        "price": 50
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Peynir",
+        "price": 15
+      },
+      {
+        "name": "Bacon",
+        "price": 25
+      },
+      {
+        "name": "Avokado",
+        "price": 20
+      },
+      {
+        "name": "Mantar",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 650,
+      "protein": 35,
+      "carbs": 48,
+      "fat": 32
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 10
+  }
+]

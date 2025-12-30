@@ -100,56 +100,50 @@ function Navbar() {
             <div className="hidden md:flex items-center">
               <div
                 className={cn(
-                  "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
-                  isSearchOpen
-                    ? "w-[280px] text-[#C46A2B]"
-                    : "w-auto text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5"
+                  "relative flex items-center gap-2 transition-all duration-500 ease-in-out",
+                  isSearchOpen ? "w-[280px]" : "w-auto"
                 )}
               >
-                <Search className="w-5 h-5 flex-shrink-0" />
-
-                {isSearchOpen && (
-                  <form onSubmit={handleSearchSubmit} className="flex-1 min-w-0">
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Ürün ara..."
-                      className="w-full bg-transparent border-none outline-none text-sm text-[#2B1E17] placeholder:text-[#2B1E17]/50"
-                    />
-                  </form>
-                )}
-
-                {!isSearchOpen && (
+                {isSearchOpen ? (
+                  <div className="flex items-center gap-2 w-full px-3 py-2 bg-[#C46A2B]/5 rounded-lg border border-[#C46A2B]/20 animate-in slide-in-from-left-2 fade-in duration-300">
+                    <Search className="w-5 h-5 text-[#C46A2B] flex-shrink-0 animate-in zoom-in-50 duration-300" />
+                    <form onSubmit={handleSearchSubmit} className="flex-1 min-w-0">
+                      <input
+                        ref={searchInputRef}
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Ürün ara..."
+                        className="w-full bg-transparent border-none outline-none text-sm text-[#2B1E17] placeholder:text-[#2B1E17]/50 animate-in fade-in duration-500"
+                      />
+                    </form>
+                    <button
+                      type="button"
+                      onClick={handleSearchClose}
+                      className="p-1 hover:bg-[#C46A2B]/10 rounded transition-colors flex-shrink-0 animate-in zoom-in-50 duration-300"
+                      aria-label="Kapat"
+                    >
+                      <X className="w-4 h-4 text-[#2B1E17]/70" />
+                    </button>
+                  </div>
+                ) : (
                   <button
                     onClick={() => setIsSearchOpen(true)}
-                    className="absolute inset-0"
+                    className={cn(
+                      'relative px-4 py-2 font-medium transition-all duration-300 rounded-lg group',
+                      'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+                    )}
                     aria-label="Ara"
-                  />
-                )}
-
-                {isSearchOpen && (
-                  <button
-                    type="button"
-                    onClick={handleSearchClose}
-                    className="p-1 hover:bg-[#C46A2B]/10 rounded transition-colors flex-shrink-0"
-                    aria-label="Kapat"
                   >
-                    <X className="w-4 h-4 text-[#2B1E17]/70" />
+                    <Search className="w-5 h-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
+                    {/* HOVER INDICATOR */}
+                    <div className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300 scale-x-0 group-hover:scale-x-100" />
                   </button>
                 )}
-
-                {/* BOTTOM INDICATOR */}
-                <div
-                  className={cn(
-                    "absolute bottom-0 left-2 h-0.5 bg-[#C46A2B] rounded-full transition-all duration-300",
-                    isSearchOpen ? "right-2" : "right-2 scale-x-0 group-hover:scale-x-100"
-                  )}
-                  style={{
-                    transformOrigin: 'left'
-                  }}
-                />
+                {/* ACTIVE INDICATOR */}
+                {isSearchOpen && (
+                  <div className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full animate-in slide-in-from-left duration-300" />
+                )}
               </div>
             </div>
           </div>
@@ -199,13 +193,6 @@ function Navbar() {
                   {totalItems > 99 ? '99+' : totalItems}
                 </span>
               )}
-              {/* ACTIVE INDICATOR */}
-              <div
-                className={cn(
-                  'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
-                  isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
-                )}
-              />
             </Link>
           </div>
 

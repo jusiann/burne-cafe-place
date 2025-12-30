@@ -1,17 +1,19 @@
 import { cn } from '../lib/utils';
-import { Menu, X, ShoppingCart, Search } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Menu, X, ShoppingCart, Search, Coffee } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const searchInputRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { getTotalItems } = useCart();
 
-  const totalItems = 0;
+  const totalItems = getTotalItems();
 
   const navItems = [
     { name: 'Ana Sayfa', href: '/' },
@@ -46,25 +48,13 @@ function Navbar() {
     };
   }, [isMenuOpen]);
 
-  useEffect(() => {
-    if (isSearchOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [isSearchOpen]);
-
-  const handleSearchSubmit = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Arama sayfasına yönlendir veya arama işlemi yap
-      console.log('Arama:', searchQuery);
-      setIsSearchOpen(false);
+      navigate(`/menu?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
+      setIsSearchOpen(false);
     }
-  };
-
-  const handleSearchClose = () => {
-    setIsSearchOpen(false);
-    setSearchQuery('');
   };
 
   return (
@@ -82,77 +72,21 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
 
-          {/* LOGO & SEARCH */}
-          <div className="flex items-center gap-2">
-            <Link
-              to="/"
-              className="flex flex-col gap-0 text-2xl font-bold text-[#2B1E17] hover:text-[#A85A24] transition-colors duration-300"
-            >
-              <span className="font-heading leading-tight">
-                BURNÉ
+          {/* LOGO */}
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-2xl font-bold text-[#2B1E17] hover:text-[#A85A24] transition-colors duration-300"
+          >
+            <Coffee className="w-7 h-7 text-[#C46A2B]" />
+            <div className="flex flex-col leading-tight">
+              <span className="font-heading text-xl sm:text-2xl">
+                BURNÉ CAFE
               </span>
-              <span className="text-[10px] font-normal tracking-[0.2em] text-[#A85A24] uppercase leading-tight">
-                Cafe & Restaurant
+              <span className="text-[10px] sm:text-xs font-normal text-[#8B7355] -mt-1">
+                Artisan Coffee & Delights
               </span>
-            </Link>
-
-            {/* SEARCH - DESKTOP */}
-            <div className="hidden md:flex items-center">
-              <div
-                className={cn(
-                  "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
-                  isSearchOpen
-                    ? "w-[280px] text-[#C46A2B]"
-                    : "w-auto text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5"
-                )}
-              >
-                <Search className="w-5 h-5 flex-shrink-0" />
-
-                {isSearchOpen && (
-                  <form onSubmit={handleSearchSubmit} className="flex-1 min-w-0">
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Ürün ara..."
-                      className="w-full bg-transparent border-none outline-none text-sm text-[#2B1E17] placeholder:text-[#2B1E17]/50"
-                    />
-                  </form>
-                )}
-
-                {!isSearchOpen && (
-                  <button
-                    onClick={() => setIsSearchOpen(true)}
-                    className="absolute inset-0"
-                    aria-label="Ara"
-                  />
-                )}
-
-                {isSearchOpen && (
-                  <button
-                    type="button"
-                    onClick={handleSearchClose}
-                    className="p-1 hover:bg-[#C46A2B]/10 rounded transition-colors flex-shrink-0"
-                    aria-label="Kapat"
-                  >
-                    <X className="w-4 h-4 text-[#2B1E17]/70" />
-                  </button>
-                )}
-
-                {/* BOTTOM INDICATOR */}
-                <div
-                  className={cn(
-                    "absolute bottom-0 left-2 h-0.5 bg-[#C46A2B] rounded-full transition-all duration-300",
-                    isSearchOpen ? "right-2" : "right-2 scale-x-0 group-hover:scale-x-100"
-                  )}
-                  style={{
-                    transformOrigin: 'left'
-                  }}
-                />
-              </div>
             </div>
-          </div>
+          </Link>
 
           {/* DESKTOP NAVIGATION */}
           <div className="hidden md:flex items-center space-x-1">
@@ -182,6 +116,20 @@ function Navbar() {
               ))
             }
 
+            {/* ARAMA İKONU - DESKTOP */}
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className={cn(
+                'p-2 rounded-lg transition-all duration-300 group',
+                isSearchOpen
+                  ? 'text-[#C46A2B] bg-[#C46A2B]/10'
+                  : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+              )}
+              aria-label="Arama"
+            >
+              <Search className="w-6 h-6 transition-transform group-hover:scale-110" />
+            </button>
+
             {/* SEPET İKONU - DESKTOP */}
             <Link
               to="/cart"
@@ -199,13 +147,6 @@ function Navbar() {
                   {totalItems > 99 ? '99+' : totalItems}
                 </span>
               )}
-              {/* ACTIVE INDICATOR */}
-              <div
-                className={cn(
-                  'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
-                  isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
-                )}
-              />
             </Link>
           </div>
 
@@ -220,6 +161,43 @@ function Navbar() {
         </div>
       </div>
 
+      {/* ARAMA ÇUBUĞU - DESKTOP */}
+      <div
+        className={cn(
+          "hidden md:block absolute top-full left-0 right-0 bg-white shadow-lg transition-all duration-300 overflow-hidden border-b border-[#E8E0D5]",
+          isSearchOpen ? "max-h-24 opacity-100" : "max-h-0 opacity-0"
+        )}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Ürün ara... (örn: burger, pizza, kahve)"
+              className="flex-1 px-4 py-2 border border-[#E8E0D5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C46A2B]/20 focus:border-[#C46A2B] transition-all"
+              autoFocus
+            />
+            <button
+              type="submit"
+              className="px-6 py-2 bg-[#C46A2B] text-white rounded-lg hover:bg-[#A85A24] transition-colors font-medium"
+            >
+              Ara
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSearchOpen(false);
+                setSearchQuery('');
+              }}
+              className="px-4 py-2 border border-[#E8E0D5] rounded-lg hover:bg-[#E8E0D5]/30 transition-colors"
+            >
+              İptal
+            </button>
+          </form>
+        </div>
+      </div>
+
       {/* MOBILE MENU */}
       <div
         className={cn(
@@ -228,20 +206,6 @@ function Navbar() {
         )}
       >
         <div className="px-4 py-3 space-y-1">
-          {/* SEARCH - MOBILE */}
-          <div className="mb-3">
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#C46A2B]" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Ürün ara..."
-                className="w-full pl-10 pr-4 py-2.5 text-[#2B1E17] placeholder:text-[#2B1E17]/40 bg-[#C46A2B]/5 border border-[#C46A2B]/20 rounded-lg outline-none focus:ring-2 focus:ring-[#C46A2B]/30 transition-all"
-              />
-            </form>
-          </div>
-
           {
             navItems.map((item, key) => (
               <Link
@@ -259,6 +223,18 @@ function Navbar() {
               </Link>
             ))
           }
+
+          {/* ARAMA - MOBILE MENU */}
+          <button
+            onClick={() => {
+              setIsMenuOpen(false);
+              setIsSearchOpen(true);
+            }}
+            className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-300 text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5 w-full"
+          >
+            <Search className="w-5 h-5" />
+            <span>Ürün Ara</span>
+          </button>
 
           {/* SEPET - MOBILE MENU */}
           <Link

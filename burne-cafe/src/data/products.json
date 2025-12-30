@@ -1,0 +1,1811 @@
+[
+  {
+    "id": 1,
+    "name": "Miel",
+    "description": "Espresso üzerine süt, tarçın aroması ve bal eklenerek hazırlanan, toz tarçın ile süslenen kahve.",
+    "image": "/caffee-pictures/miel.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 85,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 180,
+      "protein": 6,
+      "carbs": 28,
+      "fat": 5
+    },
+    "isPopular": true,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 2,
+    "name": "Cherry Blossom Zen Latte",
+    "description": "Kiraz çiçeği aromalı, sıcak sütlü kahve.",
+    "image": "/caffee-pictures/cerry-blossom-zen-latte.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 95,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 220,
+      "protein": 7,
+      "carbs": 32,
+      "fat": 6
+    },
+    "isPopular": true,
+    "isNew": true,
+    "discount": 10
+  },
+  {
+    "id": 3,
+    "name": "Dubai Chocolate Latte",
+    "description": "Antep fıstıklı, kakaolu sıcak sütlü kahve.",
+    "image": "/caffee-pictures/dubai-chocolate-latte.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 110,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 310,
+      "protein": 9,
+      "carbs": 42,
+      "fat": 12
+    },
+    "isPopular": true,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 4,
+    "name": "Cappuccino",
+    "description": "Eşit oranlı espresso, sıcak süt ve süt köpüğünün bir araya getirilmesiyle hazırlanan köpüklü kahve.",
+    "image": "/caffee-pictures/cappucino.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 70,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 120,
+      "protein": 6,
+      "carbs": 12,
+      "fat": 5
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 5,
+    "name": "Cherry Brownie Latte",
+    "description": "Kiraz çiçeği aromalı, kakaolu sıcak sütlü kahve.",
+    "image": "/caffee-pictures/cerry-brownie-latte.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 95,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 280,
+      "protein": 8,
+      "carbs": 38,
+      "fat": 10
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 6,
+    "name": "Caramel Macchiato",
+    "description": "Sıcak süt ve karamel aromasının katmanlı olarak servis edildiği tatlı kahve.",
+    "image": "/caffee-pictures/caramel-macchiato.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 85,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 250,
+      "protein": 7,
+      "carbs": 35,
+      "fat": 8
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 7,
+    "name": "Mocha",
+    "description": "Espresso ve sıcak süt ile hazırlanan, kakaolu tatlı kahve.",
+    "image": "/caffee-pictures/mocha.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 80,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 290,
+      "protein": 8,
+      "carbs": 40,
+      "fat": 11
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 8,
+    "name": "White Chocolate Mocha",
+    "description": "Espresso ve sıcak süt ile hazırlanan, vanilya ve beyaz çikolata aromalı tatlı kahve.",
+    "image": "/caffee-pictures/white-chocolate-mocha.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 90,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 320,
+      "protein": 8,
+      "carbs": 45,
+      "fat": 12
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 15
+  },
+  {
+    "id": 9,
+    "name": "Salted Caramel Latte",
+    "description": "Tuzlu karamel aromalı, sütlü kahve.",
+    "image": "/caffee-pictures/salted-caramel-latte.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 85,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 260,
+      "protein": 7,
+      "carbs": 36,
+      "fat": 9
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 10,
+    "name": "Filtre Kahve",
+    "description": "Öğütülmüş kahve çekirdeklerinin filtreden geçirilerek sıcak su ile demlenmesiyle hazırlanan kahve.",
+    "image": "/caffee-pictures/filtre-kahve.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 55,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 12
+      },
+      {
+        "name": "Venti",
+        "price": 20
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 5,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 11,
+    "name": "Americano",
+    "description": "Espresso üzerine sıcak su eklenerek hazırlanan kahve.",
+    "image": "/caffee-pictures/americano.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 60,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 12
+      },
+      {
+        "name": "Venti",
+        "price": 20
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 15,
+      "protein": 1,
+      "carbs": 2,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 12,
+    "name": "Latte",
+    "description": "Espresso ve sıcak süt ile hazırlanan, yumuşak içimli kahve.",
+    "image": "/caffee-pictures/latte.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 70,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 150,
+      "protein": 8,
+      "carbs": 15,
+      "fat": 6
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 13,
+    "name": "Black Eye",
+    "description": "Filtre kahve içine iki shot espresso eklenerek hazırlanan kahve.",
+    "image": "/caffee-pictures/black-eye.jpg",
+    "category": "Sıcak Kahveler",
+    "price": 75,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 12
+      },
+      {
+        "name": "Venti",
+        "price": 20
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 25,
+      "protein": 2,
+      "carbs": 3,
+      "fat": 0
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 14,
+    "name": "Iced Coconut Latte",
+    "description": "Hindistancevizi aromalı, sütlü buzlu kahve.",
+    "image": "/caffee-pictures/iced-coconut-latte.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 90,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 200,
+      "protein": 5,
+      "carbs": 28,
+      "fat": 8
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 15,
+    "name": "Cookie Crumble Mocha Frappe",
+    "description": "Soğuk lattenin bisküvi aroması ile bir araya geldiği buzlu kahve.",
+    "image": "/caffee-pictures/cookie-crumble-mocha-frappe.jpg",
+    "category": "Frappeler",
+    "price": 105,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 18
+      },
+      {
+        "name": "Venti",
+        "price": 28
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 420,
+      "protein": 8,
+      "carbs": 58,
+      "fat": 18
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 16,
+    "name": "Chocolate Cookie Frappe",
+    "description": "Bisküvi aromalı, sütlü buzlu kahve.",
+    "image": "/caffee-pictures/chocolate-cookie-frappe.jpg",
+    "category": "Frappeler",
+    "price": 100,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 18
+      },
+      {
+        "name": "Venti",
+        "price": 28
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 380,
+      "protein": 7,
+      "carbs": 52,
+      "fat": 16
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 10
+  },
+  {
+    "id": 17,
+    "name": "Iced Caramel Bubble Latte",
+    "description": "Karamel aromalı, bubleli sütlü buzlu kahve.",
+    "image": "/caffee-pictures/iced-caramel-bubble-latte.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 95,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 270,
+      "protein": 6,
+      "carbs": 42,
+      "fat": 9
+    },
+    "isPopular": true,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 18,
+    "name": "Iced Caramel Macchiato",
+    "description": "Süt, espresso ve karamel aromasının katmanlı olarak servis edildiği tatlı buzlu kahve.",
+    "image": "/caffee-pictures/iced-caramel-macchiato.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 90,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 260,
+      "protein": 7,
+      "carbs": 38,
+      "fat": 8
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 19,
+    "name": "Iced Americano",
+    "description": "Espresso üzerine su ve buz eklenerek hazırlanan kahve.",
+    "image": "/caffee-pictures/iced-americano.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 65,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 12
+      },
+      {
+        "name": "Venti",
+        "price": 20
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 15,
+      "protein": 1,
+      "carbs": 2,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 20,
+    "name": "Iced Latte",
+    "description": "Espresso ve süt ile hazırlanan buzlu kahve.",
+    "image": "/caffee-pictures/iced-latte.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 75,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 130,
+      "protein": 7,
+      "carbs": 14,
+      "fat": 5
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 21,
+    "name": "Iced Salted Caramel Latte",
+    "description": "Tuzlu karamel aromalı, sütlü buzlu kahve.",
+    "image": "/caffee-pictures/iced-salted-caramel-latte.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 90,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 240,
+      "protein": 6,
+      "carbs": 35,
+      "fat": 8
+    },
+    "isPopular": false,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 22,
+    "name": "Iced Mint Latte",
+    "description": "Nane aromalı, sütlü buzlu kahve.",
+    "image": "/caffee-pictures/iced-mint-latte.jpg",
+    "category": "Soğuk Kahveler",
+    "price": 85,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 15
+      },
+      {
+        "name": "Venti",
+        "price": 25
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 170,
+      "protein": 6,
+      "carbs": 22,
+      "fat": 6
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 0
+  },
+  {
+    "id": 23,
+    "name": "Espresso Frappe",
+    "description": "Espresso, buz ve sütün karıştırılarak hazırlandığı bir kahve çeşididir.",
+    "image": "/caffee-pictures/espresso-frappe.jpg",
+    "category": "Frappeler",
+    "price": 85,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 18
+      },
+      {
+        "name": "Venti",
+        "price": 28
+      }
+    ],
+    "milkOptions": [
+      {
+        "name": "Standart Süt",
+        "price": 0
+      },
+      {
+        "name": "Yağsız Süt",
+        "price": 0
+      },
+      {
+        "name": "Laktozsuz Süt",
+        "price": 0
+      },
+      {
+        "name": "Badem Sütü",
+        "price": 12
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Shot (Klasik)",
+        "price": 10
+      },
+      {
+        "name": "Ekstra Shot (Yumuşak)",
+        "price": 10
+      },
+      {
+        "name": "Fındık Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Karamel Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Vanilya Şurubu",
+        "price": 8
+      },
+      {
+        "name": "Kiraz Çiçeği Şurubu",
+        "price": 10
+      }
+    ],
+    "nutrition": {
+      "calories": 220,
+      "protein": 5,
+      "carbs": 32,
+      "fat": 8
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 24,
+    "name": "Minty Lemonade",
+    "description": "Nane aromalı, buzlu limonata.",
+    "image": "/caffee-pictures/minty-lemonade.jpg",
+    "category": "Serinletici İçecekler",
+    "price": 65,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 12
+      },
+      {
+        "name": "Venti",
+        "price": 20
+      }
+    ],
+    "milkOptions": [],
+    "extras": [
+      {
+        "name": "Ekstra Nane",
+        "price": 5
+      },
+      {
+        "name": "Ekstra Limon",
+        "price": 5
+      }
+    ],
+    "nutrition": {
+      "calories": 120,
+      "protein": 0,
+      "carbs": 30,
+      "fat": 0
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 0
+  },
+  {
+    "id": 25,
+    "name": "Freshae Cool Lime & Mango",
+    "description": "Misket limonu ve nane aromalı buzlu içeceğin mangolu sos ile bir araya geldiği serinletici bir içecek.",
+    "image": "/caffee-pictures/freshae-cool-lime-mango.jpg",
+    "category": "Serinletici İçecekler",
+    "price": 75,
+    "sizes": [
+      {
+        "name": "Tall",
+        "price": 0
+      },
+      {
+        "name": "Grande",
+        "price": 12
+      },
+      {
+        "name": "Venti",
+        "price": 20
+      }
+    ],
+    "milkOptions": [],
+    "extras": [
+      {
+        "name": "Ekstra Mango Sos",
+        "price": 8
+      },
+      {
+        "name": "Ekstra Nane",
+        "price": 5
+      }
+    ],
+    "nutrition": {
+      "calories": 150,
+      "protein": 1,
+      "carbs": 38,
+      "fat": 0
+    },
+    "isPopular": false,
+    "isNew": true,
+    "discount": 15
+  }
+]

@@ -1,20 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #FAF7F2;        /* Warm Cream */
-  --color-foreground: #2B1E17;        /* Espresso Brown (text) */
+  --color-background: #FAF7F2;
+  /* Warm Cream */
+  --color-foreground: #2B1E17;
+  /* Espresso Brown (text) */
 
-  --color-card: #FFFFFF;              /* Pure White */
-  --color-card-hover: #F5F1EB;        /* Milk Foam */
-  --color-border: #E8E0D5;            /* Soft Latte Border */
+  --color-card: #FFFFFF;
+  /* Pure White */
+  --color-card-hover: #F5F1EB;
+  /* Milk Foam */
+  --color-border: #E8E0D5;
+  /* Soft Latte Border */
 
-  --color-primary: #C46A2B;           /* Copper / Burnt Orange */
-  --color-primary-hover: #A85A24;     /* Darker Copper */
+  --color-primary: #C46A2B;
+  /* Copper / Burnt Orange */
+  --color-primary-hover: #A85A24;
+  /* Darker Copper */
   --color-primary-foreground: #FFFFFF;
 
-  --color-secondary: #6B5E55;         /* Muted Coffee */
-  --color-muted: #8B7E75;             /* Light Muted */
-  --color-accent: #2B1E17;            /* Espresso Accent */
+  --color-secondary: #6B5E55;
+  /* Muted Coffee */
+  --color-muted: #8B7E75;
+  /* Light Muted */
+  --color-accent: #2B1E17;
+  /* Espresso Accent */
 }
 
 @layer base {
@@ -36,6 +46,12 @@
     @apply border-[color:var(--border)];
   }
 
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
   html {
     @apply scroll-smooth;
   }
@@ -55,25 +71,28 @@
   margin-inline: auto;
   padding-inline: 2rem;
 
-  @media (width >= 640px) {
+  @media (width >=640px) {
     max-width: 640px;
   }
-  @media (width >= 768px) {
+
+  @media (width >=768px) {
     max-width: 768px;
   }
-  @media (width >= 1024px) {
+
+  @media (width >=1024px) {
     max-width: 1024px;
   }
-  @media (width >= 1280px) {
+
+  @media (width >=1280px) {
     max-width: 1280px;
   }
 }
 
 
 @utility font-heading {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.05em;
   line-height: 1.2;
 }
 
@@ -93,18 +112,13 @@
 @utility primary-button {
   background-color: var(--primary);
   color: var(--primary-foreground);
-  @apply px-6 py-2 rounded-md font-medium
-         transition-all duration-300
-         hover:opacity-90 active:scale-95;
+  @apply px-6 py-2 rounded-md font-medium transition-all duration-300 hover:opacity-90 active:scale-95;
 }
 
 @utility outline-button {
   border: 1px solid var(--primary);
   color: var(--primary);
-  @apply px-6 py-2 rounded-md font-medium
-         transition-all duration-300
-         hover:bg-[color:var(--primary)]
-         hover:text-[color:var(--primary-foreground)];
+  @apply px-6 py-2 rounded-md font-medium transition-all duration-300 hover:bg-[color:var(--primary)] hover:text-[color:var(--primary-foreground)];
 }
 
 #root {

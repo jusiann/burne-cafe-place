@@ -101,13 +101,13 @@ function Navbar() {
               <div
                 className={cn(
                   "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
-                  isSearchOpen
-                    ? "w-[280px] text-[#C46A2B]"
+                  isSearchOpen 
+                    ? "w-[280px] text-[#C46A2B]" 
                     : "w-auto text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5"
                 )}
               >
                 <Search className="w-5 h-5 flex-shrink-0" />
-
+                
                 {isSearchOpen && (
                   <form onSubmit={handleSearchSubmit} className="flex-1 min-w-0">
                     <input
@@ -120,7 +120,7 @@ function Navbar() {
                     />
                   </form>
                 )}
-
+                
                 {!isSearchOpen && (
                   <button
                     onClick={() => setIsSearchOpen(true)}
@@ -128,7 +128,7 @@ function Navbar() {
                     aria-label="Ara"
                   />
                 )}
-
+                
                 {isSearchOpen && (
                   <button
                     type="button"
@@ -141,7 +141,7 @@ function Navbar() {
                 )}
 
                 {/* BOTTOM INDICATOR */}
-                <div
+                <div 
                   className={cn(
                     "absolute bottom-0 left-2 h-0.5 bg-[#C46A2B] rounded-full transition-all duration-300",
                     isSearchOpen ? "right-2" : "right-2 scale-x-0 group-hover:scale-x-100"

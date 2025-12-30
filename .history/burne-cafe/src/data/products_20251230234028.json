@@ -1,0 +1,51 @@
+[
+  {
+    "id": 21,
+    "name": "Classic Cheeseburger",
+    "description": "200gr sığır eti, cheddar peyniri, marul, domates, turşu ve özel burger sosu ile hazırlanan enfes burger",
+    "image": "/images/products/classic-cheeseburger.jpg",
+    "category": "Burgerler",
+    "price": 185,
+    "sizes": [
+      {
+        "name": "Küçük",
+        "price": 0
+      },
+      {
+        "name": "Orta",
+        "price": 30
+      },
+      {
+        "name": "Büyük",
+        "price": 50
+      }
+    ],
+    "extras": [
+      {
+        "name": "Ekstra Peynir",
+        "price": 15
+      },
+      {
+        "name": "Bacon",
+        "price": 25
+      },
+      {
+        "name": "Avokado",
+        "price": 20
+      },
+      {
+        "name": "Mantar",
+        "price": 15
+      }
+    ],
+    "nutrition": {
+      "calories": 650,
+      "protein": 35,
+      "carbs": 48,
+      "fat": 32
+    },
+    "isPopular": true,
+    "isNew": false,
+    "discount": 10
+  }
+]

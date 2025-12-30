@@ -82,33 +82,30 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
 
-          {/* LOGO & SEARCH */}
-          <div className="flex items-center gap-2">
-            <Link
-              to="/"
-              className="flex flex-col gap-0 text-2xl font-bold text-[#2B1E17] hover:text-[#A85A24] transition-colors duration-300"
+          {/* LOGO */}
+          <Link
+            to="/"
+            className="flex flex-col gap-0 text-2xl font-bold text-[#2B1E17] hover:text-[#A85A24] transition-colors duration-300"
+          >
+            <span className="font-heading leading-tight">
+              BURNÉ
+            </span>
+            <span className="text-[10px] font-normal tracking-[0.2em] text-[#A85A24] uppercase leading-tight">
+              Cafe & Restaurant
+            </span>
+          </Link>
+
+          {/* SEARCH - DESKTOP */}
+          <div className="hidden md:flex items-center ml-4">
+            <div
+              className={cn(
+                "relative flex items-center gap-2 transition-all duration-300 ease-out",
+                isSearchOpen ? "w-[280px]" : "w-auto"
+              )}
             >
-              <span className="font-heading leading-tight">
-                BURNÉ
-              </span>
-              <span className="text-[10px] font-normal tracking-[0.2em] text-[#A85A24] uppercase leading-tight">
-                Cafe & Restaurant
-              </span>
-            </Link>
-
-            {/* SEARCH - DESKTOP */}
-            <div className="hidden md:flex items-center">
-              <div
-                className={cn(
-                  "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
-                  isSearchOpen
-                    ? "w-[280px] text-[#C46A2B]"
-                    : "w-auto text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5"
-                )}
-              >
-                <Search className="w-5 h-5 flex-shrink-0" />
-
-                {isSearchOpen && (
+              {isSearchOpen ? (
+                <div className="flex items-center gap-2 w-full px-3 py-2 bg-[#C46A2B]/5 rounded-lg border border-[#C46A2B]/20">
+                  <Search className="w-5 h-5 text-[#C46A2B] flex-shrink-0" />
                   <form onSubmit={handleSearchSubmit} className="flex-1 min-w-0">
                     <input
                       ref={searchInputRef}
@@ -119,17 +116,6 @@ function Navbar() {
                       className="w-full bg-transparent border-none outline-none text-sm text-[#2B1E17] placeholder:text-[#2B1E17]/50"
                     />
                   </form>
-                )}
-
-                {!isSearchOpen && (
-                  <button
-                    onClick={() => setIsSearchOpen(true)}
-                    className="absolute inset-0"
-                    aria-label="Ara"
-                  />
-                )}
-
-                {isSearchOpen && (
                   <button
                     type="button"
                     onClick={handleSearchClose}
@@ -138,19 +124,25 @@ function Navbar() {
                   >
                     <X className="w-4 h-4 text-[#2B1E17]/70" />
                   </button>
-                )}
-
-                {/* BOTTOM INDICATOR */}
-                <div
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsSearchOpen(true)}
                   className={cn(
-                    "absolute bottom-0 left-2 h-0.5 bg-[#C46A2B] rounded-full transition-all duration-300",
-                    isSearchOpen ? "right-2" : "right-2 scale-x-0 group-hover:scale-x-100"
+                    'relative px-4 py-2 font-medium transition-all duration-300 rounded-lg group',
+                    'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
                   )}
-                  style={{
-                    transformOrigin: 'left'
-                  }}
-                />
-              </div>
+                  aria-label="Ara"
+                >
+                  <Search className="w-5 h-5 transition-transform group-hover:scale-110" />
+                  {/* HOVER INDICATOR */}
+                  <div className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300 scale-x-0 group-hover:scale-x-100" />
+                </button>
+              )}
+              {/* ACTIVE INDICATOR */}
+              {isSearchOpen && (
+                <div className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full" />
+              )}
             </div>
           </div>
 
@@ -199,13 +191,6 @@ function Navbar() {
                   {totalItems > 99 ? '99+' : totalItems}
                 </span>
               )}
-              {/* ACTIVE INDICATOR */}
-              <div
-                className={cn(
-                  'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
-                  isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
-                )}
-              />
             </Link>
           </div>
 
