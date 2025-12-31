@@ -5,8 +5,9 @@ import products from '../data/products.json';
 
 function HomeDailyDeals() {
     const discountedProducts = products.filter(p => p.discount > 0).slice(0, 2);
-    const [timeLeft, setTimeLeft] = useState({ hours: 5, minutes: 32, seconds: 45 });
+    const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 51, seconds: 45 });
 
+    // COUNTDOWN TIMER EFFECT
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft(prev => {
@@ -34,11 +35,13 @@ function HomeDailyDeals() {
 
     return (
         <section className="py-20 bg-gradient-to-br from-[#2B1E17] via-[#3D2B20] to-[#2B1E17] relative overflow-hidden">
+
             {/* DECORATIVE ELEMENTS */}
             <div className="absolute top-0 left-0 w-72 h-72 bg-[#C46A2B]/20 rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C46A2B]/10 rounded-full blur-3xl" />
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
                 {/* SECTION HEADER */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#C46A2B]/20 rounded-full mb-4">
@@ -70,7 +73,7 @@ function HomeDailyDeals() {
                 </div>
 
                 {/* PROMO BANNER */}
-                <div className="mt-12 p-6 md:p-8 bg-gradient-to-r from-[#C46A2B] to-[#A85A24] rounded-2xl text-center">
+                <div className="mt-12 p-6 md:p-8 bg-gradient-to-r from-[#C46A2B] to-[#A85A24] rounded-2xl text-center max-w-4xl mx-auto">
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
                         <div className="flex items-center gap-3">
                             <Percent className="w-10 h-10 text-white" />
@@ -81,13 +84,13 @@ function HomeDailyDeals() {
                         </div>
                         <div className="hidden md:block w-px h-12 bg-white/30" />
                         <div>
-                            <p className="text-white/90 mb-2">
+                            <p className="text-white/90">
                                 Kupon kodu: <span className="font-bold">KAHVE15</span>
                             </p>
                         </div>
                         <Link
                             to="/menu"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#C46A2B] font-medium rounded-xl hover:bg-white/90 transition-all duration-300"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#C46A2B] font-medium rounded-xl hover:bg-white/90 hover:shadow-2xl transition-all duration-300"
                         >
                             Sipariş Ver
                             <ChevronRight className="w-5 h-5" />
@@ -99,6 +102,7 @@ function HomeDailyDeals() {
     );
 }
 
+// TIME BLOCK COMPONENT
 function TimeBlock({ value, label }) {
     return (
         <div className="text-center">
@@ -112,7 +116,8 @@ function TimeBlock({ value, label }) {
     );
 }
 
-function DealCard({ product }) {
+// DEAL CARD COMPONENT
+function DealCard({ product }) { 
     const discountedPrice = product.price - (product.price * product.discount / 100);
 
     return (
@@ -120,7 +125,7 @@ function DealCard({ product }) {
             to={`/urun/${product.id}`}
             className="group flex gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/15 transition-all duration-300"
         >
-            {/* IMAGE */}
+            {/* PRODUCT IMAGE */}
             <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden">
                 <img
                     src={product.image}
@@ -129,23 +134,24 @@ function DealCard({ product }) {
                 />
             </div>
 
-            {/* CONTENT */}
+            {/* PRODUCT INFO */}
             <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                     <h3 className="font-semibold text-white group-hover:text-[#C46A2B] transition-colors">
                         {product.name}
                     </h3>
-                    <span className="flex-shrink-0 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-lg">
+                    <span className="flex-shrink-0 h-7 px-2 flex items-center justify-center bg-[#8B4513] text-[#F5DEB3] text-xs font-bold rounded-md border border-[#D4A574]/50">
                         %{product.discount}
                     </span>
                 </div>
-                <p className="text-white/60 text-sm line-clamp-1 mt-1">
-                    {product.description}
-                </p>
+                
+                {/* LIMITED TIME BADGE */}
                 <div className="flex items-center gap-2 mt-3">
                     <Clock className="w-4 h-4 text-[#C46A2B]" />
                     <span className="text-[#C46A2B] text-sm">Sınırlı süre</span>
                 </div>
+
+                {/* PRICING */}
                 <div className="flex items-baseline gap-2 mt-2">
                     <span className="text-lg font-bold text-[#C46A2B]">
                         ₺{discountedPrice.toFixed(0)}

@@ -15,6 +15,7 @@ function Layout({
             flex
             flex-col
         ">
+
             {/* NAVBAR */}
             {showNavbar && <Navbar />}
 

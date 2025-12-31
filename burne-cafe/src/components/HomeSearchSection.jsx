@@ -8,6 +8,7 @@ function HomeSearchSection() {
     const [isFocused, setIsFocused] = useState(false);
     const navigate = useNavigate();
 
+    // FILTER PRODUCTS BY SEARCH QUERY
     const filteredProducts = query.trim()
         ? products.filter(p =>
             p.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -16,6 +17,7 @@ function HomeSearchSection() {
         ).slice(0, 5)
         : [];
 
+    // SEARCH SUBMIT HANDLER
     const handleSubmit = (e) => {
         e.preventDefault();
         if (query.trim()) {
@@ -24,6 +26,7 @@ function HomeSearchSection() {
         }
     };
 
+    // CLEAR SEARCH HANDLER
     const handleClear = () => {
         setQuery('');
     };
@@ -31,7 +34,8 @@ function HomeSearchSection() {
     return (
         <section className="py-16 bg-[#F5F1EB]">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* HEADER */}
+
+                {/* SECTION HEADER */}
                 <div className="text-center mb-8">
                     <h2 className="font-heading text-2xl md:text-3xl text-[#2B1E17] mb-2">
                         Bugün Ne İçmek İstersiniz?
@@ -46,15 +50,24 @@ function HomeSearchSection() {
                     <form onSubmit={handleSubmit}>
                         <div
                             className={`
-                                relative flex items-center bg-white rounded-2xl shadow-sm 
-                                transition-all duration-300
+                                relative 
+                                flex 
+                                items-center 
+                                bg-white 
+                                rounded-2xl 
+                                shadow-sm 
+                                transition-all 
+                                duration-300
                                 ${isFocused
                                     ? 'shadow-lg ring-2 ring-[#C46A2B]/20'
                                     : 'hover:shadow-md'
                                 }
                             `}
                         >
+                            {/* SEARCH ICON */}
                             <Search className="absolute left-5 w-5 h-5 text-[#C46A2B]" />
+
+                            {/* INPUT FIELD */}
                             <input
                                 type="text"
                                 value={query}
@@ -64,6 +77,8 @@ function HomeSearchSection() {
                                 placeholder="Latte, Cappuccino, Cold Brew..."
                                 className="w-full pl-14 pr-24 py-4 bg-transparent text-[#2B1E17] placeholder:text-[#8B7E75] outline-none rounded-2xl"
                             />
+
+                            {/* CLEAR BUTTON */}
                             {query && (
                                 <button
                                     type="button"
@@ -73,6 +88,8 @@ function HomeSearchSection() {
                                     <X className="w-5 h-5" />
                                 </button>
                             )}
+
+                            {/* SEARCH BUTTON */}
                             <button
                                 type="submit"
                                 className="absolute right-2 px-5 py-2 bg-[#C46A2B] hover:bg-[#A85A24] text-white font-medium rounded-xl transition-all duration-300"
@@ -92,16 +109,23 @@ function HomeSearchSection() {
                                     className="flex items-center gap-4 p-4 hover:bg-[#F5F1EB] transition-colors"
                                     onClick={() => setQuery('')}
                                 >
+                                    {/* PRODUCT ICON */}
                                     <div className="w-12 h-12 bg-gradient-to-br from-[#5D4037] to-[#3E2723] rounded-lg flex items-center justify-center">
                                         <div className="w-6 h-6 rounded-full border-2 border-[#8D6E63] bg-[#4E342E]" />
                                     </div>
+
+                                    {/* PRODUCT INFO */}
                                     <div className="flex-1 min-w-0">
                                         <p className="font-medium text-[#2B1E17]">{product.name}</p>
                                         <p className="text-sm text-[#8B7E75]">{product.category}</p>
                                     </div>
+
+                                    {/* PRICE */}
                                     <span className="font-bold text-[#C46A2B]">₺{product.price}</span>
                                 </Link>
                             ))}
+
+                            {/* VIEW ALL RESULTS */}
                             <Link
                                 to={`/menu?search=${encodeURIComponent(query)}`}
                                 className="block p-4 text-center text-[#C46A2B] font-medium hover:bg-[#F5F1EB] border-t border-[#E8E0D5]"

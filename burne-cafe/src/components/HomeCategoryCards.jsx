@@ -1,60 +1,63 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Coffee, Snowflake, IceCream, Droplets } from 'lucide-react';
+import { ArrowRight, Coffee, Snowflake, IceCream, Droplets, LayoutGrid } from 'lucide-react';
 import products from '../data/products.json';
 
-// Kategori meta bilgileri (ikon ve renkler) - Kahve Tonları
-const categoryMeta = {
-    "Sıcak Kahveler": {
-        icon: Coffee,
-        color: 'from-[#D4A574]/40 to-[#C46A2B]/30',
-        borderColor: 'border-[#C46A2B]/50',
-        description: 'Sıcacık kahve keyfi'
-    },
-    "Soğuk Kahveler": {
-        icon: Snowflake,
-        color: 'from-[#8B7E75]/30 to-[#6B5E55]/30',
-        borderColor: 'border-[#8B7E75]/40',
-        description: 'Serinletici buzlu kahveler'
-    },
-    "Frappeler": {
-        icon: IceCream,
-        color: 'from-[#A08070]/30 to-[#7A6A5A]/30',
-        borderColor: 'border-[#A08070]/40',
-        description: 'Kremsi buzlu lezzetler'
-    },
-    "Serinletici İçecekler": {
-        icon: Droplets,
-        color: 'from-[#9A8A7A]/25 to-[#7A6A5A]/25',
-        borderColor: 'border-[#9A8A7A]/35',
-        description: 'Ferahlatıcı içecekler'
-    }
-};
-
-// products.json'dan kategorileri dinamik olarak çek
-const categories = [...new Set(products.map(p => p.category))].map(categoryName => {
-    const meta = categoryMeta[categoryName] || {
-        icon: Coffee,
-        color: 'from-gray-700/30 to-gray-800/30',
-        borderColor: 'border-gray-700/40',
-        description: 'Lezzetli içecekler'
-    };
-    return {
-        id: categoryName.toLowerCase().replace(/\s+/g, '-').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g'),
-        name: categoryName,
-        description: meta.description,
-        Icon: meta.icon,
-        color: meta.color,
-        borderColor: meta.borderColor,
-        count: products.filter(p => p.category === categoryName).length
-    };
-});
-
 function HomeCategoryCards() {
+    
+    const categoryMeta = {
+        "Sıcak Kahveler": {
+            icon: Coffee,
+            color: 'from-[#D4A574]/40 to-[#C46A2B]/30',
+            borderColor: 'border-[#C46A2B]/50',
+            description: 'Sıcacık kahve keyfi'
+        },
+        "Soğuk Kahveler": {
+            icon: Snowflake,
+            color: 'from-[#8B7E75]/30 to-[#6B5E55]/30',
+            borderColor: 'border-[#8B7E75]/40',
+            description: 'Serinletici buzlu kahveler'
+        },
+        "Frappeler": {
+            icon: IceCream,
+            color: 'from-[#A08070]/30 to-[#7A6A5A]/30',
+            borderColor: 'border-[#A08070]/40',
+            description: 'Kremsi buzlu lezzetler'
+        },
+        "Serinletici İçecekler": {
+            icon: Droplets,
+            color: 'from-[#9A8A7A]/25 to-[#7A6A5A]/25',
+            borderColor: 'border-[#9A8A7A]/35',
+            description: 'Ferahlatıcı içecekler'
+        }
+    };
+
+    const categories = [...new Set(products.map(p => p.category))].map(categoryName => {
+        const meta = categoryMeta[categoryName] || {
+            icon: Coffee,
+            color: 'from-gray-700/30 to-gray-800/30',
+            borderColor: 'border-gray-700/40',
+            description: 'Lezzetli içecekler'
+        };
+        return {
+            id: categoryName.toLowerCase().replace(/\s+/g, '-').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g'),
+            name: categoryName,
+            description: meta.description,
+            Icon: meta.icon,
+            color: meta.color,
+            borderColor: meta.borderColor,
+            count: products.filter(p => p.category === categoryName).length
+        };
+    });
+
     return (
         <section className="py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
                 {/* SECTION HEADER */}
                 <div className="text-center mb-12">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4">
+                        <LayoutGrid className="w-4 h-4 text-[#C46A2B]" />
+                    </div>
                     <h2 className="font-heading text-3xl md:text-4xl text-[#2B1E17] mb-4">
                         Kategoriler
                     </h2>
@@ -70,9 +73,17 @@ function HomeCategoryCards() {
                             key={category.id}
                             to={`/menu?category=${category.id}`}
                             className={`
-                                group relative p-6 rounded-2xl border-2 ${category.borderColor}
-                                bg-gradient-to-br ${category.color}
-                                hover:scale-105 transition-all duration-300
+                                group 
+                                relative 
+                                p-6 
+                                rounded-2xl 
+                                border-2 
+                                ${category.borderColor}
+                                bg-gradient-to-br 
+                                ${category.color}
+                                hover:scale-105 
+                                transition-all 
+                                duration-300
                                 overflow-hidden
                             `}
                         >
@@ -81,7 +92,7 @@ function HomeCategoryCards() {
                                 <category.Icon className="w-6 h-6 text-[#2B1E17]" />
                             </div>
 
-                            {/* TEXT */}
+                            {/* CATEGORY INFO */}
                             <h3 className="font-semibold text-[#2B1E17] mb-1">
                                 {category.name}
                             </h3>

@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-react';
 function HomeHeroBanner() {
     return (
         <section className="relative overflow-hidden">
+
             {/* BACKGROUND GRADIENT */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#2B1E17] via-[#3D2B20] to-[#2B1E17]" />
 
@@ -13,8 +14,10 @@ function HomeHeroBanner() {
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
+
                     {/* TEXT CONTENT */}
                     <div className="text-center md:text-left">
+
                         {/* TAGLINE */}
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#C46A2B]/20 rounded-full mb-6">
                             <span className="w-2 h-2 bg-[#C46A2B] rounded-full" />
@@ -74,6 +77,7 @@ function HomeHeroBanner() {
                     {/* IMAGE SIDE */}
                     <div className="relative hidden md:block">
                         <div className="relative w-full aspect-square max-w-md mx-auto">
+
                             {/* GLOWING CIRCLE */}
                             <div className="absolute inset-0 bg-gradient-to-br from-[#C46A2B]/30 to-transparent rounded-full" />
 

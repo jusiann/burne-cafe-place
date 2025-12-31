@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
+// SLIDE DATA
 const slides = [
     {
         id: 1,
@@ -31,6 +32,7 @@ function HomeHeroSlider() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
 
+    // NEXT SLIDE HANDLER
     const nextSlide = useCallback(() => {
         if (isTransitioning) return;
         setIsTransitioning(true);
@@ -38,6 +40,7 @@ function HomeHeroSlider() {
         setTimeout(() => setIsTransitioning(false), 700);
     }, [isTransitioning]);
 
+    // GO TO SPECIFIC SLIDE
     const goToSlide = (index) => {
         if (isTransitioning || index === currentSlide) return;
         setIsTransitioning(true);
@@ -45,7 +48,7 @@ function HomeHeroSlider() {
         setTimeout(() => setIsTransitioning(false), 700);
     };
 
-    // Auto-slide
+    // AUTO SLIDE EFFECT
     useEffect(() => {
         const interval = setInterval(nextSlide, 6000);
         return () => clearInterval(interval);
@@ -53,19 +56,24 @@ function HomeHeroSlider() {
 
     return (
         <section className="relative h-[70vh] min-h-[400px] max-h-[600px] overflow-hidden bg-[#2B1E17]">
+
             {/* SLIDES */}
             {slides.map((slide, index) => (
                 <div
                     key={slide.id}
                     className={`
-                        absolute inset-0 transition-all duration-700 ease-in-out
+                        absolute 
+                        inset-0 
+                        transition-all 
+                        duration-700 
+                        ease-in-out
                         ${index === currentSlide
                             ? 'opacity-100 scale-100 z-10'
                             : 'opacity-0 scale-105 z-0'
                         }
                     `}
                 >
-                    {/* BACKGROUND IMAGE - Using gradient placeholder */}
+                    {/* BACKGROUND IMAGE */}
                     <div
                         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                         style={{
@@ -73,10 +81,10 @@ function HomeHeroSlider() {
                             backgroundColor: '#3E2723'
                         }}
                     >
-                        {/* Fallback gradient pattern for missing images */}
+                        {/* FALLBACK GRADIENT PATTERN */}
                         <div className="absolute inset-0 bg-gradient-to-br from-[#3E2723] via-[#5D4037] to-[#4E342E]" />
 
-                        {/* Decorative coffee pattern */}
+                        {/* DECORATIVE COFFEE PATTERN */}
                         <div className="absolute inset-0 opacity-10">
                             <div className="absolute top-1/4 left-1/4 w-64 h-64 border-2 border-[#C46A2B] rounded-full" />
                             <div className="absolute top-1/3 right-1/4 w-48 h-48 border border-[#C46A2B] rounded-full" />
@@ -84,18 +92,31 @@ function HomeHeroSlider() {
                         </div>
                     </div>
 
-                    {/* GRADIENT OVERLAY */}
+                    {/* GRADIENT OVERLAYS */}
                     <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#2B1E17]/60 to-transparent" />
 
-                    {/* CONTENT */}
+                    {/* SLIDE CONTENT */}
                     <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
                         <div className="max-w-xl overflow-hidden">
-                            {/* TAGLINE - Sağdan sola animasyon */}
+
+                            {/* TAGLINE */}
                             <div
                                 className={`
-                                    inline-flex items-center gap-2 px-3 py-1.5 bg-[#C46A2B]/20 backdrop-blur-sm rounded-full mb-4 border border-[#C46A2B]/30
-                                    transition-all duration-700 ease-out
+                                    inline-flex 
+                                    items-center 
+                                    gap-2 
+                                    px-3 
+                                    py-1.5 
+                                    bg-[#C46A2B]/20 
+                                    backdrop-blur-sm 
+                                    rounded-full 
+                                    mb-4 
+                                    border 
+                                    border-[#C46A2B]/30
+                                    transition-all 
+                                    duration-700 
+                                    ease-out
                                     ${index === currentSlide
                                         ? 'opacity-100 translate-x-0'
                                         : 'opacity-0 translate-x-12'
@@ -109,11 +130,19 @@ function HomeHeroSlider() {
                                 </span>
                             </div>
 
-                            {/* MAIN HEADING - Sağdan sola animasyon */}
+                            {/* MAIN HEADING */}
                             <h1
                                 className={`
-                                    font-heading text-3xl md:text-4xl lg:text-5xl text-white mb-4 leading-tight
-                                    transition-all duration-700 ease-out
+                                    font-heading 
+                                    text-3xl 
+                                    md:text-4xl 
+                                    lg:text-5xl 
+                                    text-white 
+                                    mb-4 
+                                    leading-tight
+                                    transition-all 
+                                    duration-700 
+                                    ease-out
                                     ${index === currentSlide
                                         ? 'opacity-100 translate-x-0'
                                         : 'opacity-0 translate-x-16'
@@ -132,11 +161,16 @@ function HomeHeroSlider() {
                                 ))}
                             </h1>
 
-                            {/* DESCRIPTION - Sağdan sola animasyon */}
+                            {/* DESCRIPTION */}
                             <p
                                 className={`
-                                    text-white/70 text-base md:text-lg max-w-md
-                                    transition-all duration-700 ease-out
+                                    text-white/70 
+                                    text-base 
+                                    md:text-lg 
+                                    max-w-md
+                                    transition-all 
+                                    duration-700 
+                                    ease-out
                                     ${index === currentSlide
                                         ? 'opacity-100 translate-x-0'
                                         : 'opacity-0 translate-x-20'
@@ -158,7 +192,9 @@ function HomeHeroSlider() {
                         key={index}
                         onClick={() => goToSlide(index)}
                         className={`
-                            transition-all duration-300 rounded-full
+                            transition-all 
+                            duration-300 
+                            rounded-full
                             ${index === currentSlide
                                 ? 'w-8 h-2 bg-[#C46A2B]'
                                 : 'w-2 h-2 bg-white/40 hover:bg-white/60'
