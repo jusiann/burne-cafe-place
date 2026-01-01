@@ -3,7 +3,6 @@ import { Star, ShoppingCart, ChevronRight } from 'lucide-react';
 import products from '../data/products.json';
 
 function HomeFeaturedProducts() {
-
     const hotCoffees = products.filter(p => p.isPopular && p.category === 'Sıcak Kahveler');
     const coldCoffees = products.filter(p => p.isPopular && p.category === 'Soğuk Kahveler');
     const frappes = products.filter(p => p.isPopular && p.category === 'Frappeler');

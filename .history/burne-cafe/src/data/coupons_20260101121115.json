@@ -1,0 +1,20 @@
+[
+  {
+    "code": "ILK15",
+    "discountType": "percentage",
+    "minOrderAmount": 0,
+    "isActive": true
+  },
+  {
+    "code": "IKILIM20",
+    "discountType": "percentage",
+    "minOrderAmount": 0,
+    "isActive": true
+  },
+  {
+    "code": "MIEL10",
+    "discountType": "percentage",
+    "minOrderAmount": 0,
+    "isActive": true
+  }
+]

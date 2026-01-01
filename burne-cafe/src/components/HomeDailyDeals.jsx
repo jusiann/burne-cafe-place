@@ -2,10 +2,30 @@ import { Link } from 'react-router-dom';
 import { Clock, Percent, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import products from '../data/products.json';
+import coupons from '../data/coupons.json';
 
 function HomeDailyDeals() {
     const discountedProducts = products.filter(p => p.discount > 0).slice(0, 2);
     const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 51, seconds: 45 });
+    const [activeCouponIndex, setActiveCouponIndex] = useState(0);
+
+    const couponDetails = {
+        'ILK15': {
+            title: 'İlk Siparişe Özel',
+            description: 'Tüm Kahvelerde %15 İndirim',
+            conditions: 'İlk siparişinizde geçerlidir.'
+        },
+        'IKILIM20': {
+            title: 'For Lovers',
+            description: 'Americano & Latte %20 İndirim',
+            conditions: 'Americano ve Latte bir arada alındığında geçerlidir.'
+        },
+        'MIEL10': {
+            title: 'Le Miêl',
+            description: 'Miel Ekstra Ürünlerde %10 İndirim',
+            conditions: 'Miel kahve için ekstra ürünlerde geçerlidir.'
+        }
+    };
 
     // COUNTDOWN TIMER EFFECT
     useEffect(() => {
@@ -33,6 +53,15 @@ function HomeDailyDeals() {
         return () => clearInterval(timer);
     }, []);
 
+    // COUPON CAROUSEL EFFECT
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveCouponIndex((prev) => (prev + 1) % coupons.length);
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <section className="py-20 bg-gradient-to-br from-[#2B1E17] via-[#3D2B20] to-[#2B1E17] relative overflow-hidden">
 
@@ -44,11 +73,8 @@ function HomeDailyDeals() {
 
                 {/* SECTION HEADER */}
                 <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#C46A2B]/20 rounded-full mb-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4">
                         <Percent className="w-4 h-4 text-[#C46A2B]" />
-                        <span className="text-[#C46A2B] text-sm font-medium">
-                            Günlük Fırsatlar
-                        </span>
                     </div>
                     <h2 className="font-heading text-3xl md:text-4xl text-white mb-4">
                         Günün Kampanyaları
@@ -72,29 +98,100 @@ function HomeDailyDeals() {
                     ))}
                 </div>
 
-                {/* PROMO BANNER */}
-                <div className="mt-12 p-6 md:p-8 bg-gradient-to-r from-[#C46A2B] to-[#A85A24] rounded-2xl text-center max-w-4xl mx-auto">
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-                        <div className="flex items-center gap-3">
-                            <Percent className="w-10 h-10 text-white" />
-                            <div className="text-left">
-                                <p className="text-white/80 text-sm">İlk Siparişe Özel</p>
-                                <p className="text-white font-bold text-xl">%15 İNDİRİM</p>
+                {/* PROMO BANNER - COUPON CAROUSEL */}
+                <div className="mt-12 p-4 bg-gradient-to-r from-[#C46A2B] to-[#A85A24] rounded-2xl max-w-4xl mx-auto relative overflow-hidden">
+                    <div className="flex items-center justify-between gap-3 md:gap-4">
+                        {/* LEFT - COUPON CONTENT */}
+                        <div className="flex-1 min-w-0">
+                            <div className="relative h-24 md:h-16">
+                                {coupons.map((coupon, index) => {
+                                    const details = couponDetails[coupon.code];
+                                    return (
+                                        <div
+                                            key={coupon.code}
+                                            className={`
+                                                absolute 
+                                                inset-0 
+                                                transition-all 
+                                                duration-700 
+                                                ease-out
+                                                ${index === activeCouponIndex
+                                                    ? 'opacity-100 translate-y-0 z-10 pointer-events-auto delay-300'
+                                                    : 'opacity-0 translate-y-8 z-0 pointer-events-none delay-0'
+                                                }
+                                            `}
+                                        >
+                                            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-0">
+                                                {/* ICON AND TEXT */}
+                                                <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+                                                    <Percent className="w-8 h-8 md:w-9 md:h-9 text-white flex-shrink-0" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-white/90 text-xs md:text-sm font-medium mb-0.5">{details?.title}</p>
+                                                        <p className="text-white font-bold text-base md:text-lg leading-tight">{details?.description}</p>
+                                                        <p className="text-white/80 text-xs leading-snug line-clamp-1">{details?.conditions}</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* DIVIDER - DESKTOP ONLY */}
+                                                <div className="hidden md:block h-12 w-px bg-gradient-to-b from-white/20 via-white/40 to-white/20 mx-3" />
+
+                                                {/* ACTION BUTTONS */}
+                                                <div className="flex flex-row gap-2 w-full md:w-auto md:flex-shrink-0 md:mr-3">
+                                                    <div className="flex-1 md:flex-initial bg-white/20 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/30">
+                                                        <p className="text-white text-xs text-center whitespace-nowrap">
+                                                            <span className="font-normal">Kod: </span>
+                                                            <span className="font-bold tracking-wider">{coupon.code}</span>
+                                                        </p>
+                                                    </div>
+                                                    <Link
+                                                        to="/menu"
+                                                        className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-white text-[#C46A2B] text-sm font-semibold rounded-lg hover:bg-white/90 hover:shadow-lg transition-all duration-300 whitespace-nowrap"
+                                                    >
+                                                        Sipariş Ver
+                                                        <ChevronRight className="w-4 h-4" />
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
-                        <div className="hidden md:block w-px h-12 bg-white/30" />
-                        <div>
-                            <p className="text-white/90">
-                                Kupon kodu: <span className="font-bold">KAHVE15</span>
-                            </p>
+
+                        {/* RIGHT - VERTICAL INDICATORS */}
+                        <div className="flex flex-col items-center gap-3 py-2 flex-shrink-0">
+                            {coupons.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setActiveCouponIndex(index)}
+                                    className={`
+                                        relative
+                                        w-3
+                                        flex
+                                        items-center
+                                        justify-center
+                                        transition-all 
+                                        duration-500
+                                        cursor-pointer
+                                        ${index === activeCouponIndex ? 'h-12 md:h-14' : 'h-6 md:h-7'}
+                                    `}
+                                >
+                                    <span
+                                        className={`
+                                            w-1 
+                                            h-full
+                                            rounded-full 
+                                            transition-all 
+                                            duration-500
+                                            ${index === activeCouponIndex
+                                                ? 'bg-white'
+                                                : 'bg-white/40 hover:bg-white/60'
+                                            }
+                                        `}
+                                    />
+                                </button>
+                            ))}
                         </div>
-                        <Link
-                            to="/menu"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#C46A2B] font-medium rounded-xl hover:bg-white/90 hover:shadow-2xl transition-all duration-300"
-                        >
-                            Sipariş Ver
-                            <ChevronRight className="w-5 h-5" />
-                        </Link>
                     </div>
                 </div>
             </div>
@@ -117,7 +214,7 @@ function TimeBlock({ value, label }) {
 }
 
 // DEAL CARD COMPONENT
-function DealCard({ product }) { 
+function DealCard({ product }) {
     const discountedPrice = product.price - (product.price * product.discount / 100);
 
     return (
@@ -144,7 +241,7 @@ function DealCard({ product }) {
                         %{product.discount}
                     </span>
                 </div>
-                
+
                 {/* LIMITED TIME BADGE */}
                 <div className="flex items-center gap-2 mt-3">
                     <Clock className="w-4 h-4 text-[#C46A2B]" />

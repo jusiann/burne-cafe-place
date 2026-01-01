@@ -3,7 +3,6 @@ import { ArrowRight, Coffee, Snowflake, IceCream, Droplets, LayoutGrid } from 'l
 import products from '../data/products.json';
 
 function HomeCategoryCards() {
-    
     const categoryMeta = {
         "Sıcak Kahveler": {
             icon: Coffee,

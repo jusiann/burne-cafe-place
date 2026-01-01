@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "code": "ILK15",
+    "title": "İlk Siparişe Özel",
+    "description": "%15 İndirim",
+    "discountType": "percentage",
+    "discountValue": 15,
+    "minOrderAmount": 0,
+    "isActive": true,
+    "applicableProducts": "all",
+    "conditions": "İlk siparişinizde geçerlidir"
+  },
+  {
+    "id": 2,
+    "code": "IKILIM20",
+    "title": "İkili Kombo",
+    "description": "Americano & Latte",
+    "discountType": "percentage",
+    "discountValue": 20,
+    "minOrderAmount": 0,
+    "isActive": true,
+    "applicableProducts": ["Americano", "Latte", "Iced Americano", "Iced Latte"],
+    "conditions": "Americano ve Latte bir arada alındığında geçerlidir",
+    "requiresBoth": true
+  },
+  {
+    "id": 3,
+    "code": "MIEL10",
+    "title": "Miel Ekstra",
+    "description": "Ekstra Ürünlerde",
+    "discountType": "percentage",
+    "discountValue": 10,
+    "minOrderAmount": 0,
+    "isActive": true,
+    "applicableProducts": ["Miel"],
+    "applicableExtras": true,
+    "conditions": "Miel kahve için ekstra ürünlerde geçerlidir (badem sütü, ekstra shot vb.)"
+  }
+]

@@ -1,0 +1,55 @@
+[
+  {
+    "id": 1,
+    "code": "ILK15",
+    "description": "İlk siparişe özel %15 indirim",
+    "discountType": "percentage",
+    "discountValue": 15,
+    "minOrderAmount": 0,
+    "isActive": true,
+    "applicableProducts": null,
+    "conditions": {
+      "firstOrder": true
+    }
+  },
+  {
+    "id": 2,
+    "code": "IKILIM20",
+    "description": "Americano ve Latte bir arada alana %20 indirim",
+    "discountType": "percentage",
+    "discountValue": 20,
+    "minOrderAmount": 0,
+    "isActive": true,
+    "applicableProducts": [11, 12, 20, 21],
+    "conditions": {
+      "requiredProducts": [
+        { "productIds": [11, 20], "category": "Americano" },
+        { "productIds": [12, 21], "category": "Latte" }
+      ],
+      "requiresBoth": true
+    }
+  },
+  {
+    "id": 3,
+    "code": "MIEL10",
+    "description": "Miel kahvede badem sütü ve ekstra shoplarda indirim",
+    "discountType": "fixed",
+    "discountValue": 0,
+    "minOrderAmount": 0,
+    "isActive": true,
+    "applicableProducts": [1],
+    "conditions": {
+      "productId": 1,
+      "extraDiscounts": {
+        "milkOptions": [
+          { "name": "Badem Sütü", "discount": 100 }
+        ],
+        "extras": [
+          { "name": "Ekstra Shot (Klasik)", "discount": 50 },
+          { "name": "Ekstra Shot (Yumuşak)", "discount": 50 },
+          { "name": "Bal", "discount": 50 }
+        ]
+      }
+    }
+  }
+]

@@ -1,36 +1,36 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// SLIDE DATA
-const slides = [
-    {
-        id: 1,
-        title: 'Özenle Kavrulmuş',
-        subtitle: 'Her Yudumda Ustalık',
-        description: 'BURNÉ Coffee, kahve çekirdeğinin özenle kavurulma sürecini yansıtan premium bir deneyim sunar.',
-        image: '/images/slides/slide-1.jpg',
-        gradient: 'from-[#2B1E17]/90 via-[#2B1E17]/70 to-transparent'
-    },
-    {
-        id: 2,
-        title: 'Artisan Demleme',
-        subtitle: 'El Yapımı Lezzetler',
-        description: 'Uzman baristalarımız tarafından özenle hazırlanan, her fincan bir sanat eseri.',
-        image: '/images/slides/slide-2.jpg',
-        gradient: 'from-[#2B1E17]/90 via-[#2B1E17]/70 to-transparent'
-    },
-    {
-        id: 3,
-        title: 'Premium Atmosfer',
-        subtitle: 'Kahve Kültürü',
-        description: 'Modern ve sıcak ortamımızda kahvenin tadını çıkarın, anın keyfini yaşayın.',
-        image: '/images/slides/slide-3.jpg',
-        gradient: 'from-[#2B1E17]/90 via-[#2B1E17]/70 to-transparent'
-    }
-];
-
 function HomeHeroSlider() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
+
+    const slides = [
+        {
+            id: 1,
+            title: 'Özenle Kavrulmuş',
+            subtitle: 'Her Yudumda Ustalık',
+            description: 'BURNÉ Coffee, kahve çekirdeğinin özenle kavurulma sürecini yansıtan premium bir deneyim sunar.',
+            image: '/images/slides/slide-1.jpg',
+            gradient: 'from-[#2B1E17]/90 via-[#2B1E17]/70 to-transparent'
+        },
+        {
+            id: 2,
+            title: 'Artisan Demleme',
+            subtitle: 'El Yapımı Lezzetler',
+            description: 'Uzman baristalarımız tarafından özenle hazırlanan, her fincan bir sanat eseri.',
+            image: '/images/slides/slide-2.jpg',
+            gradient: 'from-[#2B1E17]/90 via-[#2B1E17]/70 to-transparent'
+        },
+        {
+            id: 3,
+            title: 'Premium Atmosfer',
+            subtitle: 'Kahve Kültürü',
+            description: 'Modern ve sıcak ortamımızda kahvenin tadını çıkarın, anın keyfini yaşayın.',
+            image: '/images/slides/slide-3.jpg',
+            gradient: 'from-[#2B1E17]/90 via-[#2B1E17]/70 to-transparent'
+        }
+    ];
+
 
     // NEXT SLIDE HANDLER
     const nextSlide = useCallback(() => {
@@ -64,12 +64,12 @@ function HomeHeroSlider() {
                     className={`
                         absolute 
                         inset-0 
-                        transition-all 
+                        transition-opacity 
                         duration-700 
                         ease-in-out
                         ${index === currentSlide
-                            ? 'opacity-100 scale-100 z-10'
-                            : 'opacity-0 scale-105 z-0'
+                            ? 'opacity-100 z-10'
+                            : 'opacity-0 z-0'
                         }
                     `}
                 >
@@ -98,7 +98,7 @@ function HomeHeroSlider() {
 
                     {/* SLIDE CONTENT */}
                     <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-                        <div className="max-w-xl overflow-hidden">
+                        <div className="max-w-xl pr-12 md:pr-0 overflow-hidden">
 
                             {/* TAGLINE */}
                             <div
@@ -115,14 +115,14 @@ function HomeHeroSlider() {
                                     border 
                                     border-[#C46A2B]/30
                                     transition-all 
-                                    duration-700 
+                                    duration-500 
                                     ease-out
                                     ${index === currentSlide
-                                        ? 'opacity-100 translate-x-0'
-                                        : 'opacity-0 translate-x-12'
+                                        ? 'opacity-100 translate-y-0'
+                                        : 'opacity-0 translate-y-6'
                                     }
                                 `}
-                                style={{ transitionDelay: index === currentSlide ? '100ms' : '0ms' }}
+                                style={{ transitionDelay: index === currentSlide ? '150ms' : '0ms' }}
                             >
                                 <span className="w-1.5 h-1.5 bg-[#C46A2B] rounded-full animate-pulse" />
                                 <span className="text-[#C46A2B] text-xs font-medium tracking-wide">
@@ -141,14 +141,14 @@ function HomeHeroSlider() {
                                     mb-4 
                                     leading-tight
                                     transition-all 
-                                    duration-700 
+                                    duration-500 
                                     ease-out
                                     ${index === currentSlide
-                                        ? 'opacity-100 translate-x-0'
-                                        : 'opacity-0 translate-x-16'
+                                        ? 'opacity-100 translate-y-0'
+                                        : 'opacity-0 translate-y-6'
                                     }
                                 `}
-                                style={{ transitionDelay: index === currentSlide ? '200ms' : '0ms' }}
+                                style={{ transitionDelay: index === currentSlide ? '250ms' : '0ms' }}
                             >
                                 {slide.subtitle.split(' ').map((word, i) => (
                                     <span key={i}>
@@ -169,14 +169,14 @@ function HomeHeroSlider() {
                                     md:text-lg 
                                     max-w-md
                                     transition-all 
-                                    duration-700 
+                                    duration-500 
                                     ease-out
                                     ${index === currentSlide
-                                        ? 'opacity-100 translate-x-0'
-                                        : 'opacity-0 translate-x-20'
+                                        ? 'opacity-100 translate-y-0'
+                                        : 'opacity-0 translate-y-6'
                                     }
                                 `}
-                                style={{ transitionDelay: index === currentSlide ? '300ms' : '0ms' }}
+                                style={{ transitionDelay: index === currentSlide ? '350ms' : '0ms' }}
                             >
                                 {slide.description}
                             </p>
@@ -185,23 +185,39 @@ function HomeHeroSlider() {
                 </div>
             ))}
 
-            {/* SLIDE INDICATORS */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+            {/* VERTICAL INDICATORS - RIGHT SIDE */}
+            <div className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 py-2">
                 {slides.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => goToSlide(index)}
                         className={`
+                            relative
+                            w-3
+                            flex
+                            items-center
+                            justify-center
                             transition-all 
-                            duration-300 
-                            rounded-full
-                            ${index === currentSlide
-                                ? 'w-8 h-2 bg-[#C46A2B]'
-                                : 'w-2 h-2 bg-white/40 hover:bg-white/60'
-                            }
+                            duration-500
+                            cursor-pointer
+                            ${index === currentSlide ? 'h-12 md:h-14' : 'h-6 md:h-7'}
                         `}
                         aria-label={`Slide ${index + 1}`}
-                    />
+                    >
+                        <span
+                            className={`
+                                w-1 
+                                h-full
+                                rounded-full 
+                                transition-all 
+                                duration-500
+                                ${index === currentSlide
+                                    ? 'bg-[#C46A2B]'
+                                    : 'bg-white/40 hover:bg-white/60'
+                                }
+                            `}
+                        />
+                    </button>
                 ))}
             </div>
         </section>

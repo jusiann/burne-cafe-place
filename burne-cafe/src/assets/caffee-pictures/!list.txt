@@ -1,0 +1,25 @@
+Miel - Espresso üzerine süt tarçın aroması ve bal eklenerek hazırlanan ve toz tarçın ile süslenen kahve
+Cherry Blossom Zen Latte - Kiraz çiçeği aromalı sıcak sütlü kahve
+Dubai Chocolate Latte - Antep fıstıklı kakaolu sıcak sütlü kahve
+Cappucino - Eşit oranlı espresso sıcak süt ve süt köpüğünün bir araya getirilmesiyle hazırlanan köpüklü kahve
+Cherry Brownie Latte - Kiraz çiçeği aromalı kakaolu sıcak sütlü kahve
+Caramel Macchiato - Sıcak süt ve karamel aromasının katmanlı olarak servis edildiği tatlı kahve
+Mocha - Espresso ve sıcak süt ile hazırlanan kakaolu tatlı kahve
+White Chocolate Mocha - Espresso ve sıcak süt ile hazırlanan vanilya ve beyaz çikolata aromalı tatlı kahve
+Salted Caramel Latte - Tuzlu karamel aromalı sütlü kahve
+Filtre Kahve - Öğütülmüş kahve çekirdeklerinden filtrelerden geçirilerek sıcak su ile demlenmesiyle hazırlanan kahve
+Americano - Espresso üzerine sıcak su eklenerek hazırlanan kahve
+Latte - Espresso ve sıcak süt ile hazırlanan yumuşak içimli kahve
+Iced Coconut Latte - Hindistancevizi aromalı sütlü buzlu kahve
+Cookie Crumble Mocha Frappe - Soğuk lattenin bisküvi aroması ile bir araya geldiği buzlu kahve
+Chocolate Cookie Frappe - Bisküvi aromalı sütlü buzlu kahve
+Iced Caramel Bubble Latte
+Iced Caramel Macchiato - Süt espresso ve karamel aromasının katmanlı olarak servis edildiği tatlı ve buzlu kahve
+Iced Americano - Espresso üzerine su ve buz eklenerek hazırlanan kahve
+Iced Latte - Espresso ve süt ile hazırlanan buzlu kahve
+Iced Salted Caramel Latte - Tuzlu karamel aromalı sütlü buzlu kahve
+Black Eye - Filtre kahve içinde iki shot espresso eklenerek hazırlanan kahve
+Minty Lemonade - Nane aromalı buzlu limonata
+Freshae Cool Lime & Mango - Misket limonu ve nane aromalı buzlu içeceğin mangolu sos ile bir araya geldiği serinletici bir içecek
+Iced Mint Latte - Nane aromalı sütlü buzlu kahve
+Espresso Frappe - Espresso buz ve sütün karıştırılarak hazırlandığı bir kahve çeşididir.
