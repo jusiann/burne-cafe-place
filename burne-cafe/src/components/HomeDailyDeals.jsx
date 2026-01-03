@@ -199,7 +199,7 @@ function HomeDailyDeals() {
     );
 }
 
-// TIME BLOCK COMPONENT
+/* TIME BLOCK COMPONENT */
 function TimeBlock({ value, label }) {
     return (
         <div className="text-center">
@@ -213,13 +213,13 @@ function TimeBlock({ value, label }) {
     );
 }
 
-// DEAL CARD COMPONENT
+/* DEAL CARD COMPONENT */
 function DealCard({ product }) {
     const discountedPrice = product.price - (product.price * product.discount / 100);
 
     return (
         <Link
-            to={`/urun/${product.id}`}
+            to={`/product/${product.id}`}
             className="group flex gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/15 transition-all duration-300"
         >
             {/* PRODUCT IMAGE */}

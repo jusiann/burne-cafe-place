@@ -3,6 +3,7 @@ import { Menu, X, ShoppingCart, Search } from 'lucide-react';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useLocation, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import products from '../data/products.json';
+import { useCart } from '../context/CartContext';
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,7 +18,8 @@ function Navbar() {
   const activeSearchQuery = searchParams.get('search') || '';
   const hasActiveSearch = activeSearchQuery.trim() !== '';
 
-  const totalItems = 0;
+  const { cartTotals } = useCart();
+  const totalItems = cartTotals.itemCount;
 
   const filteredProducts = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -285,9 +287,7 @@ function Navbar() {
             >
               <ShoppingCart className="w-6 h-6 transition-transform group-hover:scale-110" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#C46A2B] text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                  {totalItems > 99 ? '99+' : totalItems}
-                </span>
+                <span className="absolute top-0 right-0 w-4 h-4 bg-[#C46A2B] rounded-full border-2 border-white animate-pulse" />
               )}
               {/* ACTIVE INDICATOR */}
               <div

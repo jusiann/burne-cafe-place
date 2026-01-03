@@ -1,6 +1,10 @@
+import Layout from '../components/Layout';
+
 function OrderHistory() {
     return (
-        <div>OrderHistory</div>
+        <Layout>
+            <div>OrderHistory</div>
+        </Layout>
     )
 }
 

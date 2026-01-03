@@ -1,7 +1,12 @@
+import CartSection from '../components/CartSection';
+import Layout from '../components/Layout';
+
 function Cart() {
     return (
-        <div>Cart</div>
-    )
+        <Layout>
+            <CartSection />
+        </Layout>
+    );
 }
 
 export default Cart;

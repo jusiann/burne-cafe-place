@@ -1,6 +1,10 @@
+import Layout from '../components/Layout';
+
 function Checkout() {
     return (
-        <div>Checkout</div>
+        <Layout>
+            <div>Checkout</div>
+        </Layout>
     )
 }
 

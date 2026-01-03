@@ -20,7 +20,7 @@ function Layout({
             {showNavbar && <Navbar />}
 
             {/* MAIN CONTENT */}
-            <main className="flex-1">
+            <main className="flex-1 pt-20 pb-2">
                 {children}
             </main>
 
