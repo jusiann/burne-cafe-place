@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import coupons from '../data/coupons.json';
+import ordersData from '../data/orders.json';
 
 const CART_STORAGE_KEY = 'burne-cafe-cart';
 const COUPON_STORAGE_KEY = 'burne-cafe-coupon';
@@ -50,9 +51,9 @@ function CartProvider({ children }) {
     const [orders, setOrders] = useState(() => {
         try {
             const stored = localStorage.getItem(ORDERS_STORAGE_KEY);
-            return stored ? JSON.parse(stored) : [];
+            return stored ? JSON.parse(stored) : ordersData;
         } catch {
-            return [];
+            return ordersData;
         }
     });
 
@@ -70,9 +71,68 @@ function CartProvider({ children }) {
         }
     }, [appliedCoupon]);
 
+    const validateCouponConditions = useCallback((coupon, cartItems, currentOrders) => {
+        if (!coupon) return { valid: false, message: '' };
+
+        // 1. Min Tutar Kontrolü
+        const subtotal = cartItems.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+        if (subtotal < coupon.minOrderAmount) {
+            return { valid: false, message: `Bu kupon için minimum sepet tutarı ${coupon.minOrderAmount} TL olmalıdır.` };
+        }
+
+        // 2. Özel Kurallar (Hardcoded Validation)
+        // ILK15 - İlk Sipariş
+        if (coupon.code === 'ILK15') {
+            if (currentOrders.length > 0) {
+                return { valid: false, message: 'Bu kupon sadece ilk siparişinizde geçerlidir.' };
+            }
+        }
+
+        // IKILIM20 - Americano (11) & Latte (12)
+        if (coupon.code === 'IKILIM20') {
+            const hasAmericano = cartItems.some(i => i.productId === 11);
+            const hasLatte = cartItems.some(i => i.productId === 12);
+            if (!hasAmericano || !hasLatte) {
+                return { valid: false, message: 'Bu kupon için sepetinizde Americano ve Latte bulunmalıdır.' };
+            }
+        }
+
+        // MIEL10 - Miel (1)
+        if (coupon.code === 'MIEL10') {
+            const mielItems = cartItems.filter(i => i.productId === 1);
+            if (mielItems.length === 0) {
+                return { valid: false, message: 'Bu kupon sadece Miel siparişlerinde geçerlidir.' };
+            }
+
+            // Check if any Miel item has extras that would generate a discount
+            const hasExtras = mielItems.some(item => {
+                const sizePrice = item.size?.price || 0;
+                const milkPrice = item.milkOption?.price || 0;
+                const extrasPrice = item.extras?.reduce((sum, e) => sum + (e.price || 0), 0) || 0;
+                return (sizePrice + milkPrice + extrasPrice) > 0;
+            });
+
+            if (!hasExtras) {
+                return { valid: false, message: 'Bu kupon Miel ürününün ekstraları (boyut, süt vb.) için geçerlidir.' };
+            }
+        }
+
+        return { valid: true, message: '' };
+    }, []);
+
     useEffect(() => {
         localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
     }, [orders]);
+
+    // Sepet değiştiğinde veya sipariş durumunda kupon geçerliliğini kontrol et
+    useEffect(() => {
+        if (appliedCoupon) {
+            const validation = validateCouponConditions(appliedCoupon, items, orders);
+            if (!validation.valid) {
+                setAppliedCoupon(null);
+            }
+        }
+    }, [items, orders, appliedCoupon, validateCouponConditions]);
 
     const generateItemId = useCallback((productId, size, milkOption, extras) => {
         const extrasStr = extras ? extras.sort().join(',') : '';
@@ -158,17 +218,14 @@ function CartProvider({ children }) {
             return { success: false, message: 'Geçersiz kupon kodu' };
         }
 
-        const subtotal = items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-        if (subtotal < coupon.minOrderAmount) {
-            return {
-                success: false,
-                message: `Bu kupon en az ₺${coupon.minOrderAmount} tutarındaki siparişlerde geçerlidir`
-            };
+        const validation = validateCouponConditions(coupon, items, orders);
+        if (!validation.valid) {
+            return { success: false, message: validation.message };
         }
 
         setAppliedCoupon(coupon);
         return { success: true, message: 'Kupon başarıyla uygulandı!' };
-    }, [items]);
+    }, [items, orders, validateCouponConditions]);
 
     const removeCoupon = useCallback(() => {
         setAppliedCoupon(null);
@@ -179,10 +236,36 @@ function CartProvider({ children }) {
 
         let discount = 0;
         if (appliedCoupon) {
-            if (appliedCoupon.discountType === 'percentage') {
-                discount = subtotal * (appliedCoupon.discountValue / 100);
-            } else {
-                discount = appliedCoupon.discountValue;
+            // Kupon gereksinimini tüm kurallara göre kontrol et
+            const validation = validateCouponConditions(appliedCoupon, items, orders);
+
+            if (validation.valid) {
+                if (validation.valid) {
+                    if (appliedCoupon.code === 'MIEL10') {
+                        // MIEL10 Logic: Sadece Miel (id: 1) ürününün ekstraları (boyut, süt, şurup vb.) üzerinden indirim
+                        let mielExtrasTotal = 0;
+                        items.forEach(item => {
+                            if (item.productId === 1) { // Miel ID is 1
+                                const sizePrice = item.size?.price || 0;
+                                const milkPrice = item.milkOption?.price || 0;
+                                const extrasPrice = item.extras?.reduce((sum, e) => sum + (e.price || 0), 0) || 0;
+                                mielExtrasTotal += (sizePrice + milkPrice + extrasPrice) * item.quantity;
+                            }
+                        });
+
+                        if (appliedCoupon.discountType === 'percentage') {
+                            discount = mielExtrasTotal * (appliedCoupon.discountValue / 100);
+                        } else {
+                            // Eğer sabit tutarlı ise direkt uygula (bu case şu an json'da % ama genel destek olsun)
+                            discount = appliedCoupon.discountValue;
+                        }
+                    }
+                    else if (appliedCoupon.discountType === 'percentage') {
+                        discount = subtotal * (appliedCoupon.discountValue / 100);
+                    } else {
+                        discount = appliedCoupon.discountValue;
+                    }
+                }
             }
         }
 
@@ -197,7 +280,7 @@ function CartProvider({ children }) {
             total,
             itemCount: items.reduce((sum, item) => sum + item.quantity, 0)
         };
-    }, [items, appliedCoupon]);
+    }, [items, appliedCoupon, orders, validateCouponConditions]);
 
     const createOrder = useCallback((orderData) => {
         const newOrder = {
@@ -228,6 +311,7 @@ function CartProvider({ children }) {
                 fullAddress: orderData.fullAddress
             },
             deliveryTime: orderData.deliveryTime,
+            customTime: orderData.customTime,
             paymentMethod: orderData.paymentMethod,
             orderNote: orderData.orderNote || '',
             subtotal: cartTotals.subtotal,
@@ -235,7 +319,11 @@ function CartProvider({ children }) {
             discount: cartTotals.discount,
             couponCode: appliedCoupon?.code || null,
             total: cartTotals.total,
-            estimatedDelivery: '30-45 dakika'
+            estimatedDelivery: orderData.deliveryTime === 'asap'
+                ? '15-20 dakika'
+                : orderData.deliveryTime === 'custom' && orderData.customTime
+                    ? orderData.customTime
+                    : '30-45 dakika'
         };
 
         setOrders(prevOrders => [newOrder, ...prevOrders]);

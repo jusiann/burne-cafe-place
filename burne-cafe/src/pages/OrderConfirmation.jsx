@@ -1,11 +1,12 @@
 import Layout from '../components/Layout';
+import OrderConfirmationSection from '../components/OrderConfirmationSection';
 
 function OrderConfirmation() {
   return (
     <Layout>
-      <div>OrderConfirmation</div>
+      <OrderConfirmationSection />
     </Layout>
-  )
+  );
 }
 
 export default OrderConfirmation;

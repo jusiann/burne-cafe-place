@@ -1,11 +1,12 @@
 import Layout from '../components/Layout';
+import OrderHistorySection from '../components/OrderHistorySection';
 
 function OrderHistory() {
     return (
         <Layout>
-            <div>OrderHistory</div>
+            <OrderHistorySection />
         </Layout>
-    )
+    );
 }
 
 export default OrderHistory;

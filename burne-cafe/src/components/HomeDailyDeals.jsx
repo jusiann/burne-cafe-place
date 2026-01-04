@@ -199,7 +199,7 @@ function HomeDailyDeals() {
     );
 }
 
-/* TIME BLOCK COMPONENT */
+// TIME BLOCK COMPONENT
 function TimeBlock({ value, label }) {
     return (
         <div className="text-center">
@@ -213,7 +213,7 @@ function TimeBlock({ value, label }) {
     );
 }
 
-/* DEAL CARD COMPONENT */
+// DEAL CARD COMPONENT
 function DealCard({ product }) {
     const discountedPrice = product.price - (product.price * product.discount / 100);
 

@@ -18,7 +18,7 @@ function HomeFeaturedProducts() {
         ...(refreshing.length > 0 ? refreshing.slice(0, 1) : frappes.slice(0, 1))
     ].slice(0, 4);
 
-    /* PRODUCT CARD COMPONENT */
+    // Product Card Component
     const ProductCard = ({ product }) => {
         const navigate = useNavigate();
         const [isAdded, setIsAdded] = useState(false);

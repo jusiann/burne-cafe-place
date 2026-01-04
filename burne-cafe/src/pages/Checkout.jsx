@@ -1,11 +1,12 @@
 import Layout from '../components/Layout';
+import CheckoutSection from '../components/CheckoutSection';
 
 function Checkout() {
     return (
         <Layout>
-            <div>Checkout</div>
+            <CheckoutSection />
         </Layout>
-    )
+    );
 }
 
 export default Checkout;
