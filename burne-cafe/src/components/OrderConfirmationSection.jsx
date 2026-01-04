@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Clock, Package, Coffee, ArrowRight } from 'lucide-react';
+import { Clock, Package, Coffee, ArrowRight, Tag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 function OrderConfirmationSection() {
@@ -105,7 +105,10 @@ function OrderConfirmationSection() {
                                 </div>
                                 {order.discount > 0 && order.couponCode && (
                                     <div className="flex justify-between text-sm text-[#C46A2B]">
-                                        <span>İndirim ({order.couponCode})</span>
+                                        <div className="flex items-center gap-2">
+                                            <Tag className="w-4 h-4" />
+                                            <span>{order.couponCode}</span>
+                                        </div>
                                         <span>-₺{order.discount.toFixed(2)}</span>
                                     </div>
                                 )}

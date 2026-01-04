@@ -24,9 +24,9 @@
         "totalPrice": 72
       },
       {
-        "productId": 20,
-        "name": "Iced Latte",
-        "image": "/caffee-pictures/iced-latte.jpg",
+        "productId": 12,
+        "name": "Latte",
+        "image": "/caffee-pictures/latte.jpg",
         "quantity": 1,
         "size": {
           "name": "Tall",
@@ -37,9 +37,9 @@
           "price": 0
         },
         "extras": [],
-        "note": "Çilek soslu olsun",
-        "unitPrice": 75,
-        "totalPrice": 75
+        "note": "",
+        "unitPrice": 70,
+        "totalPrice": 70
       }
     ],
     "customer": {
@@ -56,11 +56,11 @@
     "customTime": "",
     "paymentMethod": "online_card",
     "orderNote": "Zili çalmayın lütfen.",
-    "subtotal": 147,
-    "tax": 29.4,
-    "discount": 0,
-    "couponCode": null,
-    "total": 176.4,
+    "subtotal": 142,
+    "tax": 22.72,
+    "discount": 28.4,
+    "couponCode": "IKILIM20",
+    "total": 136.32,
     "estimatedDelivery": "15-20 dakika"
   },
   {

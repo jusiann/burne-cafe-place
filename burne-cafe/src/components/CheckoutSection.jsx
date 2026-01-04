@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Phone, MapPin, Clock, CreditCard, FileText, ShoppingBag, Tag, AlertCircle, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -55,6 +55,7 @@ function CheckoutSection() {
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [showClosedWarning, setShowClosedWarning] = useState(false);
     const [smsCode, setSmsCode] = useState('');
     const [pendingOrder, setPendingOrder] = useState(null);
 
@@ -64,27 +65,40 @@ function CheckoutSection() {
         { value: 'custom', label: 'Belirli Bir Saat' }
     ];
 
-    /* GENERATE TIME OPTIONS */
-    const generateTimeOptions = () => {
+    /* GENERATE TIME OPTIONS WITH MEMOIZATION */
+    const timeOptions = useMemo(() => {
         const options = [];
         const now = new Date();
         const currentHour = now.getHours();
 
-        for (let hour = currentHour + 1; hour < 24; hour++) {
+        // Çalışma saatleri: 08:00 - 23:00
+        const OPENING_HOUR = 8;
+        const CLOSING_HOUR = 23;
+
+        // Şu anki saatten sonraki saat
+        let startHour = currentHour + 1;
+
+        // Eğer çalışma saatlerinden önce ise, açılış saatinden başla
+        if (currentHour < OPENING_HOUR) {
+            startHour = OPENING_HOUR;
+        }
+
+        // Çalışma saatleri bittiyse seçenek gösterme
+        if (currentHour >= CLOSING_HOUR) {
+            return options; // Boş array dön
+        }
+
+        // Saat seçeneklerini oluştur (1'er saat)
+        for (let hour = startHour; hour <= CLOSING_HOUR; hour++) {
             const displayHour = String(hour).padStart(2, '0');
             options.push({
                 value: `${hour}:00`,
                 label: `${displayHour}:00`
             });
-            options.push({
-                value: `${hour}:30`,
-                label: `${displayHour}:30`
-            });
         }
-        return options;
-    };
 
-    const timeOptions = generateTimeOptions();
+        return options;
+    }, []); // Empty dependency array - calculate once on mount
 
     /* PAYMENT METHOD OPTIONS */
     const paymentMethods = [
@@ -96,6 +110,13 @@ function CheckoutSection() {
     /* HANDLE INPUT CHANGE */
     const handleChange = (e) => {
         const { name, value } = e.target;
+        
+        // Eğer "Belirli Bir Saat" seçiliyorsa ve çalışma saatleri dışındaysak uyarı göster
+        if (name === 'deliveryTime' && value === 'custom' && timeOptions.length === 0) {
+            setShowClosedWarning(true);
+            return;
+        }
+        
         setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
@@ -147,6 +168,18 @@ function CheckoutSection() {
     /* HANDLE SUBMIT */
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Çalışma saatleri kontrolü
+        const now = new Date();
+        const currentHour = now.getHours();
+        const OPENING_HOUR = 8;
+        const CLOSING_HOUR = 23;
+
+        if (currentHour < OPENING_HOUR || currentHour >= CLOSING_HOUR) {
+            setShowClosedWarning(true);
+            setIsSubmitting(false);
+            return;
+        }
 
         if (!validateForm()) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -578,6 +611,51 @@ function CheckoutSection() {
                         </div>
                     </div>
                 </form>
+
+                {/* CLOSED WARNING MODAL */}
+                {showClosedWarning && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-2xl max-w-md w-full p-6 relative animate-fade-in">
+                            {/* CLOSE BUTTON */}
+                            <button
+                                onClick={() => setShowClosedWarning(false)}
+                                className="absolute top-4 right-4 p-2 hover:bg-[#F5F1EB] rounded-lg transition-colors"
+                            >
+                                <X className="w-5 h-5 text-[#8B7E75]" />
+                            </button>
+
+                            {/* HEADER */}
+                            <div className="text-center mb-6">
+                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                                    <Clock className="w-8 h-8 text-red-600" />
+                                </div>
+                                <h2 className="font-heading text-2xl text-[#2B1E17] mb-2">Şuan Kapalıyız</h2>
+                                <p className="text-[#8B7E75] text-sm mb-4">Üzgünüz, çalışma saatlerimiz dışındasınız.</p>
+                            </div>
+
+                            {/* INFO */}
+                            <div className="bg-[#F5F1EB] rounded-xl p-4 mb-6">
+                                <p className="text-sm text-[#2B1E17] mb-2 font-semibold">
+                                    Çalışma Saatlerimiz:
+                                </p>
+                                <p className="text-lg font-bold text-[#C46A2B]">
+                                    08:00 - 23:00
+                                </p>
+                                <p className="text-xs text-[#8B7E75] mt-2">
+                                    Bu saatler arasında sipariş verebilirsiniz.
+                                </p>
+                            </div>
+
+                            {/* CLOSE BUTTON */}
+                            <button
+                                onClick={() => setShowClosedWarning(false)}
+                                className="w-full py-4 rounded-xl font-semibold bg-[#C46A2B] text-white hover:bg-[#A85A24] transition-all"
+                            >
+                                Anladım
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 {/* PAYMENT VERIFICATION MODAL */}
                 {showPaymentModal && (

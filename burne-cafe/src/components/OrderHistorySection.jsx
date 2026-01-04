@@ -11,9 +11,9 @@ function OrderHistorySection() {
 
     /* STATUS ICON MAPPING */
     const statusIcons = {
-        'preparing': { icon: Clock, color: 'text-orange-500', bg: 'bg-orange-100' },
-        'on_the_way': { icon: Truck, color: 'text-blue-500', bg: 'bg-blue-100' },
-        'delivered': { icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-100' }
+        'preparing': { icon: Clock, color: 'text-[#C46A2B]', bg: 'bg-[#C46A2B]/10' },
+        'on_the_way': { icon: Truck, color: 'text-[#9B7F57]', bg: 'bg-[#9B7F57]/10' },
+        'delivered': { icon: CheckCircle, color: 'text-[#6B5D4F]', bg: 'bg-[#6B5D4F]/10' }
     };
 
     /* HANDLE REORDER */

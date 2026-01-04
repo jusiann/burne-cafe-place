@@ -293,9 +293,9 @@ function CartSection() {
                                             confirmationModal.onConfirm();
                                             closeConfirmation();
                                         }}
-                                        className="px-4 py-2 rounded-xl bg-red-500 text-white font-medium hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
+                                        className="px-4 py-2 rounded-xl bg-[#C46A2B] text-white font-medium hover:bg-[#A85A24] transition-colors shadow-lg shadow-[#C46A2B]/20"
                                     >
-                                        Evet, Sil
+                                        Sil
                                     </button>
                                 </div>
                             </div>
