@@ -149,7 +149,7 @@ function OrderConfirmationSection() {
                 </div>
 
                 {/* ADDITIONAL INFO */}
-                <div className="mt-8 p-4 bg-[#F5F1EB] rounded-xl text-center">
+                <div className="mt-8 text-center">
                     <p className="text-sm text-[#8B7E75]">
                         Sipariş durumunuzu <span className="font-semibold text-[#C46A2B]">Siparişlerim</span> sayfasından takip edebilirsiniz.
                     </p>
