@@ -13,7 +13,7 @@ function Footer() {
                 </div>
 
                 {/* CONTACT & SOCIAL */}
-                <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-4">
                     {/* PHONE */}
                     <div className="flex items-center gap-1.5 text-[#6B5E55] text-sm">
                         <Phone className="w-4 h-4" />
@@ -25,11 +25,10 @@ function Footer() {
                         href="https://www.instagram.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-[#6B5E55] hover:text-[#C46A2B] text-sm transition-colors"
+                        className="p-2 text-[#6B5E55] hover:text-[#C46A2B] hover:bg-[#C46A2B]/10 rounded-lg transition-colors"
                         aria-label="Instagram"
                     >
-                        <Instagram className="w-4 h-4" />
-                        <span>burnecoffee</span>
+                        <Instagram className="w-5 h-5" />
                     </a>
                 </div>
 
