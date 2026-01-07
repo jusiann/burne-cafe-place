@@ -110,13 +110,13 @@ function CheckoutSection() {
     /* HANDLE INPUT CHANGE */
     const handleChange = (e) => {
         const { name, value } = e.target;
-        
+
         // Eğer "Belirli Bir Saat" seçiliyorsa ve çalışma saatleri dışındaysak uyarı göster
         if (name === 'deliveryTime' && value === 'custom' && timeOptions.length === 0) {
             setShowClosedWarning(true);
             return;
         }
-        
+
         setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));

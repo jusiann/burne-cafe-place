@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { UtensilsCrossed, Coffee, Snowflake, IceCream, Droplets, LayoutGrid, ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, Star, ShoppingCart, Check } from 'lucide-react';
-import { cn } from '../lib/utils';
+import {useState,useEffect,useMemo} from 'react';
+import {useSearchParams,useNavigate} from 'react-router-dom';
+import {UtensilsCrossed,Coffee,Snowflake,IceCream,Droplets,LayoutGrid,ArrowUpDown,ArrowUp,ArrowDown,RotateCcw,Star,ShoppingCart,Check} from 'lucide-react';
+import {cn} from '../lib/utils';
 import products from '../data/products.json';
 
 function MenuSection() {
@@ -12,7 +12,7 @@ function MenuSection() {
 
     /* CONFIGURATION */
     const categories = useMemo(() => {
-        return [...new Set(products.map(p => p.category))];
+        return [...new Set(products.map(product => product.category))];
     }, []);
 
     const categoryIcons = {
@@ -23,12 +23,12 @@ function MenuSection() {
     };
 
     const sortOptions = [
-        { value: 'default', label: 'Varsayılan', icon: ArrowUpDown },
-        { value: 'price-asc', label: 'Fiyat (Artan)', icon: ArrowUp },
-        { value: 'price-desc', label: 'Fiyat (Azalan)', icon: ArrowDown }
+        {value: 'default', label: 'Varsayılan', icon: ArrowUpDown},
+        {value: 'price-asc', label: 'Fiyat (Artan)', icon: ArrowUp},
+        {value: 'price-desc', label: 'Fiyat (Azalan)', icon: ArrowDown}
     ];
 
-    const currentSort = sortOptions.find(opt => opt.value === sortOrder) || sortOptions[0];
+    const currentSort = sortOptions.find(option => option.value === sortOrder) || sortOptions[0];
 
     /* URL PARAMS SYNC */
     useEffect(() => {
@@ -36,8 +36,8 @@ function MenuSection() {
         const searchParam = searchParams.get('search');
 
         if (categoryParam) {
-            const matchedCategory = categories.find(cat =>
-                cat.toLowerCase().replace(/\s+/g, '-').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g') === categoryParam
+            const matchedCategory = categories.find(category =>
+                category.toLowerCase().replace(/\s+/g, '-').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g') === categoryParam
             );
             if (matchedCategory) setActiveCategory(matchedCategory);
         } else {
@@ -71,29 +71,29 @@ function MenuSection() {
         let result = [...products];
 
         if (activeCategory !== 'all') {
-            result = result.filter(p => p.category === activeCategory);
+            result = result.filter(product => product.category === activeCategory);
         }
 
         if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase();
-            result = result.filter(p =>
-                p.name.toLowerCase().includes(query) ||
-                p.description.toLowerCase().includes(query) ||
-                p.category.toLowerCase().includes(query)
+            result = result.filter(product =>
+                product.name.toLowerCase().includes(query) ||
+                product.description.toLowerCase().includes(query) ||
+                product.category.toLowerCase().includes(query)
             );
         }
 
         if (sortOrder === 'price-asc') {
-            result.sort((a, b) => a.price - b.price);
+            result.sort((itemA,itemB) => itemA.price - itemB.price);
         } else if (sortOrder === 'price-desc') {
-            result.sort((a, b) => b.price - a.price);
+            result.sort((itemA,itemB) => itemB.price - itemA.price);
         }
 
         return result;
     }, [activeCategory, searchQuery, sortOrder]);
 
     /* PRODUCT CARD COMPONENT */
-    const ProductCard = ({ product }) => {
+    const ProductCard = ({product}) => {
         const navigate = useNavigate();
         const [isAdded, setIsAdded] = useState(false);
         const hasDiscount = product.discount > 0;
@@ -105,11 +105,13 @@ function MenuSection() {
 
         return (
             <div className="group h-full flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+
                 {/* IMAGE */}
                 <div className="block relative">
                     <div className="aspect-[4/3] overflow-hidden">
                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                     </div>
+
                     {/* BADGES */}
                     <div className="absolute top-3 left-3 flex flex-col gap-2">
                         {product.isPopular && (
@@ -155,12 +157,12 @@ function MenuSection() {
         );
     };
 
-    /* MAIN RENDER */
     return (
         <>
             {/* FILTER SECTION */}
             <section className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
                     {/* PAGE TITLE */}
                     <div className="text-center">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4">
@@ -173,6 +175,7 @@ function MenuSection() {
                     {/* CATEGORY FILTER */}
                     <div className="w-full">
                         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-1 sm:justify-center">
+
                             {/* ALL CATEGORIES TAB */}
                             <button
                                 onClick={() => handleCategoryChange('all')}
@@ -213,7 +216,7 @@ function MenuSection() {
                             <div className="relative">
                                 <select
                                     value={sortOrder}
-                                    onChange={(e) => setSortOrder(e.target.value)}
+                                    onChange={(event) => setSortOrder(event.target.value)}
                                     className="appearance-none w-full sm:w-auto px-3 py-2 pr-8 bg-white border border-[#E8E0D5] rounded-lg text-sm text-[#2B1E17] font-medium shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer outline-none focus:ring-2 focus:ring-[#C46A2B]/20"
                                 >
                                     {sortOptions.map((option) => (

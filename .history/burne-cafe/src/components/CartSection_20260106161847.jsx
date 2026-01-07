@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, ShoppingBag, Coffee, Tag, Trash2, Minus, Plus, FileText, X, Check, AlertCircle, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
+
+
 function CartSection() {
     const { items, cartTotals, appliedCoupon, updateQuantity, removeFromCart, applyCoupon, removeCoupon, isEmpty, clearCart } = useCart();
-
+    
     const [confirmationModal, setConfirmationModal] = useState({
         isOpen: false,
         title: '',
         message: '',
-        onConfirm: () => { }
+        onConfirm: () => {}
     });
 
     const openConfirmation = (title, message, onConfirm) => {
@@ -23,7 +25,7 @@ function CartSection() {
     };
 
     const closeConfirmation = () => {
-        setConfirmationModal(previous => ({ ...previous, isOpen: false }));
+        setConfirmationModal(prev => ({ ...prev, isOpen: false }));
     };
 
     useEffect(() => {
@@ -42,7 +44,7 @@ function CartSection() {
         const options = [
             item.size?.name,
             item.milkOption?.name,
-            ...(item.extras?.map(extra => extra.name) || [])
+            ...(item.extras?.map(e => e.name) || [])
         ].filter(Boolean);
 
         return (
@@ -69,8 +71,8 @@ function CartSection() {
                     {/* OPTIONS */}
                     {options.length > 0 && (
                         <div className="text-xs text-[#8B7E75] mb-2 space-y-0.5">
-                            {options.map((option, index) => (
-                                <div key={index}>{option}</div>
+                            {options.map((opt, i) => (
+                                <div key={i}>{opt}</div>
                             ))}
                         </div>
                     )}
@@ -104,8 +106,8 @@ function CartSection() {
         const [message, setMessage] = useState(null);
         const [isLoading, setIsLoading] = useState(false);
 
-        const handleApply = async (event) => {
-            event.preventDefault();
+        const handleApply = async (e) => {
+            e.preventDefault();
             if (!code.trim()) { setMessage({ type: 'error', text: 'Lütfen kupon kodu girin' }); return; }
             setIsLoading(true);
             await new Promise(resolve => setTimeout(resolve, 300));
@@ -142,7 +144,7 @@ function CartSection() {
                             <input
                                 type="text"
                                 value={code}
-                                onChange={(event) => setCode(event.target.value.toUpperCase())}
+                                onChange={(e) => setCode(e.target.value.toUpperCase())}
                                 placeholder="Kupon kodu girin"
                                 className="w-full h-full pl-10 pr-4 bg-white border border-[#E8E0D5] rounded-lg text-[#2B1E17] placeholder:text-[#8B7E75] outline-none focus:ring-2 focus:ring-[#C46A2B]/30 transition-all font-medium"
                                 disabled={isLoading}
@@ -171,7 +173,7 @@ function CartSection() {
                         <ShoppingBag className="w-5 h-5 text-[#C46A2B]" />
                         Sipariş Özeti
                     </h3>
-                    <button
+                    <button 
                         onClick={() => {
                             openConfirmation(
                                 'Sepeti Temizle',
@@ -197,7 +199,7 @@ function CartSection() {
                     <div className="h-px bg-gradient-to-r from-[#E8E0D5]/30 via-[#C46A2B]/40 to-[#E8E0D5]/30" />
                     <div className="flex justify-between text-lg font-bold"><span className="text-[#2B1E17]">Toplam</span><span className="text-[#C46A2B]">₺{cartTotals.total.toFixed(2)}</span></div>
                 </div>
-                <Link to={isEmpty ? '#' : '/checkout'} className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all duration-300 ${isEmpty ? 'bg-[#E8E0D5] text-[#8B7E75] cursor-not-allowed' : 'bg-[#C46A2B] text-white hover:bg-[#A85A24] hover:shadow-lg'}`} onClick={(event) => isEmpty && event.preventDefault()}>
+                <Link to={isEmpty ? '#' : '/checkout'} className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all duration-300 ${isEmpty ? 'bg-[#E8E0D5] text-[#8B7E75] cursor-not-allowed' : 'bg-[#C46A2B] text-white hover:bg-[#A85A24] hover:shadow-lg'}`} onClick={(e) => isEmpty && e.preventDefault()}>
                     Siparişi Tamamla <ArrowRight className="w-5 h-5" />
                 </Link>
             </div>
@@ -253,17 +255,17 @@ function CartSection() {
                     <div className="order-1 lg:order-none lg:col-span-1">
                         <CartSummary />
                     </div>
-
+            
                     {confirmationModal.isOpen && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
                             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-                                {/* HEADER */}
+                                {/* Header */}
                                 <div className="px-6 py-4 border-b border-[#E8E0D5] flex items-center justify-between bg-[#F5F1EB]">
                                     <h3 className="font-heading text-lg text-[#2B1E17] flex items-center gap-2">
                                         <AlertCircle className="w-5 h-5 text-[#C46A2B]" />
                                         {confirmationModal.title}
                                     </h3>
-                                    <button
+                                    <button 
                                         onClick={closeConfirmation}
                                         className="text-[#8B7E75] hover:text-[#2B1E17] transition-colors"
                                     >
@@ -271,14 +273,14 @@ function CartSection() {
                                     </button>
                                 </div>
 
-                                {/* BODY */}
+                                {/* Body */}
                                 <div className="p-6">
                                     <p className="text-[#8B7E75] text-base leading-relaxed">
                                         {confirmationModal.message}
                                     </p>
                                 </div>
 
-                                {/* FOOTER */}
+                                {/* Footer */}
                                 <div className="px-6 py-4 bg-[#F5F1EB]/50 border-t border-[#E8E0D5] flex justify-end gap-3">
                                     <button
                                         onClick={closeConfirmation}

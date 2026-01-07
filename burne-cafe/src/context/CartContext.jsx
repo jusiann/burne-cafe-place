@@ -1,11 +1,13 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import {createContext,useContext,useState,useEffect,useMemo,useCallback} from 'react';
 import coupons from '../data/coupons.json';
 import ordersData from '../data/orders.json';
 
+/* STORAGE KEYS */
 const CART_STORAGE_KEY = 'burne-cafe-cart';
 const COUPON_STORAGE_KEY = 'burne-cafe-coupon';
 const ORDERS_STORAGE_KEY = 'burne-cafe-orders';
 
+/* ORDER STATUS CONSTANTS */
 const ORDER_STATUSES = {
     PREPARING: 'preparing',
     ON_THE_WAY: 'on_the_way',
@@ -18,18 +20,21 @@ const STATUS_LABELS = {
     [ORDER_STATUSES.DELIVERED]: 'Teslim Edildi'
 };
 
-function generateOrderNumber() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-    return `${year}${month}${day}${random}`;
-}
-
 const CartContext = createContext(null);
 
-function CartProvider({ children }) {
+function CartProvider({children}) {
+
+    /* ORDER NUMBER GENERATOR */
+    const generateOrderNumber = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+        return `${year}${month}${day}${random}`;
+    };
+
+    /* STATE INITIALIZATION */
     const [items, setItems] = useState(() => {
         try {
             const stored = localStorage.getItem(CART_STORAGE_KEY);
@@ -59,6 +64,7 @@ function CartProvider({ children }) {
 
     const [latestOrder, setLatestOrder] = useState(null);
 
+    /* STORAGE SYNC EFFECTS */
     useEffect(() => {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }, [items]);
@@ -71,84 +77,79 @@ function CartProvider({ children }) {
         }
     }, [appliedCoupon]);
 
-    const validateCouponConditions = useCallback((coupon, cartItems, currentOrders) => {
-        if (!coupon) return { valid: false, message: '' };
-
-        // 1. Min Tutar Kontrolü
-        const subtotal = cartItems.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-        if (subtotal < coupon.minOrderAmount) {
-            return { valid: false, message: `Bu kupon için minimum sepet tutarı ${coupon.minOrderAmount} TL olmalıdır.` };
-        }
-
-        // 2. Özel Kurallar (Hardcoded Validation)
-        // ILK15 - İlk Sipariş
-        if (coupon.code === 'ILK15') {
-            if (currentOrders.length > 0) {
-                return { valid: false, message: 'Bu kupon sadece ilk siparişinizde geçerlidir.' };
-            }
-        }
-
-        // IKILIM20 - Americano (11) & Latte (12)
-        if (coupon.code === 'IKILIM20') {
-            const hasAmericano = cartItems.some(i => i.productId === 11);
-            const hasLatte = cartItems.some(i => i.productId === 12);
-            if (!hasAmericano || !hasLatte) {
-                return { valid: false, message: 'Bu kupon için sepetinizde Americano ve Latte bulunmalıdır.' };
-            }
-        }
-
-        // MIEL10 - Miel (1)
-        if (coupon.code === 'MIEL10') {
-            const mielItems = cartItems.filter(i => i.productId === 1);
-            if (mielItems.length === 0) {
-                return { valid: false, message: 'Bu kupon sadece Miel siparişlerinde geçerlidir.' };
-            }
-
-            // Check if any Miel item has extras that would generate a discount
-            const hasExtras = mielItems.some(item => {
-                const sizePrice = item.size?.price || 0;
-                const milkPrice = item.milkOption?.price || 0;
-                const extrasPrice = item.extras?.reduce((sum, e) => sum + (e.price || 0), 0) || 0;
-                return (sizePrice + milkPrice + extrasPrice) > 0;
-            });
-
-            if (!hasExtras) {
-                return { valid: false, message: 'Bu kupon Miel ürününün ekstraları (boyut, süt vb.) için geçerlidir.' };
-            }
-        }
-
-        return { valid: true, message: '' };
-    }, []);
-
     useEffect(() => {
         localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
     }, [orders]);
 
-    // Sepet değiştiğinde veya sipariş durumunda kupon geçerliliğini kontrol et
+    /* COUPON VALIDATION */
+    const validateCouponConditions = useCallback((coupon,cartItems,currentOrders) => {
+        if (!coupon) return {valid: false,message: ''};
+
+        const subtotal = cartItems.reduce((sum,item) => sum + (item.unitPrice * item.quantity), 0);
+        if (subtotal < coupon.minOrderAmount) {
+            return {valid: false,message: `Bu kupon için minimum sepet tutarı ${coupon.minOrderAmount} TL olmalıdır.`};
+        }
+
+        if (coupon.code === 'ILK15') {
+            if (currentOrders.length > 0) {
+                return {valid: false,message: 'Bu kupon sadece ilk siparişinizde geçerlidir.'};
+            }
+        }
+
+        if (coupon.code === 'IKILIM20') {
+            const hasAmericano = cartItems.some(item => item.productId === 11);
+            const hasLatte = cartItems.some(item => item.productId === 12);
+            if (!hasAmericano || !hasLatte) {
+                return {valid: false,message: 'Bu kupon için sepetinizde Americano ve Latte bulunmalıdır.'};
+            }
+        }
+
+        if (coupon.code === 'MIEL10') {
+            const mielItems = cartItems.filter(item => item.productId === 1);
+            if (mielItems.length === 0) {
+                return {valid: false,message: 'Bu kupon sadece Miel siparişlerinde geçerlidir.'};
+            }
+
+            const hasExtras = mielItems.some(item => {
+                const sizePrice = item.size?.price || 0;
+                const milkPrice = item.milkOption?.price || 0;
+                const extrasPrice = item.extras?.reduce((sum,extra) => sum + (extra.price || 0), 0) || 0;
+                return (sizePrice + milkPrice + extrasPrice) > 0;
+            });
+
+            if (!hasExtras) {
+                return {valid: false,message: 'Bu kupon Miel ürününün ekstaları (boyut, süt vb.) için geçerlidir.'};
+            }
+        }
+
+        return {valid: true,message: ''};
+    }, []);
+
     useEffect(() => {
         if (appliedCoupon) {
-            const validation = validateCouponConditions(appliedCoupon, items, orders);
+            const validation = validateCouponConditions(appliedCoupon,items,orders);
             if (!validation.valid) {
                 setAppliedCoupon(null);
             }
         }
-    }, [items, orders, appliedCoupon, validateCouponConditions]);
+    }, [items,orders,appliedCoupon,validateCouponConditions]);
 
-    const generateItemId = useCallback((productId, size, milkOption, extras) => {
+    /* CART OPERATIONS */
+    const generateItemId = useCallback((productId,size,milkOption,extras) => {
         const extrasStr = extras ? extras.sort().join(',') : '';
         return `${productId}-${size || 'default'}-${milkOption || 'default'}-${extrasStr}`;
     }, []);
 
-    const addToCart = useCallback((product, quantity = 1, size = null, milkOption = null, extras = [], note = '') => {
-        const itemId = generateItemId(product.id, size?.name, milkOption?.name, extras.map(e => e.name));
+    const addToCart = useCallback((product,quantity = 1,size = null,milkOption = null,extras = [],note = '') => {
+        const itemId = generateItemId(product.id,size?.name,milkOption?.name,extras.map(extra => extra.name));
 
-        setItems(prevItems => {
-            const existingItem = prevItems.find(item => item.itemId === itemId);
+        setItems(previous => {
+            const existingItem = previous.find(item => item.itemId === itemId);
 
             if (existingItem) {
-                return prevItems.map(item =>
+                return previous.map(item =>
                     item.itemId === itemId
-                        ? { ...item, quantity: item.quantity + quantity, note: note || item.note }
+                        ? {...item,quantity: item.quantity + quantity,note: note || item.note}
                         : item
                 );
             }
@@ -177,100 +178,97 @@ function CartProvider({ children }) {
                 note
             };
 
-            return [...prevItems, newItem];
+            return [...previous,newItem];
         });
 
         return true;
     }, [generateItemId]);
 
     const removeFromCart = useCallback((itemId) => {
-        setItems(prevItems => prevItems.filter(item => item.itemId !== itemId));
+        setItems(previous => previous.filter(item => item.itemId !== itemId));
     }, []);
 
-    const updateQuantity = useCallback((itemId, quantity) => {
+    const updateQuantity = useCallback((itemId,quantity) => {
         if (quantity <= 0) {
             removeFromCart(itemId);
             return;
         }
-        setItems(prevItems =>
-            prevItems.map(item =>
-                item.itemId === itemId ? { ...item, quantity } : item
+        setItems(previous =>
+            previous.map(item =>
+                item.itemId === itemId ? {...item,quantity} : item
             )
         );
     }, [removeFromCart]);
 
-    const updateItem = useCallback((oldItemId, product, quantity, size, milkOption, extras, note) => {
+    const updateItem = useCallback((oldItemId,product,quantity,size,milkOption,extras,note) => {
         removeFromCart(oldItemId);
-        addToCart(product, quantity, size, milkOption, extras, note);
-    }, [removeFromCart, addToCart]);
+        addToCart(product,quantity,size,milkOption,extras,note);
+    }, [removeFromCart,addToCart]);
 
     const clearCart = useCallback(() => {
         setItems([]);
         setAppliedCoupon(null);
     }, []);
 
+    /* COUPON OPERATIONS */
     const applyCoupon = useCallback((code) => {
-        const coupon = coupons.find(c =>
-            c.code.toLowerCase() === code.toLowerCase() && c.isActive
+        const coupon = coupons.find(couponItem =>
+            couponItem.code.toLowerCase() === code.toLowerCase() && couponItem.isActive
         );
 
         if (!coupon) {
-            return { success: false, message: 'Geçersiz kupon kodu' };
+            return {success: false,message: 'Geçersiz kupon kodu'};
         }
 
-        const validation = validateCouponConditions(coupon, items, orders);
+        const validation = validateCouponConditions(coupon,items,orders);
         if (!validation.valid) {
-            return { success: false, message: validation.message };
+            return {success: false,message: validation.message};
         }
 
         setAppliedCoupon(coupon);
-        return { success: true, message: 'Kupon başarıyla uygulandı!' };
-    }, [items, orders, validateCouponConditions]);
+        return {success: true,message: 'Kupon başarıyla uygulandı!'};
+    }, [items,orders,validateCouponConditions]);
 
     const removeCoupon = useCallback(() => {
         setAppliedCoupon(null);
     }, []);
 
+    /* CART TOTALS CALCULATION */
     const cartTotals = useMemo(() => {
-        const subtotal = items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+        const subtotal = items.reduce((sum,item) => sum + (item.unitPrice * item.quantity), 0);
 
         let discount = 0;
         if (appliedCoupon) {
-            // Kupon gereksinimini tüm kurallara göre kontrol et
-            const validation = validateCouponConditions(appliedCoupon, items, orders);
+            const validation = validateCouponConditions(appliedCoupon,items,orders);
 
             if (validation.valid) {
-                if (validation.valid) {
-                    if (appliedCoupon.code === 'MIEL10') {
-                        // MIEL10 Logic: Sadece Miel (id: 1) ürününün ekstraları (boyut, süt, şurup vb.) üzerinden indirim
-                        let mielExtrasTotal = 0;
-                        items.forEach(item => {
-                            if (item.productId === 1) { // Miel ID is 1
-                                const sizePrice = item.size?.price || 0;
-                                const milkPrice = item.milkOption?.price || 0;
-                                const extrasPrice = item.extras?.reduce((sum, e) => sum + (e.price || 0), 0) || 0;
-                                mielExtrasTotal += (sizePrice + milkPrice + extrasPrice) * item.quantity;
-                            }
-                        });
-
-                        if (appliedCoupon.discountType === 'percentage') {
-                            discount = mielExtrasTotal * (appliedCoupon.discountValue / 100);
-                        } else {
-                            // Eğer sabit tutarlı ise direkt uygula (bu case şu an json'da % ama genel destek olsun)
-                            discount = appliedCoupon.discountValue;
+                if (appliedCoupon.code === 'MIEL10') {
+                    let mielExtrasTotal = 0;
+                    items.forEach(item => {
+                        if (item.productId === 1) {
+                            const sizePrice = item.size?.price || 0;
+                            const milkPrice = item.milkOption?.price || 0;
+                            const extrasPrice = item.extras?.reduce((sum,extra) => sum + (extra.price || 0), 0) || 0;
+                            mielExtrasTotal += (sizePrice + milkPrice + extrasPrice) * item.quantity;
                         }
-                    }
-                    else if (appliedCoupon.discountType === 'percentage') {
-                        discount = subtotal * (appliedCoupon.discountValue / 100);
+                    });
+
+                    if (appliedCoupon.discountType === 'percentage') {
+                        discount = mielExtrasTotal * (appliedCoupon.discountValue / 100);
                     } else {
                         discount = appliedCoupon.discountValue;
                     }
+                }
+                else if (appliedCoupon.discountType === 'percentage') {
+                    discount = subtotal * (appliedCoupon.discountValue / 100);
+                } else {
+                    discount = appliedCoupon.discountValue;
                 }
             }
         }
 
         const afterDiscount = subtotal - discount;
-        const tax = afterDiscount * 0.20; // %20 KDV
+        const tax = afterDiscount * 0.20;
         const total = afterDiscount + tax;
 
         return {
@@ -278,10 +276,11 @@ function CartProvider({ children }) {
             discount,
             tax,
             total,
-            itemCount: items.reduce((sum, item) => sum + item.quantity, 0)
+            itemCount: items.reduce((sum,item) => sum + item.quantity, 0)
         };
-    }, [items, appliedCoupon, orders, validateCouponConditions]);
+    }, [items,appliedCoupon,orders,validateCouponConditions]);
 
+    /* ORDER OPERATIONS */
     const createOrder = useCallback((orderData) => {
         const newOrder = {
             id: `ORD-${Date.now()}`,
@@ -326,23 +325,23 @@ function CartProvider({ children }) {
                     : '30-45 dakika'
         };
 
-        setOrders(prevOrders => [newOrder, ...prevOrders]);
+        setOrders(previous => [newOrder,...previous]);
         setLatestOrder(newOrder);
         clearCart();
 
         return newOrder;
-    }, [items, cartTotals, appliedCoupon, clearCart]);
+    }, [items,cartTotals,appliedCoupon,clearCart]);
 
     const getOrderById = useCallback((orderId) => {
         return orders.find(order => order.id === orderId);
     }, [orders]);
 
-    const reorderFromOrder = useCallback((orderId, products) => {
-        const order = orders.find(o => o.id === orderId);
+    const reorderFromOrder = useCallback((orderId,products) => {
+        const order = orders.find(orderItem => orderItem.id === orderId);
         if (!order) return false;
 
         order.items.forEach(orderItem => {
-            const product = products.find(p => p.id === orderItem.productId);
+            const product = products.find(productItem => productItem.id === orderItem.productId);
             if (product) {
                 addToCart(
                     product,
@@ -356,12 +355,13 @@ function CartProvider({ children }) {
         });
 
         return true;
-    }, [orders, addToCart]);
+    }, [orders,addToCart]);
 
     const clearLatestOrder = useCallback(() => {
         setLatestOrder(null);
     }, []);
 
+    /* CONTEXT VALUE */
     const value = {
         items,
         appliedCoupon,
@@ -391,5 +391,5 @@ function CartProvider({ children }) {
     );
 }
 
-export { CartProvider, ORDER_STATUSES, STATUS_LABELS };
+export {CartProvider,ORDER_STATUSES,STATUS_LABELS};
 export const useCart = () => useContext(CartContext);

@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Package, Clock, CheckCircle, Truck, ChevronRight, RotateCcw, ShoppingBag } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Package,Clock,CheckCircle,Truck,ChevronRight,RotateCcw,ShoppingBag} from 'lucide-react';
+import {useCart} from '../context/CartContext';
 import products from '../data/products.json';
 
 function OrderHistorySection() {
     const navigate = useNavigate();
-    const { orders, reorderFromOrder, STATUS_LABELS } = useCart();
-    const [reorderingId, setReorderingId] = useState(null);
+    const {orders,reorderFromOrder,STATUS_LABELS} = useCart();
+    const [reorderingId,setReorderingId] = useState(null);
 
     /* STATUS ICON MAPPING */
     const statusIcons = {
-        'preparing': { icon: Clock, color: 'text-[#C46A2B]', bg: 'bg-[#C46A2B]/10' },
-        'on_the_way': { icon: Truck, color: 'text-[#9B7F57]', bg: 'bg-[#9B7F57]/10' },
-        'delivered': { icon: CheckCircle, color: 'text-[#6B5D4F]', bg: 'bg-[#6B5D4F]/10' }
+        'preparing': {icon: Clock,color: 'text-[#C46A2B]',bg: 'bg-[#C46A2B]/10'},
+        'on_the_way': {icon: Truck,color: 'text-[#9B7F57]',bg: 'bg-[#9B7F57]/10'},
+        'delivered': {icon: CheckCircle,color: 'text-[#6B5D4F]',bg: 'bg-[#6B5D4F]/10'}
     };
 
     /* HANDLE REORDER */
@@ -52,10 +52,10 @@ function OrderHistorySection() {
         );
     }
 
-    /* MAIN RENDER */
     return (
         <section className="py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
                 {/* HEADER */}
                 <div className="mb-8">
                     <h1 className="font-heading text-2xl md:text-3xl text-[#2B1E17] mb-2">Siparişlerim</h1>
@@ -70,6 +70,7 @@ function OrderHistorySection() {
 
                         return (
                             <div key={order.id} className="bg-white rounded-xl border border-[#E8E0D5] overflow-hidden hover:shadow-lg transition-shadow">
+
                                 {/* ORDER HEADER */}
                                 <div className="p-4 bg-[#F5F1EB] border-b border-[#E8E0D5] flex items-center justify-between">
                                     <div className="flex items-center gap-3">
@@ -86,12 +87,13 @@ function OrderHistorySection() {
                                 {/* ORDER BODY */}
                                 <div className="p-4">
                                     <div className="grid md:grid-cols-2 gap-4">
-                                        {/* LEFT - ITEMS */}
+
+                                        {/* ITEMS */}
                                         <div>
                                             <p className="text-sm text-[#8B7E75] mb-2">Ürünler</p>
                                             <div className="space-y-2">
-                                                {order.items.slice(0, 2).map((item, idx) => (
-                                                    <div key={idx} className="flex items-center gap-3">
+                                                {order.items.slice(0, 2).map((item, itemIndex) => (
+                                                    <div key={itemIndex} className="flex items-center gap-3">
                                                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F5F1EB] flex-shrink-0">
                                                             <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                         </div>
@@ -107,7 +109,7 @@ function OrderHistorySection() {
                                             </div>
                                         </div>
 
-                                        {/* RIGHT - DETAILS */}
+                                        {/* DETAILS */}
                                         <div className="space-y-3">
                                             <div className="flex justify-between text-sm">
                                                 <span className="text-[#8B7E75]">Teslimat</span>
@@ -133,10 +135,7 @@ function OrderHistorySection() {
                                         <button
                                             onClick={() => handleReorder(order.id)}
                                             disabled={reorderingId === order.id}
-                                            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${reorderingId === order.id
-                                                    ? 'bg-[#E8E0D5] text-[#8B7E75] cursor-not-allowed'
-                                                    : 'bg-[#C46A2B] text-white hover:bg-[#A85A24] hover:shadow-lg'
-                                                }`}
+                                            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${reorderingId === order.id ? 'bg-[#E8E0D5] text-[#8B7E75] cursor-not-allowed' : 'bg-[#C46A2B] text-white hover:bg-[#A85A24] hover:shadow-lg'}`}
                                         >
                                             {reorderingId === order.id ? 'Ekleniyor...' : 'Tekrar Sipariş Ver'}
                                             <RotateCcw className="w-4 h-4" />

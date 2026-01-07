@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import {BrowserRouter,Routes,Route,useLocation} from 'react-router-dom';
+import {useEffect} from 'react';
 import Home from './pages/Home';
 import Menu from './pages/Menu';
 import ProductDetail from './pages/ProductDetail';
@@ -9,16 +9,18 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import OrderHistory from './pages/OrderHistory';
 import NotFound from './pages/NotFound';
 
-function ScrollToTop() {
-    const { pathname } = useLocation();
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [pathname]);
-
-    return null;
-}
-
 function App() {
+
+    /* SCROLL TO TOP ON ROUTE CHANGE */
+    const ScrollToTop = () => {
+        const {pathname} = useLocation();
+        useEffect(() => {
+            window.scrollTo(0,0);
+        }, [pathname]);
+
+        return null;
+    };
+
     return (
         <BrowserRouter>
             <ScrollToTop />
@@ -33,7 +35,7 @@ function App() {
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </BrowserRouter>
-    )
+    );
 }
 
 export default App;

@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Clock, Package, Coffee, ArrowRight, Tag } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import {useEffect} from 'react';
+import {useNavigate,useLocation} from 'react-router-dom';
+import {Clock,Package,Coffee,ArrowRight,Tag} from 'lucide-react';
+import {useCart} from '../context/CartContext';
 
 function OrderConfirmationSection() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { latestOrder, getOrderById, clearLatestOrder } = useCart();
+    const {latestOrder,getOrderById,clearLatestOrder} = useCart();
 
     const orderId = location.state?.orderId;
     const order = orderId ? getOrderById(orderId) : latestOrder;
@@ -16,7 +16,7 @@ function OrderConfirmationSection() {
         if (!order) {
             navigate('/menu');
         }
-    }, [order, navigate]);
+    }, [order,navigate]);
 
     /* CLEANUP ON UNMOUNT */
     useEffect(() => {
@@ -34,6 +34,7 @@ function OrderConfirmationSection() {
     return (
         <section className="py-16 min-h-[80vh] flex items-center justify-center">
             <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+
                 {/* SUCCESS MESSAGE */}
                 <div className="text-center mb-8">
                     <h1 className="font-heading text-3xl md:text-4xl text-[#2B1E17] mb-3">Siparişiniz Alındı!</h1>
@@ -42,6 +43,7 @@ function OrderConfirmationSection() {
 
                 {/* ORDER DETAILS CARD */}
                 <div className="bg-white rounded-2xl border-2 border-[#E8E0D5] overflow-hidden shadow-lg">
+
                     {/* ORDER HEADER */}
                     <div className="bg-gradient-to-r from-[#C46A2B] to-[#A85A24] p-6 text-white">
                         <div className="flex items-center justify-between">
@@ -55,6 +57,7 @@ function OrderConfirmationSection() {
 
                     {/* ORDER INFO */}
                     <div className="p-6 space-y-6">
+
                         {/* ESTIMATED DELIVERY */}
                         <div className="flex items-start gap-4 p-4 bg-[#F5F1EB] rounded-xl">
                             <div className="w-12 h-12 rounded-full bg-[#C46A2B]/20 flex items-center justify-center flex-shrink-0">

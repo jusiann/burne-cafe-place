@@ -1,15 +1,15 @@
-import { cn } from '../lib/utils';
-import { Menu, X, ShoppingCart, Search } from 'lucide-react';
-import { useEffect, useState, useRef, useMemo } from 'react';
-import { useLocation, Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {cn} from '../lib/utils';
+import {Menu,X,ShoppingCart,Search} from 'lucide-react';
+import {useEffect,useState,useRef,useMemo} from 'react';
+import {useLocation,Link,useNavigate,useSearchParams} from 'react-router-dom';
 import products from '../data/products.json';
-import { useCart } from '../context/CartContext';
+import {useCart} from '../context/CartContext';
 
 function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isScrolled,setIsScrolled] = useState(false);
+  const [isMenuOpen,setIsMenuOpen] = useState(false);
+  const [isSearchOpen,setIsSearchOpen] = useState(false);
+  const [searchQuery,setSearchQuery] = useState('');
   const searchInputRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,25 +18,25 @@ function Navbar() {
   const activeSearchQuery = searchParams.get('search') || '';
   const hasActiveSearch = activeSearchQuery.trim() !== '';
 
-  const { cartTotals } = useCart();
+  const {cartTotals} = useCart();
   const totalItems = cartTotals.itemCount;
 
   const filteredProducts = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    return products.filter(p =>
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchQuery.toLowerCase())
-    ).slice(0, 5);
+    return products.filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase())
+    ).slice(0,5);
   }, [searchQuery]);
 
   const navItems = [
-    { name: 'Ana Sayfa', href: '/' },
-    { name: 'Menü', href: '/menu' },
-    { name: 'Siparişlerim', href: '/order-history' },
+    {name: 'Ana Sayfa',href: '/'},
+    {name: 'Menü',href: '/menu'},
+    {name: 'Siparişlerim',href: '/order-history'},
   ];
 
-  // CHECK ACTIVE ROUTE
+  /* CHECK ACTIVE ROUTE */
   const isActiveRoute = (href) => {
     if (href === '/') {
       return location.pathname === '/' || location.pathname === '';
@@ -44,7 +44,7 @@ function Navbar() {
     return location.pathname.startsWith(href);
   };
 
-  // SCROLL HANDLER
+  /* SCROLL HANDLER */
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -54,7 +54,7 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // MOBILE MENU BODY SCROLL LOCK
+  /* MOBILE MENU BODY SCROLL LOCK */
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -66,15 +66,15 @@ function Navbar() {
     };
   }, [isMenuOpen]);
 
-  // SEARCH INPUT FOCUS
+  /* SEARCH INPUT FOCUS */
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [isSearchOpen]);
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/menu?search=${encodeURIComponent(searchQuery)}`);
       setIsSearchOpen(false);
@@ -82,21 +82,18 @@ function Navbar() {
     }
   };
 
-  // SEARCH CLOSE HANDLER
   const handleSearchClose = () => {
     setIsSearchOpen(false);
     setSearchQuery('');
   };
 
   return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 w-full z-50 transition-all duration-500 ease-out",
-        isScrolled
-          ? "bg-white/90 backdrop-blur-xl shadow-[0_2px_20px_-5px_rgba(0,0,0,0.1)]"
-          : "bg-white/60 backdrop-blur-sm"
-      )}
-    >
+    <nav className={cn(
+      "fixed top-0 left-0 right-0 w-full z-50 transition-all duration-500 ease-out",
+      isScrolled
+        ? "bg-white/90 backdrop-blur-xl shadow-[0_2px_20px_-5px_rgba(0,0,0,0.1)]"
+        : "bg-white/60 backdrop-blur-sm"
+    )}>
       {/* GRADIENT BOTTOM BORDER */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-[#E8E0D5]/30 via-[#C46A2B]/40 to-[#E8E0D5]/30" />
 
@@ -105,6 +102,7 @@ function Navbar() {
 
           {/* LOGO & SEARCH */}
           <div className="flex items-center gap-2">
+
             {/* LOGO */}
             <Link
               to="/"
@@ -120,16 +118,14 @@ function Navbar() {
 
             {/* SEARCH BAR - DESKTOP */}
             <div className="hidden md:flex items-center relative">
-              <div
-                className={cn(
-                  "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
-                  isSearchOpen
-                    ? "w-[280px] text-[#C46A2B]"
-                    : hasActiveSearch
-                      ? "w-auto text-[#C46A2B] bg-[#C46A2B]/10"
-                      : "w-auto text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5"
-                )}
-              >
+              <div className={cn(
+                "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
+                isSearchOpen
+                  ? "w-[280px] text-[#C46A2B]"
+                  : hasActiveSearch
+                    ? "w-auto text-[#C46A2B] bg-[#C46A2B]/10"
+                    : "w-auto text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5"
+              )}>
                 <Search className="w-5 h-5 flex-shrink-0" />
 
                 {/* ACTIVE SEARCH TEXT */}
@@ -158,7 +154,7 @@ function Navbar() {
                       ref={searchInputRef}
                       type="text"
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={(event) => setSearchQuery(event.target.value)}
                       placeholder="Ürün ara..."
                       className="w-full bg-transparent border-none outline-none text-sm text-[#2B1E17] placeholder:text-[#2B1E17]/50"
                     />
@@ -190,9 +186,7 @@ function Navbar() {
                     "absolute bottom-0 left-2 h-0.5 bg-[#C46A2B] rounded-full transition-all duration-300",
                     isSearchOpen ? "right-2" : "right-2 scale-x-0 group-hover:scale-x-100"
                   )}
-                  style={{
-                    transformOrigin: 'left'
-                  }}
+                  style={{ transformOrigin: 'left' }}
                 />
               </div>
 
@@ -247,34 +241,31 @@ function Navbar() {
 
           {/* DESKTOP NAVIGATION */}
           <div className="hidden md:flex items-center space-x-1">
-            {/* NAVIGATION LINKS */}
-            {
-              navItems.map((item, key) => (
-                <Link
-                  key={key}
-                  to={item.href}
-                  className={cn(
-                    'relative px-4 py-2 font-medium transition-all duration-300 rounded-lg',
-                    isActiveRoute(item.href)
-                      ? 'text-[#C46A2B] bg-[#C46A2B]/10'
-                      : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
-                  )}
-                >
-                  {/* ACTIVE INDICATOR */}
-                  <div
-                    className={cn(
-                      'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
-                      isActiveRoute(item.href) ? 'scale-x-100' : 'scale-x-0'
-                    )}
-                  />
-                  <span className="relative z-10">
-                    {item.name}
-                  </span>
-                </Link>
-              ))
-            }
 
-            {/* CART ICON - DESKTOP */}
+            {/* NAVIGATION LINKS */}
+            {navItems.map((item, index) => (
+              <Link
+                key={index}
+                to={item.href}
+                className={cn(
+                  'relative px-4 py-2 font-medium transition-all duration-300 rounded-lg',
+                  isActiveRoute(item.href)
+                    ? 'text-[#C46A2B] bg-[#C46A2B]/10'
+                    : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+                )}
+              >
+                {/* ACTIVE INDICATOR */}
+                <div className={cn(
+                  'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
+                  isActiveRoute(item.href) ? 'scale-x-100' : 'scale-x-0'
+                )} />
+                <span className="relative z-10">
+                  {item.name}
+                </span>
+              </Link>
+            ))}
+
+            {/* CART ICON */}
             <Link
               to="/cart"
               className={cn(
@@ -289,13 +280,10 @@ function Navbar() {
               {totalItems > 0 && (
                 <span className="absolute top-0 right-0 w-4 h-4 bg-[#C46A2B] rounded-full border-2 border-white animate-pulse" />
               )}
-              {/* ACTIVE INDICATOR */}
-              <div
-                className={cn(
-                  'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
-                  isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
-                )}
-              />
+              <div className={cn(
+                'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
+                isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
+              )} />
             </Link>
           </div>
 
@@ -311,13 +299,12 @@ function Navbar() {
       </div>
 
       {/* MOBILE MENU */}
-      <div
-        className={cn(
-          "fixed top-16 left-0 right-0 bg-white shadow-lg md:hidden transition-all duration-300 overflow-hidden border-b border-[#E8E0D5]",
-          isMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
-        )}
-      >
+      <div className={cn(
+        "fixed top-16 left-0 right-0 bg-white shadow-lg md:hidden transition-all duration-300 overflow-hidden border-b border-[#E8E0D5]",
+        isMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+      )}>
         <div className="px-4 py-3 space-y-1">
+
           {/* SEARCH BAR - MOBILE */}
           <div className="mb-3">
             {hasActiveSearch ? (
@@ -339,12 +326,12 @@ function Navbar() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={(e) => { handleSearchSubmit(e); setIsMenuOpen(false); }} className="relative">
+              <form onSubmit={(event) => { handleSearchSubmit(event); setIsMenuOpen(false); }} className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#C46A2B]" />
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(event) => setSearchQuery(event.target.value)}
                   placeholder="Ürün ara..."
                   className="w-full pl-10 pr-4 py-2.5 text-[#2B1E17] placeholder:text-[#2B1E17]/40 bg-[#C46A2B]/5 border border-[#C46A2B]/20 rounded-lg outline-none focus:ring-2 focus:ring-[#C46A2B]/30 transition-all"
                 />
@@ -353,25 +340,23 @@ function Navbar() {
           </div>
 
           {/* NAVIGATION LINKS - MOBILE */}
-          {
-            navItems.map((item, key) => (
-              <Link
-                key={key}
-                to={item.href}
-                className={cn(
-                  'block px-4 py-3 rounded-lg transition-all duration-300',
-                  isActiveRoute(item.href)
-                    ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
-                    : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
-                )}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))
-          }
+          {navItems.map((item, index) => (
+            <Link
+              key={index}
+              to={item.href}
+              className={cn(
+                'block px-4 py-3 rounded-lg transition-all duration-300',
+                isActiveRoute(item.href)
+                  ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
+                  : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+              )}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
 
-          {/* CART - MOBILE MENU */}
+          {/* CART - MOBILE */}
           <Link
             to="/cart"
             className={cn(

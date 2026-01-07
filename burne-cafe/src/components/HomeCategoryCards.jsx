@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, Coffee, Snowflake, IceCream, Droplets, LayoutGrid } from 'lucide-react';
+import {Link} from 'react-router-dom';
+import {ArrowRight,Coffee,Snowflake,IceCream,Droplets,LayoutGrid} from 'lucide-react';
 import products from '../data/products.json';
 
 function HomeCategoryCards() {
@@ -30,7 +30,7 @@ function HomeCategoryCards() {
         }
     };
 
-    const categories = [...new Set(products.map(p => p.category))].map(categoryName => {
+    const categories = [...new Set(products.map(product => product.category))].map(categoryName => {
         const meta = categoryMeta[categoryName] || {
             icon: Coffee,
             color: 'from-gray-700/30 to-gray-800/30',
@@ -44,7 +44,7 @@ function HomeCategoryCards() {
             Icon: meta.icon,
             color: meta.color,
             borderColor: meta.borderColor,
-            count: products.filter(p => p.category === categoryName).length
+            count: products.filter(product => product.category === categoryName).length
         };
     });
 
@@ -71,20 +71,7 @@ function HomeCategoryCards() {
                         <Link
                             key={category.id}
                             to={`/menu?category=${category.id}`}
-                            className={`
-                                group 
-                                relative 
-                                p-6 
-                                rounded-2xl 
-                                border-2 
-                                ${category.borderColor}
-                                bg-gradient-to-br 
-                                ${category.color}
-                                hover:scale-105 
-                                transition-all 
-                                duration-300
-                                overflow-hidden
-                            `}
+                            className={`group relative p-6 rounded-2xl border-2 ${category.borderColor} bg-gradient-to-br ${category.color} hover:scale-105 transition-all duration-300 overflow-hidden`}
                         >
                             {/* ICON */}
                             <div className="w-12 h-12 mb-4 rounded-xl bg-[#2B1E17]/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">

@@ -1,21 +1,18 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import {useParams,useNavigate} from 'react-router-dom';
+import {useEffect} from 'react';
 import products from '../data/products.json';
 import ProductDetailSection from '../components/ProductDetailSection';
 import Layout from '../components/Layout';
-import { useEffect } from 'react';
 
 function ProductDetail() {
-    const { id } = useParams();
+    const {id} = useParams();
     const navigate = useNavigate();
 
-    // Find Product
-    // Use loose equality (==) for ID to handle string vs number mismatch
-    const product = products.find(p => p.id == id);
+    const product = products.find(productItem => productItem.id == id);
 
-    // Handle Not Found
     useEffect(() => {
         if (!product) {
-            // navigate('/not-found'); // Or redirect to menu
+            // navigate('/not-found');
         }
     }, [product, navigate]);
 

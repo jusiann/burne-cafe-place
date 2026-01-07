@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Minus, Plus, ShoppingBag, Check, Coffee, Droplet, Star, Flame, Dumbbell, Bean, ChevronLeft, RefreshCw } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import {useState,useEffect} from 'react';
+import {Link,useNavigate,useLocation} from 'react-router-dom';
+import {Minus,Plus,ShoppingBag,Check,Coffee,Droplet,Star,Flame,Dumbbell,Bean,ChevronLeft,RefreshCw} from 'lucide-react';
+import {useCart} from '../context/CartContext';
 
-function ProductDetailSection({ product }) {
-    const { addToCart, updateItem } = useCart();
+function ProductDetailSection({product}) {
+    const {addToCart,updateItem} = useCart();
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [selectedSize, setSelectedSize] = useState(null);
-    const [selectedMilk, setSelectedMilk] = useState(null);
-    const [selectedExtras, setSelectedExtras] = useState([]);
-    const [quantity, setQuantity] = useState(1);
-    const [note, setNote] = useState('');
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [isAdded, setIsAdded] = useState(false);
-    const [editingItem, setEditingItem] = useState(null);
+    const [selectedSize,setSelectedSize] = useState(null);
+    const [selectedMilk,setSelectedMilk] = useState(null);
+    const [selectedExtras,setSelectedExtras] = useState([]);
+    const [quantity,setQuantity] = useState(1);
+    const [note,setNote] = useState('');
+    const [totalPrice,setTotalPrice] = useState(0);
+    const [isAdded,setIsAdded] = useState(false);
+    const [editingItem,setEditingItem] = useState(null);
 
-    /* NUTRIENT ITEM COMPONENT */
-    const NutritionItem = ({ icon: Icon, label, value, unit }) => (
+    /* NUTRITION ITEM COMPONENT */
+    const NutritionItem = ({icon: Icon,label,value,unit}) => (
         <div className="flex flex-col items-center justify-center text-center">
             <Icon className="w-4 h-4 text-[#C46A2B]/70 mb-1" />
             <span className="text-[10px] text-[#8B7E75] uppercase tracking-wider mb-0.5">{label}</span>
@@ -26,19 +26,18 @@ function ProductDetailSection({ product }) {
         </div>
     );
 
-    /* INITIALIZATION & STATE MANAGEMENT */
+    /* INITIALIZATION */
     useEffect(() => {
         if (product) {
             const editItem = location.state?.cartItem;
-            // Edit Mode
             if (editItem && String(editItem.productId) === String(product.id)) {
                 setEditingItem(editItem);
-                const size = product.sizes?.find(s => s.name === editItem.size?.name);
+                const size = product.sizes?.find(sizeOption => sizeOption.name === editItem.size?.name);
                 setSelectedSize(size || editItem.size || null);
-                const milk = product.milkOptions?.find(m => m.name === editItem.milkOption?.name);
+                const milk = product.milkOptions?.find(milkOption => milkOption.name === editItem.milkOption?.name);
                 setSelectedMilk(milk || editItem.milkOption || null);
                 if (editItem.extras && product.extras) {
-                    const restoredExtras = editItem.extras.map(e => product.extras.find(pe => pe.name === e.name)).filter(Boolean);
+                    const restoredExtras = editItem.extras.map(extraItem => product.extras.find(productExtra => productExtra.name === extraItem.name)).filter(Boolean);
                     setSelectedExtras(restoredExtras);
                 } else {
                     setSelectedExtras([]);
@@ -46,12 +45,11 @@ function ProductDetailSection({ product }) {
                 setQuantity(editItem.quantity);
                 setNote(editItem.note || '');
             } else {
-                // Default Mode
                 setEditingItem(null);
-                const defaultSize = product.sizes?.find(s => s.name === 'Tall') || product.sizes?.[0];
+                const defaultSize = product.sizes?.find(sizeOption => sizeOption.name === 'Tall') || product.sizes?.[0];
                 setSelectedSize(defaultSize);
                 if (product.milkOptions?.length > 0) {
-                    const defaultMilk = product.milkOptions.find(m => m.name === 'Standart Süt') || product.milkOptions[0];
+                    const defaultMilk = product.milkOptions.find(milkOption => milkOption.name === 'Standart Süt') || product.milkOptions[0];
                     setSelectedMilk(defaultMilk);
                 }
                 setSelectedExtras([]);
@@ -67,18 +65,18 @@ function ProductDetailSection({ product }) {
         let total = product.price;
         if (selectedSize) total += selectedSize.price;
         if (selectedMilk) total += selectedMilk.price;
-        const extrasTotal = selectedExtras.reduce((sum, extra) => sum + extra.price, 0);
+        const extrasTotal = selectedExtras.reduce((sum,extra) => sum + extra.price,0);
         total += extrasTotal;
         setTotalPrice(total);
-    }, [product, selectedSize, selectedMilk, selectedExtras]);
+    }, [product,selectedSize,selectedMilk,selectedExtras]);
 
     if (!product) return null;
 
     /* HANDLERS */
     const handleToggleExtra = (extra) => {
-        setSelectedExtras(prev => {
-            const isSelected = prev.find(e => e.name === extra.name);
-            return isSelected ? prev.filter(e => e.name !== extra.name) : [...prev, extra];
+        setSelectedExtras(previous => {
+            const isSelected = previous.find(extraItem => extraItem.name === extra.name);
+            return isSelected ? previous.filter(extraItem => extraItem.name !== extra.name) : [...previous,extra];
         });
     };
 
@@ -95,22 +93,22 @@ function ProductDetailSection({ product }) {
         }, 1000);
     };
 
-    /* MAIN RENDER */
     return (
         <section className="pt-6 pb-8 md:py-16 overflow-x-hidden">
             <div className="w-full max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
-                {/* HEADER LINK */}
+
+                {/* BACK LINK */}
                 <Link to="/menu" className="inline-flex items-center gap-2 text-[#8B7E75] hover:text-[#C46A2B] mb-8 transition-colors text-lg font-heading uppercase tracking-wide">
                     <ChevronLeft className="w-6 h-6" />
                     MENÜ
                 </Link>
 
                 <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-start">
-                    {/* PRODUCT IMAGE SECTION */}
+
+                    {/* PRODUCT IMAGE */}
                     <div className="space-y-6">
                         <div className="aspect-square w-full rounded-2xl overflow-hidden bg-[#F5F1EB] border border-[#E8E0D5] relative md:sticky md:top-24">
                             <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
-                            {/* BADGES */}
                             <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                                 {product.isPopular && (
                                     <span className="h-8 px-3 flex items-center justify-center bg-[#2B1E17] text-[#D4A574] rounded-lg border border-[#D4A574]/30 shadow-lg"><Star className="w-5 h-5 fill-current" /></span>
@@ -125,14 +123,14 @@ function ProductDetailSection({ product }) {
                         </div>
                     </div>
 
-                    {/* PRODUCT DETAILS SECTION */}
+                    {/* PRODUCT DETAILS */}
                     <div className="space-y-8">
                         <div>
                             <h1 className="font-heading text-3xl md:text-4xl text-[#2B1E17] mb-4">{product.name}</h1>
                             <p className="text-[#8B7E75] leading-relaxed">{product.description}</p>
                         </div>
 
-                        {/* NUTRITION GRID */}
+                        {/* NUTRITION */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             <NutritionItem icon={Flame} label="Kalori" value={product.nutrition.calories} unit=" kcal" />
                             <NutritionItem icon={Dumbbell} label="Protein" value={product.nutrition.protein} unit="g" />
@@ -142,9 +140,10 @@ function ProductDetailSection({ product }) {
 
                         <div className="h-px bg-[#E8E0D5]" />
 
-                        {/* OPTIONS SECTION */}
+                        {/* OPTIONS */}
                         <div className="space-y-8">
-                            {/* SIZE OPTIONS */}
+
+                            {/* SIZE */}
                             {product.sizes && product.sizes.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold text-[#2B1E17] mb-3 flex items-center gap-2"><Coffee className="w-5 h-5 text-[#C46A2B]" /> Porsiyon Seçimi</h3>
@@ -163,7 +162,7 @@ function ProductDetailSection({ product }) {
                                 </div>
                             )}
 
-                            {/* MILK OPTIONS */}
+                            {/* MILK */}
                             {product.milkOptions && product.milkOptions.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold text-[#2B1E17] mb-3 flex items-center gap-2"><Droplet className="w-5 h-5 text-[#C46A2B]" /> Süt Seçimi</h3>
@@ -188,7 +187,7 @@ function ProductDetailSection({ product }) {
                                     <h3 className="font-semibold text-[#2B1E17] mb-3 flex items-center gap-2"><Star className="w-5 h-5 text-[#C46A2B]" /> Ekstralar</h3>
                                     <div className="space-y-2">
                                         {product.extras.map((extra) => {
-                                            const isSelected = selectedExtras.some(e => e.name === extra.name);
+                                            const isSelected = selectedExtras.some(extraItem => extraItem.name === extra.name);
                                             return (
                                                 <button
                                                     key={extra.name}
@@ -214,7 +213,7 @@ function ProductDetailSection({ product }) {
                                 <h3 className="font-semibold text-[#2B1E17] mb-3">Sipariş Notu</h3>
                                 <textarea
                                     value={note}
-                                    onChange={(e) => setNote(e.target.value)}
+                                    onChange={(event) => setNote(event.target.value)}
                                     placeholder="Eklemek istediğiniz notlar (opsiyonel)..."
                                     className="w-full p-4 bg-white border border-[#E8E0D5] rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 focus:ring-2 focus:ring-[#C46A2B]/30 outline-none resize-none h-24"
                                 />
@@ -229,7 +228,6 @@ function ProductDetailSection({ product }) {
                                     <span className="w-10 text-center font-bold text-lg text-white">{quantity}</span>
                                     <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all"><Plus className="w-4 h-4" /></button>
                                 </div>
-
                                 <button
                                     onClick={handleAction}
                                     disabled={isAdded}
@@ -246,7 +244,6 @@ function ProductDetailSection({ product }) {
                                 </button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
