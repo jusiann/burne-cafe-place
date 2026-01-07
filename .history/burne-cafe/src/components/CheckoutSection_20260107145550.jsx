@@ -3,36 +3,36 @@ import {useNavigate} from 'react-router-dom';
 import {User,Phone,MapPin,Clock,CreditCard,FileText,ShoppingBag,Tag,AlertCircle,X} from 'lucide-react';
 import {useCart} from '../context/CartContext';
 
-/* INPUT FIELD COMPONENT */
-const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
-    <div>
-        <label htmlFor={name} className="block text-sm font-medium text-[#2B1E17] mb-2">
-            {label} {required && <span className="text-[#C46A2B]">*</span>}
-        </label>
-        <div className="relative">
-            <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8B7E75]" />
-            <input
-                id={name}
-                name={name}
-                type={type}
-                value={formData[name]}
-                onChange={handleChange}
-                className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
-                {...props}
-            />
-        </div>
-        {errors[name] && (
-            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                <AlertCircle className="w-4 h-4" />
-                {errors[name]}
-            </p>
-        )}
-    </div>
-);
-
 function CheckoutSection() {
     const navigate = useNavigate();
     const {items,cartTotals,appliedCoupon,isEmpty,createOrder} = useCart();
+
+    /* INPUT FIELD COMPONENT */
+    const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
+        <div>
+            <label htmlFor={name} className="block text-sm font-medium text-[#2B1E17] mb-2">
+                {label} {required && <span className="text-[#C46A2B]">*</span>}
+            </label>
+            <div className="relative">
+                <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8B7E75]" />
+                <input
+                    id={name}
+                    name={name}
+                    type={type}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                    {...props}
+                />
+            </div>
+            {errors[name] && (
+                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors[name]}
+                </p>
+            )}
+        </div>
+    );
 
     /* FORM STATE */
     const [formData, setFormData] = useState({
@@ -102,14 +102,14 @@ function CheckoutSection() {
 
     /* PAYMENT METHOD OPTIONS */
     const paymentMethods = [
-        {value: 'cash',label: 'Kapıda Nakit Ödeme',icon: CreditCard},
-        {value: 'card_on_delivery',label: 'Kapıda Kredi Kartı',icon: CreditCard},
-        {value: 'online_card',label: 'Online Kredi Kartı ile Ödeme',icon: CreditCard}
+        { value: 'cash', label: 'Kapıda Nakit Ödeme', icon: CreditCard },
+        { value: 'card_on_delivery', label: 'Kapıda Kredi Kartı', icon: CreditCard },
+        { value: 'online_card', label: 'Online Kredi Kartı ile Ödeme', icon: CreditCard }
     ];
 
     /* HANDLE INPUT CHANGE */
-    const handleChange = (event) => {
-        const {name,value} = event.target;
+    const handleChange = (e) => {
+        const { name, value } = e.target;
 
         // Eğer "Belirli Bir Saat" seçiliyorsa ve çalışma saatleri dışındaysak uyarı göster
         if (name === 'deliveryTime' && value === 'custom' && timeOptions.length === 0) {
@@ -117,9 +117,9 @@ function CheckoutSection() {
             return;
         }
 
-        setFormData(previous => ({...previous,[name]: value}));
+        setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) {
-            setErrors(previous => ({...previous,[name]: ''}));
+            setErrors(prev => ({ ...prev, [name]: '' }));
         }
     };
 
@@ -166,8 +166,8 @@ function CheckoutSection() {
     };
 
     /* HANDLE SUBMIT */
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
         // Çalışma saatleri kontrolü
         const now = new Date();
@@ -280,16 +280,16 @@ function CheckoutSection() {
                                             name="customerPhone"
                                             type="tel"
                                             value={formData.customerPhone}
-                                            onChange={(event) => {
-                                                let value = event.target.value.replace(/\D/g,'');
-                                                if (value.length > 10) value = value.slice(0,10);
+                                            onChange={(e) => {
+                                                let value = e.target.value.replace(/\D/g, '');
+                                                if (value.length > 10) value = value.slice(0, 10);
                                                 if (value.length > 3 && value.length <= 6) {
-                                                    value = value.slice(0,3) + '-' + value.slice(3);
+                                                    value = value.slice(0, 3) + '-' + value.slice(3);
                                                 } else if (value.length > 6) {
-                                                    value = value.slice(0,3) + '-' + value.slice(3,6) + '-' + value.slice(6);
+                                                    value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
                                                 }
-                                                setFormData(previous => ({...previous,customerPhone: value}));
-                                                if (errors.customerPhone) setErrors(previous => ({...previous,customerPhone: ''}));
+                                                setFormData(prev => ({ ...prev, customerPhone: value }));
+                                                if (errors.customerPhone) setErrors(prev => ({ ...prev, customerPhone: '' }));
                                             }}
                                             placeholder="5XX-XXX-XXXX"
                                             maxLength="12"
@@ -433,11 +433,11 @@ function CheckoutSection() {
                                                 type="text"
                                                 name="cardNumber"
                                                 value={formData.cardNumber}
-                                                onChange={(event) => {
-                                                    const value = event.target.value.replace(/\s/g,'').replace(/\D/g,'');
+                                                onChange={(e) => {
+                                                    const value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
                                                     const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
-                                                    setFormData(previous => ({...previous,cardNumber: formatted}));
-                                                    if (errors.cardNumber) setErrors(previous => ({...previous,cardNumber: ''}));
+                                                    setFormData(prev => ({ ...prev, cardNumber: formatted }));
+                                                    if (errors.cardNumber) setErrors(prev => ({ ...prev, cardNumber: '' }));
                                                 }}
                                                 placeholder="1234 5678 9012 3456"
                                                 maxLength="19"
@@ -478,13 +478,13 @@ function CheckoutSection() {
                                                     type="text"
                                                     name="cardExpiry"
                                                     value={formData.cardExpiry}
-                                                    onChange={(event) => {
-                                                        let value = event.target.value.replace(/\D/g,'');
+                                                    onChange={(e) => {
+                                                        let value = e.target.value.replace(/\D/g, '');
                                                         if (value.length >= 2) {
-                                                            value = value.slice(0,2) + '/' + value.slice(2,4);
+                                                            value = value.slice(0, 2) + '/' + value.slice(2, 4);
                                                         }
-                                                        setFormData(previous => ({...previous,cardExpiry: value}));
-                                                        if (errors.cardExpiry) setErrors(previous => ({...previous,cardExpiry: ''}));
+                                                        setFormData(prev => ({ ...prev, cardExpiry: value }));
+                                                        if (errors.cardExpiry) setErrors(prev => ({ ...prev, cardExpiry: '' }));
                                                     }}
                                                     placeholder="AA/YY"
                                                     maxLength="5"
@@ -505,10 +505,10 @@ function CheckoutSection() {
                                                     type="text"
                                                     name="cardCvv"
                                                     value={formData.cardCvv}
-                                                    onChange={(event) => {
-                                                        const value = event.target.value.replace(/\D/g,'');
-                                                        setFormData(previous => ({...previous,cardCvv: value}));
-                                                        if (errors.cardCvv) setErrors(previous => ({...previous,cardCvv: ''}));
+                                                    onChange={(e) => {
+                                                        const value = e.target.value.replace(/\D/g, '');
+                                                        setFormData(prev => ({ ...prev, cardCvv: value }));
+                                                        if (errors.cardCvv) setErrors(prev => ({ ...prev, cardCvv: '' }));
                                                     }}
                                                     placeholder="123"
                                                     maxLength="3"

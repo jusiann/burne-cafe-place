@@ -3,36 +3,36 @@ import {useNavigate} from 'react-router-dom';
 import {User,Phone,MapPin,Clock,CreditCard,FileText,ShoppingBag,Tag,AlertCircle,X} from 'lucide-react';
 import {useCart} from '../context/CartContext';
 
-/* INPUT FIELD COMPONENT */
-const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
-    <div>
-        <label htmlFor={name} className="block text-sm font-medium text-[#2B1E17] mb-2">
-            {label} {required && <span className="text-[#C46A2B]">*</span>}
-        </label>
-        <div className="relative">
-            <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8B7E75]" />
-            <input
-                id={name}
-                name={name}
-                type={type}
-                value={formData[name]}
-                onChange={handleChange}
-                className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
-                {...props}
-            />
-        </div>
-        {errors[name] && (
-            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                <AlertCircle className="w-4 h-4" />
-                {errors[name]}
-            </p>
-        )}
-    </div>
-);
-
 function CheckoutSection() {
     const navigate = useNavigate();
     const {items,cartTotals,appliedCoupon,isEmpty,createOrder} = useCart();
+
+    /* INPUT FIELD COMPONENT */
+    const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
+        <div>
+            <label htmlFor={name} className="block text-sm font-medium text-[#2B1E17] mb-2">
+                {label} {required && <span className="text-[#C46A2B]">*</span>}
+            </label>
+            <div className="relative">
+                <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8B7E75]" />
+                <input
+                    id={name}
+                    name={name}
+                    type={type}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                    {...props}
+                />
+            </div>
+            {errors[name] && (
+                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors[name]}
+                </p>
+            )}
+        </div>
+    );
 
     /* FORM STATE */
     const [formData, setFormData] = useState({
@@ -281,14 +281,18 @@ function CheckoutSection() {
                                             type="tel"
                                             value={formData.customerPhone}
                                             onChange={(event) => {
-                                                let value = event.target.value.replace(/\D/g,'');
+                                                const input = event.target.value;
+                                                let value = input.replace(/\D/g,'');
                                                 if (value.length > 10) value = value.slice(0,10);
-                                                if (value.length > 3 && value.length <= 6) {
-                                                    value = value.slice(0,3) + '-' + value.slice(3);
-                                                } else if (value.length > 6) {
-                                                    value = value.slice(0,3) + '-' + value.slice(3,6) + '-' + value.slice(6);
+                                                
+                                                let formatted = value;
+                                                if (value.length > 6) {
+                                                    formatted = value.slice(0,3) + '-' + value.slice(3,6) + '-' + value.slice(6);
+                                                } else if (value.length > 3) {
+                                                    formatted = value.slice(0,3) + '-' + value.slice(3);
                                                 }
-                                                setFormData(previous => ({...previous,customerPhone: value}));
+                                                
+                                                setFormData(previous => ({...previous,customerPhone: formatted}));
                                                 if (errors.customerPhone) setErrors(previous => ({...previous,customerPhone: ''}));
                                             }}
                                             placeholder="5XX-XXX-XXXX"
@@ -434,7 +438,9 @@ function CheckoutSection() {
                                                 name="cardNumber"
                                                 value={formData.cardNumber}
                                                 onChange={(event) => {
-                                                    const value = event.target.value.replace(/\s/g,'').replace(/\D/g,'');
+                                                    const input = event.target.value;
+                                                    const value = input.replace(/\s/g,'').replace(/\D/g,'');
+                                                    if (value.length > 16) return;
                                                     const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
                                                     setFormData(previous => ({...previous,cardNumber: formatted}));
                                                     if (errors.cardNumber) setErrors(previous => ({...previous,cardNumber: ''}));
@@ -479,11 +485,16 @@ function CheckoutSection() {
                                                     name="cardExpiry"
                                                     value={formData.cardExpiry}
                                                     onChange={(event) => {
-                                                        let value = event.target.value.replace(/\D/g,'');
+                                                        const input = event.target.value;
+                                                        let value = input.replace(/\D/g,'');
+                                                        if (value.length > 4) value = value.slice(0,4);
+                                                        
+                                                        let formatted = value;
                                                         if (value.length >= 2) {
-                                                            value = value.slice(0,2) + '/' + value.slice(2,4);
+                                                            formatted = value.slice(0,2) + '/' + value.slice(2);
                                                         }
-                                                        setFormData(previous => ({...previous,cardExpiry: value}));
+                                                        
+                                                        setFormData(previous => ({...previous,cardExpiry: formatted}));
                                                         if (errors.cardExpiry) setErrors(previous => ({...previous,cardExpiry: ''}));
                                                     }}
                                                     placeholder="AA/YY"
@@ -506,7 +517,9 @@ function CheckoutSection() {
                                                     name="cardCvv"
                                                     value={formData.cardCvv}
                                                     onChange={(event) => {
-                                                        const value = event.target.value.replace(/\D/g,'');
+                                                        const input = event.target.value;
+                                                        const value = input.replace(/\D/g,'');
+                                                        if (value.length > 3) return;
                                                         setFormData(previous => ({...previous,cardCvv: value}));
                                                         if (errors.cardCvv) setErrors(previous => ({...previous,cardCvv: ''}));
                                                     }}

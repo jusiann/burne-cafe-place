@@ -3,36 +3,36 @@ import {useNavigate} from 'react-router-dom';
 import {User,Phone,MapPin,Clock,CreditCard,FileText,ShoppingBag,Tag,AlertCircle,X} from 'lucide-react';
 import {useCart} from '../context/CartContext';
 
-/* INPUT FIELD COMPONENT */
-const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
-    <div>
-        <label htmlFor={name} className="block text-sm font-medium text-[#2B1E17] mb-2">
-            {label} {required && <span className="text-[#C46A2B]">*</span>}
-        </label>
-        <div className="relative">
-            <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8B7E75]" />
-            <input
-                id={name}
-                name={name}
-                type={type}
-                value={formData[name]}
-                onChange={handleChange}
-                className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
-                {...props}
-            />
-        </div>
-        {errors[name] && (
-            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                <AlertCircle className="w-4 h-4" />
-                {errors[name]}
-            </p>
-        )}
-    </div>
-);
-
 function CheckoutSection() {
     const navigate = useNavigate();
     const {items,cartTotals,appliedCoupon,isEmpty,createOrder} = useCart();
+
+    /* INPUT FIELD COMPONENT */
+    const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
+        <div>
+            <label htmlFor={name} className="block text-sm font-medium text-[#2B1E17] mb-2">
+                {label} {required && <span className="text-[#C46A2B]">*</span>}
+            </label>
+            <div className="relative">
+                <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8B7E75]" />
+                <input
+                    id={name}
+                    name={name}
+                    type={type}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                    {...props}
+                />
+            </div>
+            {errors[name] && (
+                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors[name]}
+                </p>
+            )}
+        </div>
+    );
 
     /* FORM STATE */
     const [formData, setFormData] = useState({

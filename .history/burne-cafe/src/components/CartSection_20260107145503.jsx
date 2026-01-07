@@ -106,14 +106,14 @@ function CartSection() {
 
         const handleApply = async (event) => {
             event.preventDefault();
-            if (!code.trim()) {setMessage({type: 'error',text: 'Lütfen kupon kodu girin'}); return;}
+            if (!code.trim()) { setMessage({ type: 'error', text: 'Lütfen kupon kodu girin' }); return; }
             setIsLoading(true);
-            await new Promise(resolve => setTimeout(resolve,300));
+            await new Promise(resolve => setTimeout(resolve, 300));
             const result = applyCoupon(code.trim());
-            setMessage({type: result.success ? 'success' : 'error',text: result.message});
+            setMessage({ type: result.success ? 'success' : 'error', text: result.message });
             if (result.success) setCode('');
             setIsLoading(false);
-            setTimeout(() => setMessage(null),3000);
+            setTimeout(() => setMessage(null), 3000);
         };
 
         if (appliedCoupon) {

@@ -80,11 +80,11 @@ function CartSection() {
                     <div className="mt-auto flex items-end justify-between gap-2 min-h-[45px]">
                         {/* QUANTITY CONTROLS */}
                         <div className="flex items-center bg-[#C46A2B] rounded-xl p-0.5 shrink-0">
-                            <button onClick={() => updateQuantity(item.itemId,item.quantity - 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all disabled:opacity-50" disabled={item.quantity <= 1}>
+                            <button onClick={() => updateQuantity(item.itemId, item.quantity - 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all disabled:opacity-50" disabled={item.quantity <= 1}>
                                 <Minus className="w-3.5 h-3.5" />
                             </button>
                             <span className="w-8 text-center font-bold text-sm text-white">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.itemId,item.quantity + 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all">
+                            <button onClick={() => updateQuantity(item.itemId, item.quantity + 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all">
                                 <Plus className="w-3.5 h-3.5" />
                             </button>
                         </div>
@@ -106,14 +106,14 @@ function CartSection() {
 
         const handleApply = async (event) => {
             event.preventDefault();
-            if (!code.trim()) {setMessage({type: 'error',text: 'Lütfen kupon kodu girin'}); return;}
+            if (!code.trim()) { setMessage({ type: 'error', text: 'Lütfen kupon kodu girin' }); return; }
             setIsLoading(true);
-            await new Promise(resolve => setTimeout(resolve,300));
+            await new Promise(resolve => setTimeout(resolve, 300));
             const result = applyCoupon(code.trim());
-            setMessage({type: result.success ? 'success' : 'error',text: result.message});
+            setMessage({ type: result.success ? 'success' : 'error', text: result.message });
             if (result.success) setCode('');
             setIsLoading(false);
-            setTimeout(() => setMessage(null),3000);
+            setTimeout(() => setMessage(null), 3000);
         };
 
         if (appliedCoupon) {

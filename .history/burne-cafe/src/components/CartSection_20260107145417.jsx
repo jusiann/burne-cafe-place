@@ -6,14 +6,14 @@ import {useCart} from '../context/CartContext';
 function CartSection() {
     const {items,cartTotals,appliedCoupon,updateQuantity,removeFromCart,applyCoupon,removeCoupon,isEmpty,clearCart} = useCart();
 
-    const [confirmationModal,setConfirmationModal] = useState({
+    const [confirmationModal, setConfirmationModal] = useState({
         isOpen: false,
         title: '',
         message: '',
-        onConfirm: () => {}
+        onConfirm: () => { }
     });
 
-    const openConfirmation = (title,message,onConfirm) => {
+    const openConfirmation = (title, message, onConfirm) => {
         setConfirmationModal({
             isOpen: true,
             title,
@@ -38,7 +38,7 @@ function CartSection() {
     }, [confirmationModal.isOpen]);
 
     /* CART ITEM COMPONENT */
-    const CartItem = ({item}) => {
+    const CartItem = ({ item }) => {
         const options = [
             item.size?.name,
             item.milkOption?.name,
@@ -47,13 +47,13 @@ function CartSection() {
 
         return (
             <div className="flex gap-4 p-4 bg-white rounded-xl border border-[#E8E0D5] hover:shadow-md transition-shadow duration-300">
-                <Link to={`/product/${item.productId}`} state={{cartItem: item}} className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-[#F5F1EB]">
+                <Link to={`/product/${item.productId}`} state={{ cartItem: item }} className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-[#F5F1EB]">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-300" />
                 </Link>
                 <div className="flex-1 min-w-0 flex flex-col">
                     <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex-1 min-w-0">
-                            <Link to={`/product/${item.productId}`} state={{cartItem: item}} className="font-semibold text-[#2B1E17] hover:text-[#C46A2B] transition-colors line-clamp-1">{item.name}</Link>
+                            <Link to={`/product/${item.productId}`} state={{ cartItem: item }} className="font-semibold text-[#2B1E17] hover:text-[#C46A2B] transition-colors line-clamp-1">{item.name}</Link>
                         </div>
                         <button onClick={() => {
                             openConfirmation(
@@ -69,7 +69,7 @@ function CartSection() {
                     {/* OPTIONS */}
                     {options.length > 0 && (
                         <div className="text-xs text-[#8B7E75] mb-2 space-y-0.5">
-                            {options.map((option,index) => (
+                            {options.map((option, index) => (
                                 <div key={index}>{option}</div>
                             ))}
                         </div>
@@ -80,11 +80,11 @@ function CartSection() {
                     <div className="mt-auto flex items-end justify-between gap-2 min-h-[45px]">
                         {/* QUANTITY CONTROLS */}
                         <div className="flex items-center bg-[#C46A2B] rounded-xl p-0.5 shrink-0">
-                            <button onClick={() => updateQuantity(item.itemId,item.quantity - 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all disabled:opacity-50" disabled={item.quantity <= 1}>
+                            <button onClick={() => updateQuantity(item.itemId, item.quantity - 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all disabled:opacity-50" disabled={item.quantity <= 1}>
                                 <Minus className="w-3.5 h-3.5" />
                             </button>
                             <span className="w-8 text-center font-bold text-sm text-white">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.itemId,item.quantity + 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all">
+                            <button onClick={() => updateQuantity(item.itemId, item.quantity + 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all">
                                 <Plus className="w-3.5 h-3.5" />
                             </button>
                         </div>
@@ -106,14 +106,14 @@ function CartSection() {
 
         const handleApply = async (event) => {
             event.preventDefault();
-            if (!code.trim()) {setMessage({type: 'error',text: 'Lütfen kupon kodu girin'}); return;}
+            if (!code.trim()) { setMessage({ type: 'error', text: 'Lütfen kupon kodu girin' }); return; }
             setIsLoading(true);
-            await new Promise(resolve => setTimeout(resolve,300));
+            await new Promise(resolve => setTimeout(resolve, 300));
             const result = applyCoupon(code.trim());
-            setMessage({type: result.success ? 'success' : 'error',text: result.message});
+            setMessage({ type: result.success ? 'success' : 'error', text: result.message });
             if (result.success) setCode('');
             setIsLoading(false);
-            setTimeout(() => setMessage(null),3000);
+            setTimeout(() => setMessage(null), 3000);
         };
 
         if (appliedCoupon) {
