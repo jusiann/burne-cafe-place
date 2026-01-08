@@ -33,14 +33,18 @@ function HomeHeroSlider() {
 
     /* SLIDE HANDLERS */
     const nextSlide = useCallback(() => {
-        if (isTransitioning) return;
+        if (isTransitioning) 
+            return;
+
         setIsTransitioning(true);
         setCurrentSlide((previous) => (previous + 1) % slides.length);
         setTimeout(() => setIsTransitioning(false),700);
-    }, [isTransitioning]);
+    }, [isTransitioning, slides.length]);
 
     const goToSlide = (index) => {
-        if (isTransitioning || index === currentSlide) return;
+        if (isTransitioning || index === currentSlide) 
+            return;
+        
         setIsTransitioning(true);
         setCurrentSlide(index);
         setTimeout(() => setIsTransitioning(false), 700);

@@ -39,7 +39,8 @@ function MenuSection() {
             const matchedCategory = categories.find(category =>
                 category.toLowerCase().replace(/\s+/g, '-').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g') === categoryParam
             );
-            if (matchedCategory) setActiveCategory(matchedCategory);
+            if (matchedCategory) 
+                setActiveCategory(matchedCategory);
         } else {
             setActiveCategory('all');
         }

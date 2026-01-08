@@ -159,17 +159,19 @@ function CartProvider({children}) {
             couponItem.code.toLowerCase() === code.toLowerCase() && couponItem.isActive
         );
 
-        if (!coupon) {
+        if (!coupon)
             return { success: false, message: 'Geçersiz kupon kodu' };
-        }
 
         const validation = validateCouponConditions(coupon, items, orders);
-        if (!validation.valid) {
+        if (!validation.valid)
             return { success: false, message: validation.message };
-        }
+        
 
         setAppliedCoupon(coupon);
-        return { success: true, message: 'Kupon başarıyla uygulandı!' };
+        return { 
+            success: true, 
+            message: 'Kupon başarıyla uygulandı!' 
+        };
     }, [items, orders, validateCouponConditions]);
 
     const removeCoupon = useCallback(() => {
