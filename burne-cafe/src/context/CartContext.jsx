@@ -7,32 +7,9 @@ const CART_STORAGE_KEY = 'burne-cafe-cart';
 const COUPON_STORAGE_KEY = 'burne-cafe-coupon';
 const ORDERS_STORAGE_KEY = 'burne-cafe-orders';
 
-/* ORDER STATUS CONSTANTS */
-const ORDER_STATUSES = {
-    PREPARING: 'preparing',
-    ON_THE_WAY: 'on_the_way',
-    DELIVERED: 'delivered'
-};
-
-const STATUS_LABELS = {
-    [ORDER_STATUSES.PREPARING]: 'Hazırlanıyor',
-    [ORDER_STATUSES.ON_THE_WAY]: 'Yolda',
-    [ORDER_STATUSES.DELIVERED]: 'Teslim Edildi'
-};
-
 const CartContext = createContext(null);
 
 function CartProvider({children}) {
-
-    /* ORDER NUMBER GENERATOR */
-    const generateOrderNumber = () => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-        return `${year}${month}${day}${random}`;
-    };
 
     /* STATE INITIALIZATION */
     const [items, setItems] = useState(() => {
@@ -108,17 +85,6 @@ function CartProvider({children}) {
             const mielItems = cartItems.filter(item => item.productId === 1);
             if (mielItems.length === 0) {
                 return {valid: false,message: 'Bu kupon sadece Miel siparişlerinde geçerlidir.'};
-            }
-
-            const hasExtras = mielItems.some(item => {
-                const sizePrice = item.size?.price || 0;
-                const milkPrice = item.milkOption?.price || 0;
-                const extrasPrice = item.extras?.reduce((sum,extra) => sum + (extra.price || 0), 0) || 0;
-                return (sizePrice + milkPrice + extrasPrice) > 0;
-            });
-
-            if (!hasExtras) {
-                return {valid: false,message: 'Bu kupon Miel ürününün ekstaları (boyut, süt vb.) için geçerlidir.'};
             }
         }
 
@@ -242,24 +208,7 @@ function CartProvider({children}) {
             const validation = validateCouponConditions(appliedCoupon,items,orders);
 
             if (validation.valid) {
-                if (appliedCoupon.code === 'MIEL10') {
-                    let mielExtrasTotal = 0;
-                    items.forEach(item => {
-                        if (item.productId === 1) {
-                            const sizePrice = item.size?.price || 0;
-                            const milkPrice = item.milkOption?.price || 0;
-                            const extrasPrice = item.extras?.reduce((sum,extra) => sum + (extra.price || 0), 0) || 0;
-                            mielExtrasTotal += (sizePrice + milkPrice + extrasPrice) * item.quantity;
-                        }
-                    });
-
-                    if (appliedCoupon.discountType === 'percentage') {
-                        discount = mielExtrasTotal * (appliedCoupon.discountValue / 100);
-                    } else {
-                        discount = appliedCoupon.discountValue;
-                    }
-                }
-                else if (appliedCoupon.discountType === 'percentage') {
+                if (appliedCoupon.discountType === 'percentage') {
                     discount = subtotal * (appliedCoupon.discountValue / 100);
                 } else {
                     discount = appliedCoupon.discountValue;
@@ -284,9 +233,9 @@ function CartProvider({children}) {
     const createOrder = useCallback((orderData) => {
         const newOrder = {
             id: `ORD-${Date.now()}`,
-            orderNumber: generateOrderNumber(),
+            orderNumber: `#${Date.now()}`,
             date: new Date().toISOString(),
-            status: ORDER_STATUSES.PREPARING,
+            status: 'preparing',
             items: items.map(item => ({
                 productId: item.productId,
                 name: item.name,
@@ -336,27 +285,6 @@ function CartProvider({children}) {
         return orders.find(order => order.id === orderId);
     }, [orders]);
 
-    const reorderFromOrder = useCallback((orderId,products) => {
-        const order = orders.find(orderItem => orderItem.id === orderId);
-        if (!order) return false;
-
-        order.items.forEach(orderItem => {
-            const product = products.find(productItem => productItem.id === orderItem.productId);
-            if (product) {
-                addToCart(
-                    product,
-                    orderItem.quantity,
-                    orderItem.size,
-                    orderItem.milkOption,
-                    orderItem.extras || [],
-                    orderItem.note || ''
-                );
-            }
-        });
-
-        return true;
-    }, [orders,addToCart]);
-
     const clearLatestOrder = useCallback(() => {
         setLatestOrder(null);
     }, []);
@@ -378,10 +306,7 @@ function CartProvider({children}) {
         latestOrder,
         createOrder,
         getOrderById,
-        reorderFromOrder,
-        clearLatestOrder,
-        ORDER_STATUSES,
-        STATUS_LABELS
+        clearLatestOrder
     };
 
     return (
@@ -391,5 +316,5 @@ function CartProvider({children}) {
     );
 }
 
-export {CartProvider,ORDER_STATUSES,STATUS_LABELS};
+export {CartProvider};
 export const useCart = () => useContext(CartContext);

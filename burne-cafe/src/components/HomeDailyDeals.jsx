@@ -22,8 +22,8 @@ function HomeDailyDeals() {
         },
         'MIEL10': {
             title: 'Le Miêl',
-            description: 'Miel Ekstra Ürünlerde %10 İndirim',
-            conditions: 'Miel kahve için ekstra ürünlerde geçerlidir.'
+            description: 'Miel Siparişlerinde %10 İndirim',
+            conditions: 'Mielde geçerlidir.'
         }
     };
 
@@ -114,7 +114,7 @@ function HomeDailyDeals() {
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveCouponIndex((previous) => (previous + 1) % coupons.length);
-        }, 5000);
+        }, 2000);
 
         return () => clearInterval(interval);
     }, []);

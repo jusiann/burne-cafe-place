@@ -1,33 +1,23 @@
-import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Package,Clock,CheckCircle,Truck,ChevronRight,RotateCcw,ShoppingBag} from 'lucide-react';
+import {Package,Clock,CheckCircle,Truck,ChevronRight,ShoppingBag} from 'lucide-react';
 import {useCart} from '../context/CartContext';
-import products from '../data/products.json';
 
 function OrderHistorySection() {
     const navigate = useNavigate();
-    const {orders,reorderFromOrder,STATUS_LABELS} = useCart();
-    const [reorderingId,setReorderingId] = useState(null);
+    const {orders} = useCart();
+
+    /* STATUS LABELS */
+    const statusLabels = {
+        'preparing': 'Hazırlanıyor',
+        'on_the_way': 'Yolda',
+        'delivered': 'Teslim Edildi'
+    };
 
     /* STATUS ICON MAPPING */
     const statusIcons = {
         'preparing': {icon: Clock,color: 'text-[#C46A2B]',bg: 'bg-[#C46A2B]/10'},
         'on_the_way': {icon: Truck,color: 'text-[#9B7F57]',bg: 'bg-[#9B7F57]/10'},
         'delivered': {icon: CheckCircle,color: 'text-[#6B5D4F]',bg: 'bg-[#6B5D4F]/10'}
-    };
-
-    /* HANDLE REORDER */
-    const handleReorder = (orderId) => {
-        setReorderingId(orderId);
-        const success = reorderFromOrder(orderId, products);
-
-        if (success) {
-            setTimeout(() => {
-                navigate('/cart');
-            }, 500);
-        } else {
-            setReorderingId(null);
-        }
     };
 
     /* EMPTY STATE */
@@ -80,7 +70,7 @@ function OrderHistorySection() {
                                         </div>
                                     </div>
                                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusConfig.color} ${statusConfig.bg}`}>
-                                        {STATUS_LABELS[order.status]}
+                                        {statusLabels[order.status]}
                                     </span>
                                 </div>
 
@@ -131,20 +121,12 @@ function OrderHistorySection() {
                                     </div>
 
                                     {/* ACTIONS */}
-                                    <div className="mt-4 pt-4 border-t border-[#E8E0D5] flex gap-3">
-                                        <button
-                                            onClick={() => handleReorder(order.id)}
-                                            disabled={reorderingId === order.id}
-                                            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${reorderingId === order.id ? 'bg-[#E8E0D5] text-[#8B7E75] cursor-not-allowed' : 'bg-[#C46A2B] text-white hover:bg-[#A85A24] hover:shadow-lg'}`}
-                                        >
-                                            {reorderingId === order.id ? 'Ekleniyor...' : 'Tekrar Sipariş Ver'}
-                                            <RotateCcw className="w-4 h-4" />
-                                        </button>
+                                    <div className="mt-4 pt-4 border-t border-[#E8E0D5]">
                                         <button
                                             onClick={() => navigate('/order-confirmation', { state: { orderId: order.id } })}
-                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border-2 border-[#C46A2B] text-[#C46A2B] font-semibold rounded-lg hover:bg-[#C46A2B] hover:text-white transition-all"
+                                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C46A2B] text-white font-semibold rounded-lg hover:bg-[#A85A24] hover:shadow-lg transition-all"
                                         >
-                                            Detayları Gör
+                                            Sipariş Detayları
                                             <ChevronRight className="w-4 h-4" />
                                         </button>
                                     </div>

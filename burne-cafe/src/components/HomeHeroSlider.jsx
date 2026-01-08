@@ -48,7 +48,7 @@ function HomeHeroSlider() {
 
     /* AUTO SLIDE */
     useEffect(() => {
-        const interval = setInterval(nextSlide, 6000);
+        const interval = setInterval(nextSlide, 2000);
         return () => clearInterval(interval);
     }, [nextSlide]);
 

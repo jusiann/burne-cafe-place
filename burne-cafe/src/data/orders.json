@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "orderNumber": "202401031234",
+    "orderNumber": "#1704275400000",
     "date": "2024-01-03T10:30:00.000Z",
     "status": "delivered",
     "items": [
@@ -61,11 +61,11 @@
     "discount": 28.4,
     "couponCode": "IKILIM20",
     "total": 136.32,
-    "estimatedDelivery": "15-20 dakika"
+    "estimatedDelivery": "Teslim Edildi"
   },
   {
     "id": "2",
-    "orderNumber": "202401035678",
+    "orderNumber": "#1704289500000",
     "date": "2024-01-03T14:15:00.000Z",
     "status": "on_the_way",
     "items": [
@@ -107,6 +107,6 @@
     "discount": 0,
     "couponCode": null,
     "total": 256.8,
-    "estimatedDelivery": "15:00"
+    "estimatedDelivery": "5 dk içinde"
   }
 ]
