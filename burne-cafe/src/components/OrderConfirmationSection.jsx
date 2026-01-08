@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {useNavigate,useLocation} from 'react-router-dom';
-import {Clock,Package,Coffee,ArrowRight,Tag} from 'lucide-react';
+import {Clock,Package,Coffee,ArrowRight,Tag,FileText} from 'lucide-react';
 import {useCart} from '../context/CartContext';
 
 function OrderConfirmationSection() {
@@ -84,6 +84,17 @@ function OrderConfirmationSection() {
                                 <p className="text-sm text-[#8B7E75] mt-1">{order.address.fullAddress}</p>
                             </div>
                         </div>
+
+                        {/* ORDER NOTE */}
+                        {order.orderNote && (
+                            <div className="p-4 bg-[#fff8f3] rounded-xl border border-[#C46A2B]/10">
+                                <p className="text-sm text-[#8B7E75] mb-1 flex items-center gap-2">
+                                    <FileText className="w-4 h-4 text-[#C46A2B]" />
+                                    Sipariş Notu
+                                </p>
+                                <p className="text-[#2B1E17] italic">{order.orderNote}</p>
+                            </div>
+                        )}
 
                         {/* ORDER SUMMARY */}
                         <div className="border-t border-[#E8E0D5] pt-4">
