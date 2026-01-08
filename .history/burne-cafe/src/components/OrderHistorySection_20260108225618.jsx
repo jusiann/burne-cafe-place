@@ -95,7 +95,7 @@ function OrderHistorySection() {
                                 <div className="p-4 bg-[#F5F1EB] border-b border-[#E8E0D5] flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <div>
-                                            <p className="font-semibold text-[#2B1E17]">{order.orderNumber}</p>
+                                            <p className="font-semibold text-[#2B1E17]">#{order.orderNumber}</p>
                                             <p className="text-xs text-[#8B7E75]">{new Date(order.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                                         </div>
                                     </div>
@@ -163,10 +163,10 @@ function OrderHistorySection() {
                                             {order.status === 'preparing' && (
                                                 <button
                                                     onClick={() => openConfirmation(order.id)}
-                                                    className="px-4 py-2.5 bg-white border-2 border-[#C46A2B] text-[#C46A2B] font-semibold rounded-lg hover:bg-[#F5F1EB] hover:shadow-lg transition-all flex items-center gap-2"
+                                                    className="px-4 py-2.5 bg-[#3D2817] text-white font-semibold rounded-lg hover:bg-[#2B1E17] hover:shadow-lg transition-all flex items-center gap-2"
                                                 >
+                                                    <XCircle className="w-4 h-4" />
                                                     İptal Et
-                                                    <X className="w-5 h-5" />
                                                 </button>
                                             )}
                                         </div>

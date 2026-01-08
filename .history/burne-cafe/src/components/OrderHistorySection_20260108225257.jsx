@@ -1,38 +1,10 @@
-import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Package,Clock,CheckCircle,Truck,ChevronRight,ShoppingBag,XCircle,AlertCircle,X} from 'lucide-react';
+import {Package,Clock,CheckCircle,Truck,ChevronRight,ShoppingBag,XCircle} from 'lucide-react';
 import {useCart} from '../context/CartContext';
 
 function OrderHistorySection() {
     const navigate = useNavigate();
     const {orders, cancelOrder} = useCart();
-
-    const [confirmationModal, setConfirmationModal] = useState({
-        isOpen: false,
-        orderId: null
-    });
-
-    const openConfirmation = (orderId) => {
-        setConfirmationModal({
-            isOpen: true,
-            orderId
-        });
-    };
-
-    const closeConfirmation = () => {
-        setConfirmationModal({isOpen: false, orderId: null});
-    };
-
-    useEffect(() => {
-        if (confirmationModal.isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [confirmationModal.isOpen]);
 
     /* STATUS LABELS */
     const statusLabels = {
@@ -47,7 +19,7 @@ function OrderHistorySection() {
         'preparing': {icon: Clock,color: 'text-[#C46A2B]',bg: 'bg-[#C46A2B]/10'},
         'on_the_way': {icon: Truck,color: 'text-[#9B7F57]',bg: 'bg-[#9B7F57]/10'},
         'delivered': {icon: CheckCircle,color: 'text-[#6B5D4F]',bg: 'bg-[#6B5D4F]/10'},
-        'cancelled': {icon: XCircle,color: 'text-[#3D2817]',bg: 'bg-[#3D2817]/10'}
+        'cancelled': {icon: XCircle,color: 'text-red-600',bg: 'bg-red-50'}
     };
 
     /* EMPTY STATE */
@@ -95,7 +67,7 @@ function OrderHistorySection() {
                                 <div className="p-4 bg-[#F5F1EB] border-b border-[#E8E0D5] flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <div>
-                                            <p className="font-semibold text-[#2B1E17]">{order.orderNumber}</p>
+                                            <p className="font-semibold text-[#2B1E17]">#{order.orderNumber}</p>
                                             <p className="text-xs text-[#8B7E75]">{new Date(order.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                                         </div>
                                     </div>
@@ -162,11 +134,15 @@ function OrderHistorySection() {
                                             </button>
                                             {order.status === 'preparing' && (
                                                 <button
-                                                    onClick={() => openConfirmation(order.id)}
-                                                    className="px-4 py-2.5 bg-white border-2 border-[#C46A2B] text-[#C46A2B] font-semibold rounded-lg hover:bg-[#F5F1EB] hover:shadow-lg transition-all flex items-center gap-2"
+                                                    onClick={() => {
+                                                        if (window.confirm('Bu siparişi iptal etmek istediğinizden emin misiniz?')) {
+                                                            cancelOrder(order.id);
+                                                        }
+                                                    }}
+                                                    className="px-4 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 hover:shadow-lg transition-all flex items-center gap-2"
                                                 >
+                                                    <XCircle className="w-4 h-4" />
                                                     İptal Et
-                                                    <X className="w-5 h-5" />
                                                 </button>
                                             )}
                                         </div>
@@ -176,53 +152,6 @@ function OrderHistorySection() {
                         );
                     })}
                 </div>
-
-                {/* CONFIRMATION MODAL */}
-                {confirmationModal.isOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-                        <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-                            {/* HEADER */}
-                            <div className="px-6 py-4 border-b border-[#E8E0D5] flex items-center justify-between bg-[#F5F1EB]">
-                                <h3 className="font-heading text-lg text-[#2B1E17] flex items-center gap-2">
-                                    <AlertCircle className="w-5 h-5 text-[#C46A2B]" />
-                                    Siparişi İptal Et
-                                </h3>
-                                <button
-                                    onClick={closeConfirmation}
-                                    className="text-[#8B7E75] hover:text-[#2B1E17] transition-colors"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            {/* BODY */}
-                            <div className="p-6">
-                                <p className="text-[#8B7E75] text-base leading-relaxed">
-                                    Bu siparişi iptal etmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
-                                </p>
-                            </div>
-
-                            {/* FOOTER */}
-                            <div className="px-6 py-4 bg-[#F5F1EB]/50 border-t border-[#E8E0D5] flex justify-end gap-3">
-                                <button
-                                    onClick={closeConfirmation}
-                                    className="px-4 py-2 rounded-xl text-[#8B7E75] font-medium hover:bg-[#E8E0D5]/50 transition-colors"
-                                >
-                                    Vazgeç
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        cancelOrder(confirmationModal.orderId);
-                                        closeConfirmation();
-                                    }}
-                                    className="px-4 py-2 rounded-xl bg-[#C46A2B] text-white font-medium hover:bg-[#A85A24] transition-colors shadow-lg shadow-[#C46A2B]/20"
-                                >
-                                    İptal Et
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
         </section>
     );

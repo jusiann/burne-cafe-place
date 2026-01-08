@@ -166,7 +166,7 @@ function OrderHistorySection() {
                                                     className="px-4 py-2.5 bg-white border-2 border-[#C46A2B] text-[#C46A2B] font-semibold rounded-lg hover:bg-[#F5F1EB] hover:shadow-lg transition-all flex items-center gap-2"
                                                 >
                                                     İptal Et
-                                                    <X className="w-5 h-5" />
+                                                    <XCircle className="w-4 h-4" />
                                                 </button>
                                             )}
                                         </div>
