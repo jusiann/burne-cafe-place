@@ -1,4 +1,4 @@
-import {createContext,useContext,useState,useEffect,useMemo,useCallback} from 'react';
+import {createContext, useContext, useState, useEffect, useMemo, useCallback} from 'react';
 import coupons from '../data/coupons.json';
 import ordersData from '../data/orders.json';
 
@@ -10,6 +10,7 @@ const ORDERS_STORAGE_KEY = 'burne-cafe-orders';
 const CartContext = createContext(null);
 
 function CartProvider({children}) {
+    const [latestOrder, setLatestOrder] = useState(null);
 
     /* STATE INITIALIZATION */
     const [items, setItems] = useState(() => {
@@ -39,49 +40,51 @@ function CartProvider({children}) {
         }
     });
 
-    const [latestOrder, setLatestOrder] = useState(null);
+    /* COUPON VALIDATION */
+    const validateCouponConditions = useCallback((coupon, cartItems, currentOrders) => {
+        if (!coupon) 
+            return { valid: false, message: '' };
 
-        /* COUPON VALIDATION */
-    const validateCouponConditions = useCallback((coupon,cartItems,currentOrders) => {
-        if (!coupon) return {valid: false,message: ''};
-
-        const subtotal = cartItems.reduce((sum,item) => sum + (item.unitPrice * item.quantity), 0);
-        if (subtotal < coupon.minOrderAmount) {
-            return {valid: false,message: `Bu kupon için minimum sepet tutarı ${coupon.minOrderAmount} TL olmalıdır.`};
-        }
+        const subtotal = cartItems.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+        if (subtotal < coupon.minOrderAmount)
+            return { valid: false, message: `Bu kupon için minimum sepet tutarı ${coupon.minOrderAmount} TL olmalıdır.` };
+        
 
         if (coupon.code === 'ILK15') {
-            if (currentOrders.length > 0) {
-                return {valid: false,message: 'Bu kupon sadece ilk siparişinizde geçerlidir.'};
-            }
+            if (currentOrders.length > 0)
+                return { valid: false, message: 'Bu kupon sadece ilk siparişinizde geçerlidir.' };
+            
         }
 
         if (coupon.code === 'IKILIM20') {
             const hasAmericano = cartItems.some(item => item.productId === 11);
             const hasLatte = cartItems.some(item => item.productId === 12);
-            if (!hasAmericano || !hasLatte) {
-                return {valid: false,message: 'Bu kupon için sepetinizde Americano ve Latte bulunmalıdır.'};
-            }
+            if (!hasAmericano || !hasLatte)
+                return { valid: false, message: 'Bu kupon için sepetinizde Americano ve Latte bulunmalıdır.' };
+            
         }
 
         if (coupon.code === 'MIEL10') {
             const mielItems = cartItems.filter(item => item.productId === 1);
             if (mielItems.length === 0) {
-                return {valid: false,message: 'Bu kupon sadece Miel siparişlerinde geçerlidir.'};
+                return { valid: false, message: 'Bu kupon sadece Miel siparişlerinde geçerlidir.' };
             }
         }
 
-        return {valid: true,message: ''};
+        return { 
+            valid: true, 
+            message: '' 
+        };
     }, []);
 
     /* CART OPERATIONS */
-    const generateItemId = useCallback((productId,size,milkOption,extras) => {
+    const generateItemId = useCallback((productId, size, milkOption, extras) => {
         const extrasStr = extras ? extras.sort().join(',') : '';
         return `${productId}-${size || 'default'}-${milkOption || 'default'}-${extrasStr}`;
     }, []);
 
-    const addToCart = useCallback((product,quantity = 1,size = null,milkOption = null,extras = [],note = '') => {
-        const itemId = generateItemId(product.id,size?.name,milkOption?.name,extras.map(extra => extra.name));
+    const addToCart = useCallback((product, quantity = 1, size = null, milkOption = null, extras = [], note = '') => {
+        const itemId = generateItemId(product.id, size?.name, milkOption?.name, extras.map(extra => extra.name));
 
         setItems(previous => {
             const existingItem = previous.find(item => item.itemId === itemId);
@@ -89,7 +92,7 @@ function CartProvider({children}) {
             if (existingItem) {
                 return previous.map(item =>
                     item.itemId === itemId
-                        ? {...item,quantity: item.quantity + quantity,note: note || item.note}
+                        ? { ...item, quantity: item.quantity + quantity, note: note || item.note }
                         : item
                 );
             }
@@ -118,7 +121,7 @@ function CartProvider({children}) {
                 note
             };
 
-            return [...previous,newItem];
+            return [...previous, newItem];
         });
 
         return true;
@@ -128,22 +131,22 @@ function CartProvider({children}) {
         setItems(previous => previous.filter(item => item.itemId !== itemId));
     }, []);
 
-    const updateQuantity = useCallback((itemId,quantity) => {
+    const updateQuantity = useCallback((itemId, quantity) => {
         if (quantity <= 0) {
             removeFromCart(itemId);
             return;
         }
         setItems(previous =>
             previous.map(item =>
-                item.itemId === itemId ? {...item,quantity} : item
+                item.itemId === itemId ? { ...item, quantity } : item
             )
         );
     }, [removeFromCart]);
 
-    const updateItem = useCallback((oldItemId,product,quantity,size,milkOption,extras,note) => {
+    const updateItem = useCallback((oldItemId, product, quantity, size, milkOption, extras, note) => {
         removeFromCart(oldItemId);
-        addToCart(product,quantity,size,milkOption,extras,note);
-    }, [removeFromCart,addToCart]);
+        addToCart(product, quantity, size, milkOption, extras, note);
+    }, [removeFromCart, addToCart]);
 
     const clearCart = useCallback(() => {
         setItems([]);
@@ -157,17 +160,17 @@ function CartProvider({children}) {
         );
 
         if (!coupon) {
-            return {success: false,message: 'Geçersiz kupon kodu'};
+            return { success: false, message: 'Geçersiz kupon kodu' };
         }
 
-        const validation = validateCouponConditions(coupon,items,orders);
+        const validation = validateCouponConditions(coupon, items, orders);
         if (!validation.valid) {
-            return {success: false,message: validation.message};
+            return { success: false, message: validation.message };
         }
 
         setAppliedCoupon(coupon);
-        return {success: true,message: 'Kupon başarıyla uygulandı!'};
-    }, [items,orders,validateCouponConditions]);
+        return { success: true, message: 'Kupon başarıyla uygulandı!' };
+    }, [items, orders, validateCouponConditions]);
 
     const removeCoupon = useCallback(() => {
         setAppliedCoupon(null);
@@ -175,11 +178,11 @@ function CartProvider({children}) {
 
     /* CART TOTALS CALCULATION */
     const cartTotals = useMemo(() => {
-        const subtotal = items.reduce((sum,item) => sum + (item.unitPrice * item.quantity), 0);
+        const subtotal = items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
 
         let discount = 0;
         if (appliedCoupon) {
-            const validation = validateCouponConditions(appliedCoupon,items,orders);
+            const validation = validateCouponConditions(appliedCoupon, items, orders);
 
             if (validation.valid) {
                 if (appliedCoupon.discountType === 'percentage') {
@@ -199,9 +202,9 @@ function CartProvider({children}) {
             discount,
             tax,
             total,
-            itemCount: items.reduce((sum,item) => sum + item.quantity, 0)
+            itemCount: items.reduce((sum, item) => sum + item.quantity, 0)
         };
-    }, [items,appliedCoupon,orders,validateCouponConditions]);
+    }, [items, appliedCoupon, orders, validateCouponConditions]);
 
     /* ORDER OPERATIONS */
     const createOrder = useCallback((orderData) => {
@@ -248,12 +251,12 @@ function CartProvider({children}) {
                     : '30-45 dakika'
         };
 
-        setOrders(previous => [newOrder,...previous]);
+        setOrders(previous => [newOrder, ...previous]);
         setLatestOrder(newOrder);
         clearCart();
 
         return newOrder;
-    }, [items,cartTotals,appliedCoupon,clearCart]);
+    }, [items, cartTotals, appliedCoupon, clearCart]);
 
     const getOrderById = useCallback((orderId) => {
         return orders.find(order => order.id === orderId);
@@ -302,12 +305,12 @@ function CartProvider({children}) {
 
     useEffect(() => {
         if (appliedCoupon) {
-            const validation = validateCouponConditions(appliedCoupon,items,orders);
+            const validation = validateCouponConditions(appliedCoupon, items, orders);
             if (!validation.valid) {
                 setAppliedCoupon(null);
             }
         }
-    }, [items,orders,appliedCoupon,validateCouponConditions]);
+    }, [items, orders, appliedCoupon, validateCouponConditions]);
 
 
     return (
@@ -317,5 +320,5 @@ function CartProvider({children}) {
     );
 }
 
-export {CartProvider};
+export { CartProvider };
 export const useCart = () => useContext(CartContext);
