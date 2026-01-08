@@ -3,7 +3,6 @@ import {useNavigate} from 'react-router-dom';
 import {User,Phone,MapPin,Clock,CreditCard,FileText,ShoppingBag,Tag,AlertCircle,X} from 'lucide-react';
 import {useCart} from '../context/CartContext';
 
-/* INPUT FIELD COMPONENT */
 const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
     <div>
         <label htmlFor={name} className="block text-sm font-medium text-[#2B1E17] mb-2">
@@ -34,7 +33,6 @@ function CheckoutSection() {
     const navigate = useNavigate();
     const {items,cartTotals,appliedCoupon,isEmpty,createOrder} = useCart();
 
-    /* FORM STATE */
     const [formData, setFormData] = useState({
         customerName: '',
         customerPhone: '',
@@ -54,76 +52,42 @@ function CheckoutSection() {
 
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showPaymentModal, setShowPaymentModal] = useState(false);
-    const [showClosedWarning, setShowClosedWarning] = useState(false);
-    const [smsCode, setSmsCode] = useState('');
-    const [pendingOrder, setPendingOrder] = useState(null);
 
-    /* DELIVERY TIME OPTIONS */
     const deliveryTimeOptions = [
         {value: 'asap',label: 'Şimdi (15-20 dk)'},
         {value: 'custom',label: 'Belirli Bir Saat'}
     ];
 
-    /* GENERATE TIME OPTIONS WITH MEMOIZATION */
     const timeOptions = useMemo(() => {
         const options = [];
         const now = new Date();
         const currentHour = now.getHours();
-
-        // Çalışma saatleri: 08:00 - 23:00
-        const OPENING_HOUR = 8;
-        const CLOSING_HOUR = 23;
-
-        // Şu anki saatten sonraki saat
         let startHour = currentHour + 1;
 
-        // Eğer çalışma saatlerinden önce ise, açılış saatinden başla
-        if (currentHour < OPENING_HOUR) {
-            startHour = OPENING_HOUR;
-        }
-
-        // Çalışma saatleri bittiyse seçenek gösterme
-        if (currentHour >= CLOSING_HOUR) {
-            return options; // Boş array dön
-        }
-
-        // Saat seçeneklerini oluştur (1'er saat)
-        for (let hour = startHour; hour <= CLOSING_HOUR; hour++) {
+        for (let hour = startHour; hour < 24; hour++) {
             const displayHour = String(hour).padStart(2, '0');
             options.push({
                 value: `${hour}:00`,
                 label: `${displayHour}:00`
             });
         }
-
         return options;
-    }, []); // Empty dependency array - calculate once on mount
+    }, []);
 
-    /* PAYMENT METHOD OPTIONS */
     const paymentMethods = [
         {value: 'cash',label: 'Kapıda Nakit Ödeme',icon: CreditCard},
         {value: 'card_on_delivery',label: 'Kapıda Kredi Kartı',icon: CreditCard},
         {value: 'online_card',label: 'Online Kredi Kartı ile Ödeme',icon: CreditCard}
     ];
 
-    /* HANDLE INPUT CHANGE */
     const handleChange = (event) => {
         const {name,value} = event.target;
-
-        // Eğer "Belirli Bir Saat" seçiliyorsa ve çalışma saatleri dışındaysak uyarı göster
-        if (name === 'deliveryTime' && value === 'custom' && timeOptions.length === 0) {
-            setShowClosedWarning(true);
-            return;
-        }
-
         setFormData(previous => ({...previous,[name]: value}));
         if (errors[name]) {
             setErrors(previous => ({...previous,[name]: ''}));
         }
     };
 
-    /* FORM VALIDATION */
     const validateForm = () => {
         const newErrors = {};
 
@@ -165,21 +129,8 @@ function CheckoutSection() {
         return Object.keys(newErrors).length === 0;
     };
 
-    /* HANDLE SUBMIT */
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // Çalışma saatleri kontrolü
-        const now = new Date();
-        const currentHour = now.getHours();
-        const OPENING_HOUR = 8;
-        const CLOSING_HOUR = 23;
-
-        if (currentHour < OPENING_HOUR || currentHour >= CLOSING_HOUR) {
-            setShowClosedWarning(true);
-            setIsSubmitting(false);
-            return;
-        }
 
         if (!validateForm()) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -190,16 +141,8 @@ function CheckoutSection() {
 
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // If online card payment, show verification modal
-            if (formData.paymentMethod === 'online_card') {
-                setPendingOrder(formData);
-                setShowPaymentModal(true);
-                setIsSubmitting(false);
-            } else {
-                const order = createOrder(formData);
-                navigate('/order-confirmation', { state: { orderId: order.id } });
-            }
+            const order = createOrder(formData);
+            navigate('/order-confirmation', { state: { orderId: order.id } });
         } catch (error) {
             console.error('Order creation failed:', error);
             setErrors({ submit: 'Sipariş oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.' });
@@ -207,30 +150,6 @@ function CheckoutSection() {
         }
     };
 
-    /* HANDLE PAYMENT VERIFICATION */
-    const handlePaymentVerification = async () => {
-        if (!smsCode || smsCode.length !== 6) {
-            return;
-        }
-
-        setIsSubmitting(true);
-
-        try {
-            // Simulate payment processing
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            const order = createOrder(pendingOrder);
-            setShowPaymentModal(false);
-            setSmsCode('');
-            setPendingOrder(null);
-            navigate('/order-confirmation', { state: { orderId: order.id } });
-        } catch (error) {
-            console.error('Payment verification failed:', error);
-            setIsSubmitting(false);
-        }
-    };
-
-    /* EMPTY CART STATE */
     if (isEmpty) {
         return (
             <section className="py-16">
@@ -248,10 +167,10 @@ function CheckoutSection() {
         );
     }
 
-    /* MAIN RENDER */
     return (
         <section className="py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
                 {/* HEADER */}
                 <div className="mb-8">
                     <h1 className="font-heading text-2xl md:text-3xl text-[#2B1E17] mb-2">Sipariş Detayları</h1>
@@ -259,8 +178,10 @@ function CheckoutSection() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid lg:grid-cols-3 gap-8">
-                    {/* LEFT COLUMN - FORMS */}
+
+                    {/* FORMS */}
                     <div className="lg:col-span-2 space-y-6">
+
                         {/* CUSTOMER INFO */}
                         <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
                             <h2 className="font-semibold text-lg text-[#2B1E17] mb-4 flex items-center gap-2">
@@ -367,7 +288,6 @@ function CheckoutSection() {
                                     ))}
                                 </div>
 
-                                {/* CUSTOM TIME PICKER */}
                                 {formData.deliveryTime === 'custom' && (
                                     <div>
                                         <label className="block text-sm font-medium text-[#2B1E17] mb-2">
@@ -422,7 +342,6 @@ function CheckoutSection() {
                                     </label>
                                 ))}
 
-                                {/* ONLINE CARD DETAILS */}
                                 {formData.paymentMethod === 'online_card' && (
                                     <div className="mt-4 p-4 bg-[#F5F1EB] rounded-xl space-y-4">
                                         <div>
@@ -544,7 +463,7 @@ function CheckoutSection() {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN - ORDER SUMMARY */}
+                    {/* ORDER SUMMARY */}
                     <div className="lg:col-span-1">
                         <div className="bg-white rounded-xl border border-[#E8E0D5] p-6 sticky top-24">
                             <h2 className="font-semibold text-lg text-[#2B1E17] mb-4 flex items-center gap-2">
@@ -552,7 +471,7 @@ function CheckoutSection() {
                                 Sipariş Özeti
                             </h2>
 
-                            {/* ORDER ITEMS */}
+                            {/* ITEMS */}
                             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
                                 {items.map((item) => (
                                     <div key={item.itemId} className="flex items-center gap-3 pb-3 border-b border-[#E8E0D5]">
@@ -568,7 +487,7 @@ function CheckoutSection() {
                                 ))}
                             </div>
 
-                            {/* PRICE SUMMARY */}
+                            {/* TOTALS */}
                             <div className="space-y-2 mb-6">
                                 <div className="flex justify-between text-sm text-[#2B1E17]">
                                     <span>Ara Toplam</span>
@@ -594,7 +513,7 @@ function CheckoutSection() {
                                 </div>
                             </div>
 
-                            {/* SUBMIT BUTTON */}
+                            {/* SUBMIT */}
                             {errors.submit && (
                                 <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-center gap-2">
                                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
@@ -611,127 +530,6 @@ function CheckoutSection() {
                         </div>
                     </div>
                 </form>
-
-                {/* CLOSED WARNING MODAL */}
-                {showClosedWarning && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-2xl max-w-md w-full p-6 relative animate-fade-in">
-                            {/* CLOSE BUTTON */}
-                            <button
-                                onClick={() => setShowClosedWarning(false)}
-                                className="absolute top-4 right-4 p-2 hover:bg-[#F5F1EB] rounded-lg transition-colors"
-                            >
-                                <X className="w-5 h-5 text-[#8B7E75]" />
-                            </button>
-
-                            {/* HEADER */}
-                            <div className="text-center mb-6">
-                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                                    <Clock className="w-8 h-8 text-red-600" />
-                                </div>
-                                <h2 className="font-heading text-2xl text-[#2B1E17] mb-2">Şuan Kapalıyız</h2>
-                                <p className="text-[#8B7E75] text-sm mb-4">Üzgünüz, çalışma saatlerimiz dışındasınız.</p>
-                            </div>
-
-                            {/* INFO */}
-                            <div className="bg-[#F5F1EB] rounded-xl p-4 mb-6">
-                                <p className="text-sm text-[#2B1E17] mb-2 font-semibold">
-                                    Çalışma Saatlerimiz:
-                                </p>
-                                <p className="text-lg font-bold text-[#C46A2B]">
-                                    08:00 - 23:00
-                                </p>
-                                <p className="text-xs text-[#8B7E75] mt-2">
-                                    Bu saatler arasında sipariş verebilirsiniz.
-                                </p>
-                            </div>
-
-                            {/* CLOSE BUTTON */}
-                            <button
-                                onClick={() => setShowClosedWarning(false)}
-                                className="w-full py-4 rounded-xl font-semibold bg-[#C46A2B] text-white hover:bg-[#A85A24] transition-all"
-                            >
-                                Anladım
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {/* PAYMENT VERIFICATION MODAL */}
-                {showPaymentModal && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-2xl max-w-md w-full p-6 relative animate-fade-in">
-                            {/* CLOSE BUTTON */}
-                            <button
-                                onClick={() => {
-                                    setShowPaymentModal(false);
-                                    setSmsCode('');
-                                    setPendingOrder(null);
-                                    setIsSubmitting(false);
-                                }}
-                                className="absolute top-4 right-4 p-2 hover:bg-[#F5F1EB] rounded-lg transition-colors"
-                                disabled={isSubmitting}
-                            >
-                                <X className="w-5 h-5 text-[#8B7E75]" />
-                            </button>
-
-                            {/* HEADER */}
-                            <div className="text-center mb-6">
-                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#C46A2B]/10 flex items-center justify-center">
-                                    <CreditCard className="w-8 h-8 text-[#C46A2B]" />
-                                </div>
-                                <h2 className="font-heading text-2xl text-[#2B1E17] mb-2">Ödeme Onayı</h2>
-                                <p className="text-[#8B7E75] text-sm">Kartınızdan <span className="font-bold text-[#C46A2B]">₺{cartTotals.total.toFixed(2)}</span> çekilecektir</p>
-                            </div>
-
-                            {/* SMS INFO */}
-                            <div className="bg-[#F5F1EB] rounded-xl p-4 mb-4">
-                                <p className="text-sm text-[#2B1E17] mb-2">
-                                    Telefonunuza gönderilen 6 haneli kodu girin
-                                </p>
-                                <p className="text-xs text-[#8B7E75]">
-                                    Kod gönderildi: <span className="font-semibold text-[#C46A2B]">{formData.customerPhone}</span>
-                                </p>
-                            </div>
-
-                            {/* SMS CODE INPUT */}
-                            <div className="mb-6">
-                                <input
-                                    type="text"
-                                    value={smsCode}
-                                    onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, '');
-                                        if (value.length <= 6) {
-                                            setSmsCode(value);
-                                        }
-                                    }}
-                                    placeholder="000000"
-                                    maxLength="6"
-                                    className="w-full px-4 py-4 text-center text-2xl tracking-widest font-bold bg-white border-2 border-[#E8E0D5] rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/30 outline-none focus:ring-2 focus:ring-[#C46A2B]/30 focus:border-[#C46A2B] transition-all"
-                                    autoFocus
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-
-                            {/* VERIFY BUTTON */}
-                            <button
-                                onClick={handlePaymentVerification}
-                                disabled={smsCode.length !== 6 || isSubmitting}
-                                className={`w-full py-4 rounded-xl font-semibold transition-all ${smsCode.length === 6 && !isSubmitting
-                                    ? 'bg-[#C46A2B] text-white hover:bg-[#A85A24] hover:shadow-lg'
-                                    : 'bg-[#E8E0D5] text-[#8B7E75] cursor-not-allowed'
-                                    }`}
-                            >
-                                {isSubmitting ? 'Onaylanıyor...' : 'Ödemeyi Onayla'}
-                            </button>
-
-                            {/* HELPER TEXT */}
-                            <p className="text-xs text-center text-[#8B7E75] mt-4">
-                                Kodu almadınız mı? <button className="text-[#C46A2B] font-semibold hover:underline">Tekrar gönder</button>
-                            </p>
-                        </div>
-                    </div>
-                )}
             </div>
         </section>
     );

@@ -41,24 +41,7 @@ function CartProvider({children}) {
 
     const [latestOrder, setLatestOrder] = useState(null);
 
-    /* STORAGE SYNC EFFECTS */
-    useEffect(() => {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-    }, [items]);
-
-    useEffect(() => {
-        if (appliedCoupon) {
-            localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(appliedCoupon));
-        } else {
-            localStorage.removeItem(COUPON_STORAGE_KEY);
-        }
-    }, [appliedCoupon]);
-
-    useEffect(() => {
-        localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
-    }, [orders]);
-
-    /* COUPON VALIDATION */
+        /* COUPON VALIDATION */
     const validateCouponConditions = useCallback((coupon,cartItems,currentOrders) => {
         if (!coupon) return {valid: false,message: ''};
 
@@ -90,15 +73,6 @@ function CartProvider({children}) {
 
         return {valid: true,message: ''};
     }, []);
-
-    useEffect(() => {
-        if (appliedCoupon) {
-            const validation = validateCouponConditions(appliedCoupon,items,orders);
-            if (!validation.valid) {
-                setAppliedCoupon(null);
-            }
-        }
-    }, [items,orders,appliedCoupon,validateCouponConditions]);
 
     /* CART OPERATIONS */
     const generateItemId = useCallback((productId,size,milkOption,extras) => {
@@ -308,6 +282,33 @@ function CartProvider({children}) {
         getOrderById,
         clearLatestOrder
     };
+
+    /* STORAGE SYNC EFFECTS */
+    useEffect(() => {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    }, [items]);
+
+    useEffect(() => {
+        if (appliedCoupon) {
+            localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(appliedCoupon));
+        } else {
+            localStorage.removeItem(COUPON_STORAGE_KEY);
+        }
+    }, [appliedCoupon]);
+
+    useEffect(() => {
+        localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+    }, [orders]);
+
+    useEffect(() => {
+        if (appliedCoupon) {
+            const validation = validateCouponConditions(appliedCoupon,items,orders);
+            if (!validation.valid) {
+                setAppliedCoupon(null);
+            }
+        }
+    }, [items,orders,appliedCoupon,validateCouponConditions]);
+
 
     return (
         <CartContext.Provider value={value}>
