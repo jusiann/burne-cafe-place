@@ -1,14 +1,62 @@
-# Burne Cafe - Online Sipariş Sistemi
+# Burne Cafe
 
-Bu proje, React ve Vite kullanılarak geliştirilmiş bir online cafe sipariş platformudur. Kullanıcıların menüden ürün seçip, sepete ekleyip, sipariş verebilecekleri modern bir web uygulamasıdır.
+> Modern ve kullanıcı dostu bir online cafe sipariş platformu.
+
+![License](https://img.shields.io/github/license/jusiann/burne-cafe-place)
+![Stars](https://img.shields.io/github/stars/jusiann/burne-cafe-place?style=social)
+
+---
+
+## İçindekiler
+
+- [Hakkında](#hakkında)
+- [Özellikler](#özellikler)
+- [Kurulum](#kurulum)
+- [Kullanım](#kullanım)
+- [Konfigürasyon](#konfigürasyon)
+- [İletişim](#iletişim)
+
+---
+
+## Hakkında
+
+Burne Cafe, kullanıcıların kolayca kahve ve yiyecek siparişi verebilmelerini sağlayan modern bir web uygulamasıdır. Menüden ürün seçimi, sepet yönetimi, kupon kullanımı ve sipariş takibi gibi tam kapsamlı bir e-ticaret deneyimi sunar.
+
+**Teknoloji Yığını:**
+
+- **Dil:** JavaScript (ES6+)
+- **Framework:** React 19.2.0 + Vite 7.2.4
+- **Stil:** Tailwind CSS 4.1.18
+- **Routing:** React Router DOM 7.11.0
+- **Diğer:** Lucide React, clsx, tailwind-merge
+
+---
+
+## Özellikler
+
+- **Dinamik Menü** — Kategorilere göre filtrelenebilir ürün listesi
+- **Sepet Yönetimi** — Ürün ekleme, çıkarma ve miktar güncelleme
+- **Kupon Sistemi** — İndirim kuponları ile tasarruf imkanı
+- **Sipariş Takibi** — Geçmiş siparişleri görüntüleme
+- **Hero Slider** — Ana sayfada dinamik görsel slider
+- **Günlük Fırsatlar** — Öne çıkan ürünler ve kampanyalar
+- **Responsive Tasarım** — Mobil uyumlu arayüz
+
+---
 
 ## Kurulum
 
-Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları izleyin:
+### Gereksinimler
+
+- Node.js >= 18
+- npm veya yarn
+
+### Hızlı Başlangıç
 
 ```bash
-# Proje dizinine git
-cd burne-cafe
+# Repoyu klonla
+git clone https://github.com/jusiann/burne-cafe-place.git
+cd burne-cafe-place/burne-cafe
 
 # Bağımlılıkları yükle
 npm install
@@ -32,72 +80,42 @@ npm run preview
 npm run lint
 ```
 
-## Proje Yapısı
+---
 
-```
-burne-cafe/
-├── public/
-│   └── caffee-pictures/     # Ürün görselleri
-├── src/
-│   ├── assets/              # Statik dosyalar
-│   ├── components/          # React bileşenleri
-│   │   ├── CartSection.jsx
-│   │   ├── CheckoutSection.jsx
-│   │   ├── Footer.jsx
-│   │   ├── HomeCategoryCards.jsx
-│   │   ├── HomeDailyDeals.jsx
-│   │   ├── HomeFeaturedProducts.jsx
-│   │   ├── HomeHeroSlider.jsx
-│   │   ├── Layout.jsx
-│   │   ├── MenuSection.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── OrderConfirmationSection.jsx
-│   │   ├── OrderHistorySection.jsx
-│   │   └── ProductDetailSection.jsx
-│   ├── context/             # Context API dosyaları
-│   │   └── CartContext.jsx  # Sepet yönetimi
-│   ├── data/                # Mock data dosyaları
-│   │   ├── products.json    # Ürün veritabanı (25 ürün)
-│   │   ├── orders.json      # Sipariş şablonları
-│   │   └── coupons.json     # İndirim kuponları
-│   ├── lib/                 # Yardımcı fonksiyonlar
-│   │   └── utils.js
-│   ├── pages/               # Sayfa bileşenleri
-│   │   ├── Cart.jsx
-│   │   ├── Checkout.jsx
-│   │   ├── Home.jsx
-│   │   ├── Menu.jsx
-│   │   ├── NotFound.jsx
-│   │   ├── OrderConfirmation.jsx
-│   │   ├── OrderHistory.jsx
-│   │   └── ProductDetail.jsx
-│   ├── App.jsx              # Ana uygulama bileşeni
-│   ├── main.jsx             # Uygulama giriş noktası
-│   └── index.css            # Global stiller
-├── package.json
-└── vite.config.js
-```
+## Kullanım
 
-## Kullanılan Teknolojiler
+Uygulama aşağıdaki sayfa yapısına sahiptir:
 
-### Temel Teknolojiler
-| Teknoloji | Versiyon | Açıklama |
-|-----------|----------|----------|
-| React | 19.2.0 | UI geliştirme kütüphanesi |
-| Vite | 7.2.4 | Build aracı ve geliştirme sunucusu |
-| React Router DOM | 7.11.0 | Sayfa yönlendirmeleri |
+| Sayfa | Yol | Açıklama |
+|-------|-----|----------|
+| Ana Sayfa | `/` | Hero slider, kategoriler ve günlük fırsatlar |
+| Menü | `/menu` | Tüm ürünlerin listelendiği sayfa |
+| Ürün Detay | `/product/:id` | Tek ürün detay sayfası |
+| Sepet | `/cart` | Sepet içeriği ve yönetimi |
+| Ödeme | `/checkout` | Sipariş tamamlama |
+| Sipariş Onay | `/order-confirmation` | Sipariş özeti |
+| Geçmiş | `/order-history` | Sipariş geçmişi |
 
-### UI ve Stil
-| Teknoloji | Versiyon | Açıklama |
-|-----------|----------|----------|
-| Tailwind CSS | 4.1.18 | Utility-first CSS framework |
-| Lucide React | 0.562.0 | Modern ikon kütüphanesi |
-| clsx | 2.1.1 | Koşullu className yönetimi |
-| tailwind-merge | 3.4.0 | Tailwind sınıf birleştirme |
+---
 
-### State Yönetimi
-| Teknoloji | Açıklama |
-|-----------|----------|
+## Konfigürasyon
+
+Proje yapılandırmaları:
+
+| Dosya | Açıklama |
+|-------|----------|
+| `vite.config.js` | Vite build ve dev server ayarları |
+| `tailwind.config.js` | Tailwind CSS özelleştirmeleri |
+| `src/data/products.json` | Ürün veritabanı |
+| `src/data/coupons.json` | İndirim kuponları |
+
+---
+
+## İletişim
+
+**Adil Aslan** — insta:adlefee — aslanadil8@gmail.com
+
+Proje: [https://github.com/jusiann/burne-cafe-place](https://github.com/jusiann/burne-cafe-place)
 | Context API | Sepet ve sipariş state yönetimi |
 | Local Storage | Sepet ve sipariş verilerinin kalıcı saklanması |
 
@@ -226,9 +244,6 @@ Proje, orijinal dönem proje dökümanında belirtilen "restoran" konsepti yerin
 - ✅ Frappeler
 - ✅ Serinletici İçecekler
 
-## Lisans
-
-Bu proje eğitim amaçlı geliştirilmiştir.
 
 ## İletişim
 
