@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Sıcak Kahveler",
+    "slug": "sicak-kahveler",
+    "description": "Espresso tabanlı sıcak kahve çeşitleri",
+    "sort_order": 1,
+    "is_active": true
+  },
+  {
+    "name": "Soğuk Kahveler",
+    "slug": "soguk-kahveler",
+    "description": "Buzlu kahve ve frappe çeşitleri",
+    "sort_order": 2,
+    "is_active": true
+  },
+  {
+    "name": "Soğuk İçecekler",
+    "slug": "soguk-icecekler",
+    "description": "Kahve içermeyen serinletici içecekler",
+    "sort_order": 3,
+    "is_active": true
+  },
+  {
+    "name": "Kahvaltılık",
+    "slug": "kahvaltilik",
+    "description": "Taze kahvaltılık ürünler ve kruvasanlar",
+    "sort_order": 4,
+    "is_active": true
+  },
+  {
+    "name": "Sandviç",
+    "slug": "sandvic",
+    "description": "Günlük taze hazırlanan sıcak sandviçler",
+    "sort_order": 5,
+    "is_active": true
+  },
+  {
+    "name": "Tatlı",
+    "slug": "tatli",
+    "description": "Cheesecake, pasta ve kek çeşitleri",
+    "sort_order": 6,
+    "is_active": true
+  }
+]

@@ -1,0 +1,291 @@
+{
+  "size_templates": {
+    "standard_coffee": [
+      { "name": "Tall", "extra_price": 0 },
+      { "name": "Grande", "extra_price": 15 },
+      { "name": "Venti", "extra_price": 25 }
+    ],
+    "budget_coffee": [
+      { "name": "Tall", "extra_price": 0 },
+      { "name": "Grande", "extra_price": 12 },
+      { "name": "Venti", "extra_price": 20 }
+    ],
+    "frappe": [
+      { "name": "Tall", "extra_price": 0 },
+      { "name": "Grande", "extra_price": 18 },
+      { "name": "Venti", "extra_price": 28 }
+    ],
+    "cold_drink": [
+      { "name": "Tall", "extra_price": 0 },
+      { "name": "Grande", "extra_price": 12 },
+      { "name": "Venti", "extra_price": 20 }
+    ]
+  },
+
+  "milk_template": [
+    { "name": "Standart Süt", "extra_price": 0 },
+    { "name": "Yağsız Süt", "extra_price": 0 },
+    { "name": "Laktozsuz Süt", "extra_price": 0 },
+    { "name": "Badem Sütü", "extra_price": 12 }
+  ],
+
+  "extras_templates": {
+    "coffee_extras": [
+      { "name": "Ekstra Shot (Klasik)", "extra_price": 10 },
+      { "name": "Ekstra Shot (Yumuşak)", "extra_price": 10 },
+      { "name": "Fındık Şurubu", "extra_price": 8 },
+      { "name": "Karamel Şurubu", "extra_price": 8 },
+      { "name": "Vanilya Şurubu", "extra_price": 8 },
+      { "name": "Kiraz Çiçeği Şurubu", "extra_price": 10 }
+    ],
+    "lemonade_extras": [
+      { "name": "Ekstra Nane", "extra_price": 5 },
+      { "name": "Ekstra Limon", "extra_price": 5 }
+    ],
+    "freshae_extras": [
+      { "name": "Ekstra Mango Sos", "extra_price": 8 },
+      { "name": "Ekstra Nane", "extra_price": 5 }
+    ]
+  },
+
+  "product_options": [
+    {
+      "product_id": 1,
+      "product_name": "Miel",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 2,
+      "product_name": "Cherry Blossom Zen Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 3,
+      "product_name": "Dubai Chocolate Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 4,
+      "product_name": "Cappuccino",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 5,
+      "product_name": "Cherry Brownie Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 6,
+      "product_name": "Caramel Macchiato",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 7,
+      "product_name": "Mocha",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 8,
+      "product_name": "White Chocolate Mocha",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 9,
+      "product_name": "Salted Caramel Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 10,
+      "product_name": "Filtre Kahve",
+      "sizes": "budget_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 11,
+      "product_name": "Americano",
+      "sizes": "budget_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 12,
+      "product_name": "Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 13,
+      "product_name": "Black Eye",
+      "sizes": "budget_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 14,
+      "product_name": "Iced Coconut Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 15,
+      "product_name": "Cookie Crumble Mocha Frappe",
+      "sizes": "frappe",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 16,
+      "product_name": "Chocolate Cookie Frappe",
+      "sizes": "frappe",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 17,
+      "product_name": "Iced Caramel Bubble Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 18,
+      "product_name": "Iced Caramel Macchiato",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 19,
+      "product_name": "Iced Americano",
+      "sizes": "budget_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 20,
+      "product_name": "Iced Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 21,
+      "product_name": "Iced Salted Caramel Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 22,
+      "product_name": "Iced Mint Latte",
+      "sizes": "standard_coffee",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 23,
+      "product_name": "Espresso Frappe",
+      "sizes": "frappe",
+      "milk": true,
+      "extras": "coffee_extras"
+    },
+    {
+      "product_id": 24,
+      "product_name": "Minty Lemonade",
+      "sizes": "cold_drink",
+      "milk": false,
+      "extras": "lemonade_extras"
+    },
+    {
+      "product_id": 25,
+      "product_name": "Freshae Cool Lime & Mango",
+      "sizes": "cold_drink",
+      "milk": false,
+      "extras": "freshae_extras"
+    },
+    {
+      "product_id": 26,
+      "product_name": "Tereyağlı Kruvasan",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 27,
+      "product_name": "Çikolata Dolgulu Kruvasan",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 28,
+      "product_name": "Çikolata ve Fındık Kremalı Kruvasan",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 29,
+      "product_name": "Sıcak Karışık Sandviç",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 30,
+      "product_name": "Sıcak Peynirli Sandviç",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 31,
+      "product_name": "Frambuazlı Cheesecake",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 32,
+      "product_name": "Limonlu Cheesecake",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 33,
+      "product_name": "Kremalı Havuçlu Dilimli Kek",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    },
+    {
+      "product_id": 34,
+      "product_name": "Orman Meyveli Pasta",
+      "sizes": null,
+      "milk": false,
+      "extras": null
+    }
+  ]
+}
