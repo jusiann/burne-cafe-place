@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16.13-alpine
+    container_name: burne_cafe_db
+    environment:
+      POSTGRES_USER: postgre
+      POSTGRES_PASSWORD: "1397"
+      POSTGRES_DB: burne_cafe_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./api/src/lib/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./api/src/lib/db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: burne_cafe_api
+    environment:
+      - PGHOST=db
+      - PGUSER=postgre
+      - PGPASSWORD=1397
+      - PGDATABASE=burne_cafe_db
+      - PGPORT=5432
+      - PORT=3000
+    env_file:
+      - ./api/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: burne_cafe_web
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
