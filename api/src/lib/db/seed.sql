@@ -361,3 +361,11 @@ INSERT INTO product_options (id, product_id, option_type, name, extra_price) VAL
 ('b14c1b0b-8418-4af2-b2cc-d394b7f133ca', '052750b7-ffcf-44c7-b95d-916da727a79f', 'extra', 'Ekstra Mango Sos', 8),
 ('52a4bf06-b009-4704-a90f-3463abd6eedd', '052750b7-ffcf-44c7-b95d-916da727a79f', 'extra', 'Ekstra Nane', 5);
 
+INSERT INTO branches (id, name, city, district, address, is_active) VALUES
+('0a5dc118-530d-4ea0-a2db-306574b8e1db', 'Kartal Merkez', 'İstanbul', 'Kartal', 'Ankara Cd. No:123', true),
+('767d1374-d5ac-44e5-8409-95130f5b49d1', 'Beşiktaş Sahil', 'İstanbul', 'Beşiktaş', 'Barbaros Blv. No:45', true);
+
+INSERT INTO coupons (id, code, discount_type, discount_value, min_order_amount, conditions, description, is_active) VALUES
+('a112ab05-377a-4042-beb5-799cb3802673', 'ILK15', 'percentage', 15.00, 0, '{}', 'Sadece ilk siparişe özel %15 indirim', true),
+('bea5ffd7-0b26-4715-bbce-42121837c7f0', 'IKILIM20', 'percentage', 20.00, 0, '{"requires_products": ["dc16a1fd-a3a8-4ab0-9a7f-b626d008ebc0", "4ca5df75-c2b2-4422-ab44-8ca706f11c5f"]}', 'Americano ve Latte alımında %20 indirim', true),
+('f22a737c-eeb5-40c8-9bca-3b7a8a7c380a', 'MIEL10', 'percentage', 10.00, 0, '{"requires_products": ["f4154f41-7382-402e-a43d-4df0010c2319"]}', 'Sepette Miel kahvesi varsa %10 indirim', true);
