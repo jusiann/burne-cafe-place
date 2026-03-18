@@ -96,6 +96,34 @@ CREATE TABLE IF NOT EXISTS coupons (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Carts Table
+CREATE TABLE IF NOT EXISTS carts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_carts_user ON carts(user_id);
+
+-- Cart Items Table
+CREATE TABLE IF NOT EXISTS cart_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cart_id UUID REFERENCES carts(id) ON DELETE CASCADE,
+    product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL DEFAULT 1,
+    size_name VARCHAR(100),
+    size_extra_price DECIMAL(10, 2) DEFAULT 0,
+    milk_option_name VARCHAR(100),
+    milk_option_extra_price DECIMAL(10, 2) DEFAULT 0,
+    extras JSONB DEFAULT '[]',
+    unit_price DECIMAL(10, 2) NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    note TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_cart_items_cart ON cart_items(cart_id);
+
 -- Orders Table
 CREATE TYPE order_status AS ENUM ('preparing', 'ready', 'completed', 'cancelled');
 CREATE TYPE payment_method AS ENUM ('cash', 'credit_card');
