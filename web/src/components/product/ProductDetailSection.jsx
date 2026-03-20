@@ -1,10 +1,10 @@
 import {useState,useEffect} from 'react';
 import {Link,useNavigate,useLocation} from 'react-router-dom';
 import {Minus,Plus,ShoppingBag,Check,Coffee,Droplet,Star,Flame,Dumbbell,Bean,ChevronLeft,RefreshCw} from 'lucide-react';
-import {useCart} from '../context/CartContext';
+import useCartStore from '../../stores/cartStore.js';
 
 function ProductDetailSection({product}) {
-    const {addToCart,updateItem} = useCart();
+    const {addToCart,updateItem} = useCartStore();
     const navigate = useNavigate();
     const location = useLocation();
 

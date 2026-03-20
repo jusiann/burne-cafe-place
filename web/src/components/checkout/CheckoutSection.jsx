@@ -1,7 +1,10 @@
 import {useState,useMemo} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {User,Phone,MapPin,Clock,CreditCard,FileText,ShoppingBag,Tag,AlertCircle,X} from 'lucide-react';
-import {useCart} from '../context/CartContext';
+import useCartStore from '../../stores/cartStore.js';
+import useLocationStore from '../../stores/locationStore.js';
+import * as orderService from '../../services/order.service.js';
+import {showSuccess, showError} from '../../constants/alert.utils.js';
 
 const InputField = ({name,label,icon: Icon,type = 'text',required = true,formData,errors,handleChange,...props}) => (
     <div>
@@ -31,13 +34,19 @@ const InputField = ({name,label,icon: Icon,type = 'text',required = true,formDat
 
 function CheckoutSection() {
     const navigate = useNavigate();
-    const {items,cartTotals,appliedCoupon,isEmpty,createOrder} = useCart();
+    const store = useCartStore();
+    const {items, appliedCoupon, clearCart} = store;
+    const cartTotals = store.getCartTotals();
+    const isEmpty = store.isEmpty();
+    
+    const locationStore = useLocationStore();
+    const activeBranchId = locationStore.branchId || 1; // Default to 1 if not selected
 
     const [formData, setFormData] = useState({
         customerName: '',
         customerPhone: '',
-        city: '',
-        district: '',
+        city: locationStore.city || '',
+        district: locationStore.district || '',
         neighborhood: '',
         fullAddress: '',
         deliveryTime: 'asap',
@@ -140,12 +149,38 @@ function CheckoutSection() {
         setIsSubmitting(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            const order = createOrder(formData);
-            navigate('/order-confirmation', { state: { orderId: order.id } });
+            let scheduledTime = null;
+            if (formData.deliveryTime === 'custom') {
+                const now = new Date();
+                const [hours, minutes] = formData.customTime.split(':');
+                now.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+                scheduledTime = now.toISOString();
+            }
+
+            const paymentMethod = formData.paymentMethod === 'online_card' ? 'credit_card' : 'cash';
+
+            const orderData = {
+                branchId: activeBranchId,
+                customerName: formData.customerName.trim(),
+                customerPhone: formData.customerPhone.replace(/[-]/g, ''),
+                scheduledTime: scheduledTime,
+                paymentMethod: paymentMethod,
+                orderNote: formData.orderNote.trim() || null,
+                couponCode: appliedCoupon ? appliedCoupon.code : null,
+                cartId: store.id
+            };
+
+            const response = await orderService.createOrder(orderData);
+            
+            await clearCart();
+            showSuccess('Sipariş başarıyla oluşturuldu');
+            navigate('/order-confirmation', { state: { orderId: response.order.id } });
         } catch (error) {
             console.error('Order creation failed:', error);
-            setErrors({ submit: 'Sipariş oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.' });
+            const errorMsg = error.response?.data?.message || 'Sipariş oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.';
+            setErrors({ submit: errorMsg });
+            showError(errorMsg);
+        } finally {
             setIsSubmitting(false);
         }
     };
@@ -474,15 +509,15 @@ function CheckoutSection() {
                             {/* ITEMS */}
                             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
                                 {items.map((item) => (
-                                    <div key={item.itemId} className="flex items-center gap-3 pb-3 border-b border-[#E8E0D5]">
+                                    <div key={item.id} className="flex items-center gap-3 pb-3 border-b border-[#E8E0D5]">
                                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F5F1EB] flex-shrink-0">
-                                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                            <img src={item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.name || item.product_name} className="w-full h-full object-cover" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-[#2B1E17] truncate">{item.name}</p>
-                                            <p className="text-xs text-[#8B7E75]">{item.quantity}x ₺{item.unitPrice.toFixed(2)}</p>
+                                            <p className="text-sm font-medium text-[#2B1E17] truncate">{item.name || item.product_name}</p>
+                                            <p className="text-xs text-[#8B7E75]">{item.quantity}x ₺{Number(item.unit_price || 0).toFixed(2)}</p>
                                         </div>
-                                        <p className="text-sm font-semibold text-[#C46A2B]">₺{(item.unitPrice * item.quantity).toFixed(2)}</p>
+                                        <p className="text-sm font-semibold text-[#C46A2B]">₺{(Number(item.unit_price || 0) * item.quantity).toFixed(2)}</p>
                                     </div>
                                 ))}
                             </div>

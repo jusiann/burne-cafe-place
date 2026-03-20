@@ -1,44 +1,64 @@
 import {useState} from 'react';
 import {Link,useNavigate} from 'react-router-dom';
 import {Star,ShoppingCart,ChevronRight,Check} from 'lucide-react';
-import products from '../data/products.json';
-import {useCart} from '../context/CartContext';
+import {useProducts} from '../../hooks/useProducts.js';
+import useCartStore from '../../stores/cartStore.js';
+import {showSuccess, showError} from '../../constants/alert.utils.js';
 
 function HomeFeaturedProducts() {
-    const {addToCart} = useCart();
+    const {products, isLoading, error} = useProducts({ is_popular: true });
+    const {addToCart, isLoading: isCartLoading} = useCartStore();
 
-    const hotCoffees = products.filter(product => product.isPopular && product.category === 'Sıcak Kahveler');
-    const coldCoffees = products.filter(product => product.isPopular && product.category === 'Soğuk Kahveler');
-    const frappes = products.filter(product => product.isPopular && product.category === 'Frappeler');
-    const refreshing = products.filter(product => product.isPopular && product.category === 'Serinletici İçecekler');
+    // Sadece popüler olanlardan ilk 4 tanesi
+    const popularProducts = (products || [])
+        .filter(p => p.isPopular)
+        .slice(0, 4);
 
-    const popularProducts = [
-        ...hotCoffees.slice(0, 2),
-        ...(coldCoffees.length > 0 ? coldCoffees.slice(0, 1) : frappes.slice(0, 1)),
-        ...(refreshing.length > 0 ? refreshing.slice(0, 1) : frappes.slice(0, 1))
-    ].slice(0, 4);
-
-    /* PRODUCT CARD COMPONENT */
     const ProductCard = ({product}) => {
         const navigate = useNavigate();
         const [isAdded,setIsAdded] = useState(false);
-        const hasDiscount = product.discount > 0;
+        const priceNum = Number(product.price || 0);
+        const discountNum = Number(product.discount || 0);
+        const hasDiscount = discountNum > 0;
         const discountedPrice = hasDiscount
-            ? product.price - (product.price * product.discount / 100)
-            : product.price;
+            ? priceNum - (priceNum * discountNum / 100)
+            : priceNum;
 
-        const handleAddToCart = () => {
+        const handleAddToCart = async (e) => {
+            e.stopPropagation();
+            if (isCartLoading) return;
+            
+            const result = await addToCart({
+                product_id: product.id,
+                quantity: 1,
+                unit_price: discountedPrice,
+                product_name: product.name,
+                image_url: product.image
+            });
+
+            if (result.success) {
+                setIsAdded(true);
+                showSuccess(`${product.name} sepete eklendi`);
+                setTimeout(() => setIsAdded(false), 2000);
+            } else {
+                showError('Sepete eklenirken hata oluştu');
+            }
+        };
+
+        const handleCardClick = () => {
             navigate(`/product/${product.id}`);
         };
 
         return (
-            <div className="group h-full flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-
+            <div 
+                onClick={handleCardClick}
+                className="group cursor-pointer h-full flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+            >
                 {/* PRODUCT IMAGE */}
                 <div className="block relative">
                     <div className="aspect-[4/3] overflow-hidden">
                         <img
-                            src={product.image}
+                            src={product.image || '/assets/caffee-pictures/placeholder.jpg'}
                             alt={product.name}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
@@ -66,11 +86,9 @@ function HomeFeaturedProducts() {
 
                 {/* PRODUCT INFO */}
                 <div className="flex-1 flex flex-col p-4">
-
-                    {/* TOP CONTENT */}
                     <div className="flex-1">
                         <div className="text-xs text-[#C46A2B] font-medium mb-1">
-                            {product.category}
+                            {product.category?.name || product.category}
                         </div>
                         <h3 className="font-semibold text-[#2B1E17] group-hover:text-[#C46A2B] transition-colors">
                             {product.name}
@@ -79,9 +97,7 @@ function HomeFeaturedProducts() {
 
                     {/* PRICE AND ADD TO CART */}
                     <div className="relative mt-3 pt-3">
-                        {/* GRADIENT BORDER */}
                         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-[#E8E0D5]/30 via-[#C46A2B]/40 to-[#E8E0D5]/30" />
-
                         <div className="flex items-center justify-between">
                             <div className="flex items-baseline gap-2">
                                 <span className="text-lg font-bold text-[#C46A2B]">
@@ -89,13 +105,14 @@ function HomeFeaturedProducts() {
                                 </span>
                                 {hasDiscount && (
                                     <span className="text-sm text-[#8B7E75] line-through">
-                                        ₺{product.price}
+                                        ₺{priceNum.toFixed(2)}
                                     </span>
                                 )}
                             </div>
                             <button
                                 onClick={handleAddToCart}
-                                className={`p-2 rounded-lg transition-all duration-300 ${isAdded ? 'bg-green-500 text-white' : 'bg-[#C46A2B]/10 hover:bg-[#C46A2B] text-[#C46A2B] hover:text-white'}`}
+                                disabled={isCartLoading || isAdded}
+                                className={`p-2 rounded-lg transition-all duration-300 ${isAdded ? 'bg-green-500 text-white' : 'bg-[#C46A2B]/10 hover:bg-[#C46A2B] text-[#C46A2B] hover:text-white'} disabled:opacity-50`}
                                 aria-label="Sepete Ekle"
                             >
                                 {isAdded ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
@@ -110,7 +127,6 @@ function HomeFeaturedProducts() {
     return (
         <section className="py-20 bg-gradient-to-b from-background to-[#F5F1EB]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
                 {/* SECTION HEADER */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4">
@@ -124,12 +140,19 @@ function HomeFeaturedProducts() {
                     </p>
                 </div>
 
-                {/* PRODUCTS GRID */}
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {popularProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                    ))}
-                </div>
+                {isLoading ? (
+                    <div className="flex justify-center py-10">
+                        <div className="w-8 h-8 border-4 border-[#C46A2B]/30 border-t-[#C46A2B] rounded-full animate-spin" />
+                    </div>
+                ) : error ? (
+                    <div className="text-center text-red-500 py-10">Popüler ürünler yüklenemedi.</div>
+                ) : (
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {popularProducts.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                )}
 
                 {/* VIEW ALL BUTTON */}
                 <div className="text-center mt-12">

@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import CheckoutSection from '../components/CheckoutSection';
+import Layout from '../../components/layout/Layout';
+import CheckoutSection from '../../components/checkout/CheckoutSection';
 
 function Checkout() {
     return (

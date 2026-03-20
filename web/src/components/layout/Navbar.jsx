@@ -1,9 +1,9 @@
-import {cn} from '../lib/utils';
+import {cn} from '../../lib/utils';
 import {Menu,X,ShoppingCart,Search} from 'lucide-react';
 import {useEffect,useState,useRef,useMemo} from 'react';
 import {useLocation,Link,useNavigate,useSearchParams} from 'react-router-dom';
-import products from '../data/products.json';
-import {useCart} from '../context/CartContext';
+import useCartStore from '../../stores/cartStore.js';
+import {useProducts} from '../../hooks/useProducts.js';
 
 function Navbar() {
   const [isScrolled,setIsScrolled] = useState(false);
@@ -18,17 +18,21 @@ function Navbar() {
   const activeSearchQuery = searchParams.get('search') || '';
   const hasActiveSearch = activeSearchQuery.trim() !== '';
 
-  const {cartTotals} = useCart();
-  const totalItems = cartTotals.itemCount;
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
-  const filteredProducts = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    return products.filter(product =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase())
-    ).slice(0,5);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  const { products: searchedProducts } = useProducts(debouncedQuery ? { search: debouncedQuery } : { limit: 0 }); // pass something that fetches nothing if empty?
+  // Use products array and slice it
+  const filteredProducts = useMemo(() => {
+    if (!debouncedQuery.trim()) return [];
+    return (searchedProducts || []).slice(0, 5);
+  }, [searchedProducts, debouncedQuery]);
+
+  const itemCount = useCartStore((state) => state.getItemCount());
 
   const navItems = [
     {name: 'Ana Sayfa',href: '/'},
@@ -274,10 +278,10 @@ function Navbar() {
                   ? 'text-[#C46A2B] bg-[#C46A2B]/10'
                   : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
               )}
-              aria-label={`Sepet - ${totalItems} ürün`}
+              aria-label={`Sepet - ${itemCount} ürün`}
             >
               <ShoppingCart className="w-6 h-6 transition-transform group-hover:scale-110" />
-              {totalItems > 0 && (
+              {itemCount > 0 && (
                 <span className="absolute top-0 right-0 w-4 h-4 bg-[#C46A2B] rounded-full border-2 border-white animate-pulse" />
               )}
               <div className={cn(
@@ -371,9 +375,9 @@ function Navbar() {
               <ShoppingCart className="w-5 h-5" />
               <span>Sepetim</span>
             </div>
-            {totalItems > 0 && (
+            {itemCount > 0 && (
               <span className="px-2 py-0.5 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
-                {totalItems}
+                {itemCount}
               </span>
             )}
           </Link>

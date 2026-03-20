@@ -1,8 +1,10 @@
 import {Link} from 'react-router-dom';
 import {ArrowRight,Coffee,Snowflake,IceCream,Droplets,LayoutGrid} from 'lucide-react';
-import products from '../data/products.json';
+import {useCategories} from '../../hooks/useCategories.js';
 
 function HomeCategoryCards() {
+    const {categories: apiCategories, isLoading, error} = useCategories();
+
     const categoryMeta = {
         "Sıcak Kahveler": {
             icon: Coffee,
@@ -30,28 +32,39 @@ function HomeCategoryCards() {
         }
     };
 
-    const categories = [...new Set(products.map(product => product.category))].map(categoryName => {
-        const meta = categoryMeta[categoryName] || {
+    if (isLoading) {
+        return (
+            <section className="py-20 flex justify-center items-center">
+                <div className="w-8 h-8 border-4 border-[#C46A2B]/30 border-t-[#C46A2B] rounded-full animate-spin" />
+            </section>
+        );
+    }
+
+    if (error) {
+        return null;
+    }
+
+    const categories = (apiCategories || []).map(cat => {
+        const meta = categoryMeta[cat.name] || {
             icon: Coffee,
             color: 'from-gray-700/30 to-gray-800/30',
             borderColor: 'border-gray-700/40',
-            description: 'Lezzetli içecekler'
+            description: cat.description || 'Lezzetli içecekler'
         };
         return {
-            id: categoryName.toLowerCase().replace(/\s+/g, '-').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g'),
-            name: categoryName,
+            id: cat.id,
+            name: cat.name,
             description: meta.description,
             Icon: meta.icon,
             color: meta.color,
             borderColor: meta.borderColor,
-            count: products.filter(product => product.category === categoryName).length
+            count: cat.product_count || 0
         };
     });
 
     return (
         <section className="py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
                 {/* SECTION HEADER */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4">
@@ -85,11 +98,6 @@ function HomeCategoryCards() {
                             <p className="text-xs text-[#6B5E55] line-clamp-1">
                                 {category.description}
                             </p>
-
-                            {/* PRODUCT COUNT */}
-                            <div className="mt-3 text-xs text-[#8B7E75]">
-                                {category.count} çeşit
-                            </div>
 
                             {/* ARROW INDICATOR */}
                             <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

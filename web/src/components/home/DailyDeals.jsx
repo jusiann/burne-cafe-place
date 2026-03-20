@@ -1,13 +1,20 @@
 import {Link} from 'react-router-dom';
 import {Clock,Percent,ChevronRight} from 'lucide-react';
 import {useState,useEffect} from 'react';
-import products from '../data/products.json';
-import coupons from '../data/coupons.json';
+import {useProducts} from '../../hooks/useProducts.js';
 
 function HomeDailyDeals() {
-    const discountedProducts = products.filter(product => product.discount > 0).slice(0,2);
+    const {products, isLoading, error} = useProducts();
+    const discountedProducts = (products || []).filter(product => product.discount > 0).slice(0, 2);
+    
     const [timeLeft,setTimeLeft] = useState({hours: 4,minutes: 51,seconds: 45});
     const [activeCouponIndex,setActiveCouponIndex] = useState(0);
+
+    const coupons = [
+        { code: 'ILK15' },
+        { code: 'IKILIM20' },
+        { code: 'MIEL10' }
+    ];
 
     const couponDetails = {
         'ILK15': {
@@ -27,7 +34,6 @@ function HomeDailyDeals() {
         }
     };
 
-    /* TIME BLOCK COMPONENT */
     const TimeBlock = ({value,label}) => (
         <div className="text-center">
             <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
@@ -39,21 +45,20 @@ function HomeDailyDeals() {
         </div>
     );
 
-    /* DEAL CARD COMPONENT */
     const DealCard = ({product}) => {
-        const discountedPrice = product.price - (product.price * product.discount / 100);
+        const priceNum = Number(product.price || 0);
+        const discountNum = Number(product.discount || 0);
+        const discountedPrice = priceNum - (priceNum * discountNum / 100);
 
         return (
             <Link
                 to={`/product/${product.id}`}
                 className="group flex gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/15 transition-all duration-300"
             >
-                {/* PRODUCT IMAGE */}
                 <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden">
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                    <img src={product.image || '/assets/caffee-pictures/placeholder.jpg'} alt={product.name} className="w-full h-full object-cover" />
                 </div>
 
-                {/* PRODUCT INFO */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                         <h3 className="font-semibold text-white group-hover:text-[#C46A2B] transition-colors">
@@ -64,19 +69,17 @@ function HomeDailyDeals() {
                         </span>
                     </div>
 
-                    {/* LIMITED TIME BADGE */}
                     <div className="flex items-center gap-2 mt-3">
                         <Clock className="w-4 h-4 text-[#C46A2B]" />
                         <span className="text-[#C46A2B] text-sm">Sınırlı süre</span>
                     </div>
 
-                    {/* PRICING */}
                     <div className="flex items-baseline gap-2 mt-2">
                         <span className="text-lg font-bold text-[#C46A2B]">
                             ₺{discountedPrice.toFixed(0)}
                         </span>
                         <span className="text-sm text-white/50 line-through">
-                            ₺{product.price}
+                            ₺{priceNum.toFixed(2)}
                         </span>
                     </div>
                 </div>
@@ -84,7 +87,6 @@ function HomeDailyDeals() {
         );
     };
 
-    /* COUNTDOWN TIMER */
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft(previous => {
@@ -110,7 +112,6 @@ function HomeDailyDeals() {
         return () => clearInterval(timer);
     }, []);
 
-    /* COUPON CAROUSEL */
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveCouponIndex((previous) => (previous + 1) % coupons.length);
@@ -121,14 +122,10 @@ function HomeDailyDeals() {
 
     return (
         <section className="py-20 bg-gradient-to-br from-[#2B1E17] via-[#3D2B20] to-[#2B1E17] relative overflow-hidden">
-
-            {/* DECORATIVE ELEMENTS */}
             <div className="absolute top-0 left-0 w-72 h-72 bg-[#C46A2B]/20 rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C46A2B]/10 rounded-full blur-3xl" />
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                {/* SECTION HEADER */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4">
                         <Percent className="w-4 h-4 text-[#C46A2B]" />
@@ -141,25 +138,28 @@ function HomeDailyDeals() {
                     </p>
                 </div>
 
-                {/* COUNTDOWN TIMER */}
                 <div className="flex justify-center gap-4 mb-12">
                     <TimeBlock value={timeLeft.hours} label="Saat" />
                     <TimeBlock value={timeLeft.minutes} label="Dakika" />
                     <TimeBlock value={timeLeft.seconds} label="Saniye" />
                 </div>
 
-                {/* DEALS GRID */}
-                <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                    {discountedProducts.map((product) => (
-                        <DealCard key={product.id} product={product} />
-                    ))}
-                </div>
+                {isLoading ? (
+                    <div className="flex justify-center py-10">
+                        <div className="w-8 h-8 border-4 border-[#C46A2B]/30 border-t-[#C46A2B] rounded-full animate-spin" />
+                    </div>
+                ) : error ? (
+                    <div className="text-center text-red-500 py-10">Kampanyalar yüklenemedi.</div>
+                ) : (
+                    <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        {discountedProducts.map((product) => (
+                            <DealCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                )}
 
-                {/* PROMO BANNER - COUPON CAROUSEL */}
                 <div className="mt-12 p-4 bg-gradient-to-r from-[#C46A2B] to-[#A85A24] rounded-2xl max-w-4xl mx-auto relative overflow-hidden">
                     <div className="flex items-center justify-between gap-3 md:gap-4">
-
-                        {/* COUPON CONTENT */}
                         <div className="flex-1 min-w-0">
                             <div className="relative h-24 md:h-16">
                                 {coupons.map((coupon, index) => {
@@ -170,8 +170,6 @@ function HomeDailyDeals() {
                                             className={`absolute inset-0 transition-all duration-700 ease-out ${index === activeCouponIndex ? 'opacity-100 translate-y-0 z-10 pointer-events-auto delay-300' : 'opacity-0 translate-y-8 z-0 pointer-events-none delay-0'}`}
                                         >
                                             <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-0">
-
-                                                {/* ICON AND TEXT */}
                                                 <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
                                                     <Percent className="w-8 h-8 md:w-9 md:h-9 text-white flex-shrink-0" />
                                                     <div className="flex-1 min-w-0">
@@ -181,10 +179,8 @@ function HomeDailyDeals() {
                                                     </div>
                                                 </div>
 
-                                                {/* DIVIDER */}
                                                 <div className="hidden md:block h-12 w-px bg-gradient-to-b from-white/20 via-white/40 to-white/20 mx-3" />
 
-                                                {/* ACTION BUTTONS */}
                                                 <div className="flex flex-row gap-2 w-full md:w-auto md:flex-shrink-0 md:mr-3">
                                                     <div className="flex-1 md:flex-initial bg-white/20 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/30">
                                                         <p className="text-white text-xs text-center whitespace-nowrap">
@@ -207,7 +203,6 @@ function HomeDailyDeals() {
                             </div>
                         </div>
 
-                        {/* VERTICAL INDICATORS */}
                         <div className="flex flex-col items-center gap-3 py-2 flex-shrink-0">
                             {coupons.map((_, index) => (
                                 <button

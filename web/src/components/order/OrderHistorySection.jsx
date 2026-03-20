@@ -1,11 +1,13 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Package,Clock,CheckCircle,Truck,ChevronRight,ShoppingBag,XCircle,AlertCircle,X} from 'lucide-react';
-import {useCart} from '../context/CartContext';
+import {Package,Clock,CheckCircle,Truck,ChevronRight,ShoppingBag,XCircle,AlertCircle,X,Loader2} from 'lucide-react';
+import {useMyOrders} from '../../hooks/useOrders.js';
+import * as orderService from '../../services/order.service.js';
+import {showSuccess, showError} from '../../constants/alert.utils.js';
 
 function OrderHistorySection() {
     const navigate = useNavigate();
-    const {orders, cancelOrder} = useCart();
+    const {orders, isLoading, error, refetch} = useMyOrders();
 
     const [confirmationModal, setConfirmationModal] = useState({
         isOpen: false,
@@ -17,41 +19,63 @@ function OrderHistorySection() {
             isOpen: true,
             orderId
         });
+        document.body.style.overflow = 'hidden';
     };
 
     const closeConfirmation = () => {
         setConfirmationModal({isOpen: false, orderId: null});
+        document.body.style.overflow = 'unset';
     };
 
-    useEffect(() => {
-        if (confirmationModal.isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
+    const handleCancelOrder = async () => {
+        if (!confirmationModal.orderId) return;
+        
+        try {
+            await orderService.cancelOrder(confirmationModal.orderId, { staffNote: 'Müşteri tarafından iptal edildi' });
+            showSuccess('Sipariş başarıyla iptal edildi.');
+            refetch();
+        } catch (err) {
+            showError(err.response?.data?.message || 'Sipariş iptal edilemedi.');
+        } finally {
+            closeConfirmation();
         }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [confirmationModal.isOpen]);
+    };
 
     /* STATUS LABELS */
     const statusLabels = {
         'preparing': 'Hazırlanıyor',
-        'on_the_way': 'Yolda',
-        'delivered': 'Teslim Edildi',
+        'ready': 'Hazır',
+        'completed': 'Teslim Edildi',
         'cancelled': 'İptal Edildi'
     };
 
     /* STATUS ICON MAPPING */
     const statusIcons = {
         'preparing': {icon: Clock,color: 'text-[#C46A2B]',bg: 'bg-[#C46A2B]/10'},
-        'on_the_way': {icon: Truck,color: 'text-[#9B7F57]',bg: 'bg-[#9B7F57]/10'},
-        'delivered': {icon: CheckCircle,color: 'text-[#6B5D4F]',bg: 'bg-[#6B5D4F]/10'},
+        'ready': {icon: Truck,color: 'text-[#9B7F57]',bg: 'bg-[#9B7F57]/10'},
+        'completed': {icon: CheckCircle,color: 'text-[#6B5D4F]',bg: 'bg-[#6B5D4F]/10'},
         'cancelled': {icon: XCircle,color: 'text-[#3D2817]',bg: 'bg-[#3D2817]/10'}
     };
 
+    if (isLoading) {
+        return (
+            <div className="min-h-[60vh] flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-[#C46A2B] animate-spin" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-[60vh] flex items-center justify-center text-red-500">
+                <AlertCircle className="w-6 h-6 mr-2" />
+                <p>{error}</p>
+            </div>
+        );
+    }
+
     /* EMPTY STATE */
-    if (orders.length === 0) {
+    if (!orders || orders.length === 0) {
         return (
             <section className="py-16 min-h-[80vh] flex items-center justify-center">
                 <div className="max-w-md mx-auto px-4 text-center">
@@ -85,7 +109,7 @@ function OrderHistorySection() {
                 {/* ORDERS LIST */}
                 <div className="space-y-4">
                     {orders.map((order) => {
-                        const statusConfig = statusIcons[order.status];
+                        const statusConfig = statusIcons[order.status] || statusIcons['preparing'];
                         const StatusIcon = statusConfig.icon;
 
                         return (
@@ -95,8 +119,8 @@ function OrderHistorySection() {
                                 <div className="p-4 bg-[#F5F1EB] border-b border-[#E8E0D5] flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <div>
-                                            <p className="font-semibold text-[#2B1E17]">{order.orderNumber}</p>
-                                            <p className="text-xs text-[#8B7E75]">{new Date(order.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                                            <p className="font-semibold text-[#2B1E17]">{order.order_number}</p>
+                                            <p className="text-xs text-[#8B7E75]">{new Date(order.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                                         </div>
                                     </div>
                                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusConfig.color} ${statusConfig.bg}`}>
@@ -112,18 +136,18 @@ function OrderHistorySection() {
                                         <div>
                                             <p className="text-sm text-[#8B7E75] mb-2">Ürünler</p>
                                             <div className="space-y-2">
-                                                {order.items.slice(0, 2).map((item, itemIndex) => (
+                                                {order.items?.slice(0, 2).map((item, itemIndex) => (
                                                     <div key={itemIndex} className="flex items-center gap-3">
                                                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F5F1EB] flex-shrink-0">
-                                                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                                            <div className="w-full h-full flex items-center justify-center text-[#8B7E75] text-xs">A</div>
                                                         </div>
                                                         <div className="flex-1 min-w-0">
-                                                            <p className="text-sm font-medium text-[#2B1E17] truncate">{item.name}</p>
+                                                            <p className="text-sm font-medium text-[#2B1E17] truncate">{item.product_name}</p>
                                                             <p className="text-xs text-[#8B7E75]">{item.quantity} adet</p>
                                                         </div>
                                                     </div>
                                                 ))}
-                                                {order.items.length > 2 && (
+                                                {order.items?.length > 2 && (
                                                     <p className="text-xs text-[#8B7E75] italic">+ {order.items.length - 2} ürün daha</p>
                                                 )}
                                             </div>
@@ -132,20 +156,19 @@ function OrderHistorySection() {
                                         {/* DETAILS */}
                                         <div className="space-y-3">
                                             <div className="flex justify-between text-sm">
-                                                <span className="text-[#8B7E75]">Teslimat</span>
-                                                <span className="text-[#2B1E17] font-medium">{order.estimatedDelivery}</span>
+                                                <span className="text-[#8B7E75]">Şube</span>
+                                                <span className="text-[#2B1E17] font-medium">{order.branch_name || order.branch_id || 'Merkez'}</span>
                                             </div>
                                             <div className="flex justify-between text-sm">
                                                 <span className="text-[#8B7E75]">Ödeme</span>
                                                 <span className="text-[#2B1E17] font-medium">
-                                                    {order.paymentMethod === 'cash' && 'Kapıda Nakit'}
-                                                    {order.paymentMethod === 'card_on_delivery' && 'Kapıda Kart'}
-                                                    {order.paymentMethod === 'online_card' && 'Online Kart'}
+                                                    {order.payment_method === 'cash' && 'Nakit'}
+                                                    {order.payment_method === 'credit_card' && 'Kredi Kartı'}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between items-center pt-2 border-t border-[#E8E0D5]">
                                                 <span className="text-[#2B1E17] font-semibold">Toplam</span>
-                                                <span className="text-lg font-bold text-[#C46A2B]">₺{order.total.toFixed(2)}</span>
+                                                <span className="text-lg font-bold text-[#C46A2B]">₺{Number(order.total).toFixed(2)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -211,10 +234,7 @@ function OrderHistorySection() {
                                     Vazgeç
                                 </button>
                                 <button
-                                    onClick={() => {
-                                        cancelOrder(confirmationModal.orderId);
-                                        closeConfirmation();
-                                    }}
+                                    onClick={handleCancelOrder}
                                     className="px-4 py-2 rounded-xl bg-[#C46A2B] text-white font-medium hover:bg-[#A85A24] transition-colors shadow-lg shadow-[#C46A2B]/20"
                                 >
                                     İptal Et

@@ -1,10 +1,16 @@
 import {useState,useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {ShoppingCart,ShoppingBag,Coffee,Tag,Trash2,Minus,Plus,FileText,X,Check,AlertCircle,ArrowRight} from 'lucide-react';
-import {useCart} from '../context/CartContext';
+import useCartStore from '../../stores/cartStore.js';
+import {showSuccess} from '../../constants/alert.utils.js';
 
 function CartSection() {
-    const {items,cartTotals,appliedCoupon,updateQuantity,removeFromCart,applyCoupon,removeCoupon,isEmpty,clearCart} = useCart();
+    const store = useCartStore();
+    const {items, appliedCoupon, updateQuantity, removeFromCart, applyCoupon, removeCoupon, clearCart} = store;
+    
+    // get computed values
+    const cartTotals = store.getCartTotals();
+    const isEmpty = store.isEmpty();
 
     const [confirmationModal,setConfirmationModal] = useState({
         isOpen: false,
@@ -39,27 +45,23 @@ function CartSection() {
 
     /* CART ITEM COMPONENT */
     const CartItem = ({item}) => {
-        const options = [
-            item.size?.name,
-            item.milkOption?.name,
-            ...(item.extras?.map(extra => extra.name) || [])
-        ].filter(Boolean);
+        const options = []; // Backend currently doesn't map size, milk, and extras to the cart item
 
         return (
             <div className="flex gap-4 p-4 bg-white rounded-xl border border-[#E8E0D5] hover:shadow-md transition-shadow duration-300">
-                <Link to={`/product/${item.productId}`} state={{cartItem: item}} className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-[#F5F1EB]">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-300" />
+                <Link to={`/product/${item.product_id}`} state={{cartItem: item}} className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-[#F5F1EB]">
+                    <img src={item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.product_name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-300" />
                 </Link>
                 <div className="flex-1 min-w-0 flex flex-col">
                     <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex-1 min-w-0">
-                            <Link to={`/product/${item.productId}`} state={{cartItem: item}} className="font-semibold text-[#2B1E17] hover:text-[#C46A2B] transition-colors line-clamp-1">{item.name}</Link>
+                            <Link to={`/product/${item.product_id}`} state={{cartItem: item}} className="font-semibold text-[#2B1E17] hover:text-[#C46A2B] transition-colors line-clamp-1">{item.product_name}</Link>
                         </div>
                         <button onClick={() => {
                             openConfirmation(
                                 'Ürünü Sil',
-                                `${item.name} ürününü sepetten silmek istediğinize emin misiniz?`,
-                                () => removeFromCart(item.itemId)
+                                `${item.product_name} ürününü sepetten silmek istediğinize emin misiniz?`,
+                                () => removeFromCart(item.id)
                             );
                         }} className="p-1.5 text-[#8B7E75] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                             <Trash2 className="w-4 h-4" />
@@ -80,17 +82,17 @@ function CartSection() {
                     <div className="mt-auto flex items-end justify-between gap-2 min-h-[45px]">
                         {/* QUANTITY CONTROLS */}
                         <div className="flex items-center bg-[#C46A2B] rounded-xl p-0.5 shrink-0">
-                            <button onClick={() => updateQuantity(item.itemId,item.quantity - 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all disabled:opacity-50" disabled={item.quantity <= 1}>
+                            <button onClick={() => updateQuantity(item.id,item.quantity - 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all disabled:opacity-50" disabled={item.quantity <= 1}>
                                 <Minus className="w-3.5 h-3.5" />
                             </button>
                             <span className="w-8 text-center font-bold text-sm text-white">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.itemId,item.quantity + 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all">
+                            <button onClick={() => updateQuantity(item.id,item.quantity + 1)} className="w-8 h-8 flex items-center justify-center hover:bg-[#A85A24] rounded-lg text-white transition-all">
                                 <Plus className="w-3.5 h-3.5" />
                             </button>
                         </div>
                         <div className="text-right">
-                            <div className="font-bold text-[#C46A2B]">₺{(item.unitPrice * item.quantity).toFixed(2)}</div>
-                            {item.quantity > 1 && <div className="text-xs text-[#8B7E75]">₺{item.unitPrice.toFixed(2)} / adet</div>}
+                            <div className="font-bold text-[#C46A2B]">₺{(item.unit_price * item.quantity).toFixed(2)}</div>
+                            {item.quantity > 1 && <div className="text-xs text-[#8B7E75]">₺{item.unit_price} / adet</div>}
                         </div>
                     </div>
                 </div>

@@ -1,8 +1,8 @@
-import HomeHeroSlider from "../components/HomeHeroSlider";
-import HomeCategoryCards from "../components/HomeCategoryCards";
-import HomeFeaturedProducts from "../components/HomeFeaturedProducts";
-import HomeDailyDeals from "../components/HomeDailyDeals";
-import Layout from "../components/Layout";
+import HomeHeroSlider from '../../components/home/HeroSlider';
+import HomeCategoryCards from '../../components/home/CategoryCards';
+import HomeFeaturedProducts from '../../components/home/FeaturedProducts';
+import HomeDailyDeals from '../../components/home/DailyDeals';
+import Layout from '../../components/layout/Layout';
 
 function Home() {
     return (

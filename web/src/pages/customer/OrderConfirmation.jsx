@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import OrderConfirmationSection from '../components/OrderConfirmationSection';
+import Layout from '../../components/layout/Layout';
+import OrderConfirmationSection from '../../components/order/OrderConfirmationSection';
 
 function OrderConfirmation() {
   return (
