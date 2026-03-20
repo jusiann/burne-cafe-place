@@ -1,4 +1,4 @@
-TRUNCATE TABLE order_items, orders, coupons, staff_branches, branches, product_options, products, categories, users CASCADE;
+TRUNCATE TABLE order_items, orders, cart_coupons, cart_items, carts, coupons, staff_branches, branches, product_options, products, categories, users CASCADE;
 
 INSERT INTO categories (id, name, description, sort_order) VALUES
 ('f4154f41-7382-402e-a43d-4df0010c2319', 'Sıcak Kahveler', 'Espresso tabanlı sıcak kahve çeşitleri', 1),
@@ -363,9 +363,22 @@ INSERT INTO product_options (id, product_id, option_type, name, extra_price) VAL
 
 INSERT INTO branches (id, name, city, district, address, is_active) VALUES
 ('0a5dc118-530d-4ea0-a2db-306574b8e1db', 'Kartal Merkez', 'İstanbul', 'Kartal', 'Ankara Cd. No:123', true),
-('767d1374-d5ac-44e5-8409-95130f5b49d1', 'Beşiktaş Sahil', 'İstanbul', 'Beşiktaş', 'Barbaros Blv. No:45', true);
+('767d1374-d5ac-44e5-8409-95130f5b49d1', 'Beşiktaş Sahil', 'İstanbul', 'Beşiktaş', 'Barbaros Blv. No:45', true),
+('b2c3d4e5-f6a7-4890-b1c2-d3e4f5a6b7c8', 'Kadıköy Moda', 'İstanbul', 'Kadıköy', 'Moda Cd. No:78', true),
+('c3d4e5f6-a7b8-4901-c2d3-e4f5a6b7c8d9', 'Şişli Merkez', 'İstanbul', 'Şişli', 'Halaskargazi Cd. No:56', true),
+('d4e5f6a7-b8c9-4012-d3e4-f5a6b7c8d9e0', 'Maltepe Sahil', 'İstanbul', 'Maltepe', 'Bağdat Cd. No:200', true);
 
 INSERT INTO coupons (id, code, discount_type, discount_value, min_order_amount, conditions, description, is_active) VALUES
 ('a112ab05-377a-4042-beb5-799cb3802673', 'ILK15', 'percentage', 15.00, 0, '{}', 'Sadece ilk siparişe özel %15 indirim', true),
 ('bea5ffd7-0b26-4715-bbce-42121837c7f0', 'IKILIM20', 'percentage', 20.00, 0, '{"requires_products": ["dc16a1fd-a3a8-4ab0-9a7f-b626d008ebc0", "4ca5df75-c2b2-4422-ab44-8ca706f11c5f"]}', 'Americano ve Latte alımında %20 indirim', true),
 ('f22a737c-eeb5-40c8-9bca-3b7a8a7c380a', 'MIEL10', 'percentage', 10.00, 0, '{"requires_products": ["f4154f41-7382-402e-a43d-4df0010c2319"]}', 'Sepette Miel kahvesi varsa %10 indirim', true);
+
+-- Test Users (password: Admin1234)
+INSERT INTO users (id, name, email, phone, password, role, is_active) VALUES
+('a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8', 'Admin', 'admin@burnecafe.com', '5551000001', '$2b$10$dzff40qXXZ.3uiFS1BXV5.X6535TqAVNj.Leh8l.CqIREDwmKkQ6i', 'admin', true),
+('c3d4e5f6-a7b8-4901-c234-d5e6f7a8b9c0', 'Eda Demir', 'eda@burnecafe.com', '5552000002', '$2b$10$dzff40qXXZ.3uiFS1BXV5.X6535TqAVNj.Leh8l.CqIREDwmKkQ6i', 'staff', true),
+('e5f6a7b8-c9d0-4123-e456-f7a8b9c0d1e2', 'Can Özkan', 'can@test.com', '5553000002', '$2b$10$dzff40qXXZ.3uiFS1BXV5.X6535TqAVNj.Leh8l.CqIREDwmKkQ6i', 'customer', true);
+
+-- Staff-Branch Assignments
+INSERT INTO staff_branches (user_id, branch_id) VALUES
+('c3d4e5f6-a7b8-4901-c234-d5e6f7a8b9c0', '767d1374-d5ac-44e5-8409-95130f5b49d1');

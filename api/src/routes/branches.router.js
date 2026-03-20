@@ -1,8 +1,9 @@
 import express from 'express';
 import {
-   getBranches,
-    getBranchId
+    getBranches,
+    getBranchId,
 } from '../controllers/branches.controller.js';
+
 const router = express.Router();
 
 router.get('/', getBranches);

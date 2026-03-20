@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken';
-import db from '../lib/db/database.js';
-
 
 export const verifyToken = async (req, res, next) => {
     try {

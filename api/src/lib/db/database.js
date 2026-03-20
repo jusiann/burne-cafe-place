@@ -1,4 +1,4 @@
-import pg from "pg";
+import pg from 'pg';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -10,9 +10,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const connectDB = async () => {
-    const time = new Date().toLocaleTimeString("tr-TR", { hour12: false });
+    const time = new Date().toLocaleTimeString('tr-TR', { hour12: false });
     try {
-        await db.query("SELECT 1");
+        await db.query('SELECT 1');
         console.log(`[DB - ${time}] PostgreSQL connected`);
 
         const schemaPath = path.join(__dirname, 'schema.sql');
@@ -41,7 +41,7 @@ export const connectDB = async () => {
 };
 
 export const runSeed = async () => {
-    const time = new Date().toLocaleTimeString("tr-TR", { hour12: false });
+    const time = new Date().toLocaleTimeString('tr-TR', { hour12: false });
     try {
         const seedPath = path.join(__dirname, 'seed.sql');
         const seedSql = fs.readFileSync(seedPath, 'utf8');

@@ -124,6 +124,15 @@ CREATE TABLE IF NOT EXISTS cart_items (
 );
 CREATE INDEX IF NOT EXISTS idx_cart_items_cart ON cart_items(cart_id);
 
+-- Cart Coupons Table
+CREATE TABLE IF NOT EXISTS cart_coupons (
+    cart_id UUID PRIMARY KEY REFERENCES carts(id) ON DELETE CASCADE,
+    coupon_id UUID REFERENCES coupons(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_cart_coupons_coupon ON cart_coupons(coupon_id);
+
 -- Orders Table
 CREATE TYPE order_status AS ENUM ('preparing', 'ready', 'completed', 'cancelled');
 CREATE TYPE payment_method AS ENUM ('cash', 'credit_card');
