@@ -81,7 +81,7 @@ function MenuSection() {
 
         if (activeCategory !== 'all') {
             result = result.filter(product => {
-                const pCatName = product.category?.name || product.category;
+                const pCatName = product.category_name;
                 return pCatName === activeCategory;
             });
         }
@@ -89,7 +89,7 @@ function MenuSection() {
         if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase();
             result = result.filter(product => {
-                const pCatName = product.category?.name || product.category || '';
+                const pCatName = product.category_name || '';
                 return (
                     product.name.toLowerCase().includes(query) ||
                     (product.description && product.description.toLowerCase().includes(query)) ||
@@ -99,9 +99,9 @@ function MenuSection() {
         }
 
         if (sortOrder === 'price-asc') {
-            result.sort((itemA,itemB) => itemA.price - itemB.price);
+            result.sort((itemA,itemB) => itemA.base_price - itemB.base_price);
         } else if (sortOrder === 'price-desc') {
-            result.sort((itemA,itemB) => itemB.price - itemA.price);
+            result.sort((itemA,itemB) => itemB.base_price - itemA.base_price);
         }
 
         return result;
@@ -111,7 +111,7 @@ function MenuSection() {
     const ProductCard = ({product}) => {
         const navigate = useNavigate();
         const [isAdded, setIsAdded] = useState(false);
-        const priceNum = Number(product.price || 0);
+        const priceNum = Number(product.base_price || 0);
         const discountNum = Number(product.discount || 0);
         const hasDiscount = discountNum > 0;
         const discountedPrice = hasDiscount ? priceNum - (priceNum * discountNum / 100) : priceNum;
@@ -125,7 +125,7 @@ function MenuSection() {
                 quantity: 1,
                 unit_price: discountedPrice,
                 product_name: product.name,
-                image_url: product.image
+                image_url: product.image_url
             });
 
             if (result.success) {
@@ -148,16 +148,16 @@ function MenuSection() {
             >
                 <div className="block relative">
                     <div className="aspect-[4/3] overflow-hidden">
-                        <img src={product.image || '/assets/caffee-pictures/placeholder.jpg'} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                        <img src={product.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                     </div>
 
                     <div className="absolute top-3 left-3 flex flex-col gap-2">
-                        {product.isPopular && (
+                        {product.is_popular && (
                             <span className="h-7 px-2 flex items-center justify-center bg-[#2B1E17] text-[#D4A574] rounded-md border border-[#D4A574]/30">
                                 <Star className="w-4 h-4 fill-current" />
                             </span>
                         )}
-                        {product.isNew && (
+                        {product.is_new && (
                             <span className="h-7 px-2 flex items-center justify-center bg-[#C46A2B] text-white text-xs font-medium rounded-md border border-[#D4A574]/50">
                                 Yeni
                             </span>
@@ -172,7 +172,7 @@ function MenuSection() {
 
                 <div className="flex-1 flex flex-col p-4">
                     <div className="flex-1">
-                        <div className="text-xs text-[#C46A2B] font-medium mb-1">{product.category?.name || product.category}</div>
+                        <div className="text-xs text-[#C46A2B] font-medium mb-1">{product.category_name}</div>
                         <h3 className="font-semibold text-[#2B1E17] group-hover:text-[#C46A2B] transition-colors mb-1">{product.name}</h3>
                         <p className="text-xs text-[#8B7E75] line-clamp-2">{product.description}</p>
                     </div>

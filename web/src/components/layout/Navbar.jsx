@@ -1,9 +1,11 @@
 import {cn} from '../../lib/utils';
-import {Menu,X,ShoppingCart,Search} from 'lucide-react';
+import {Menu,X,ShoppingCart,Search,User,LogOut,LogIn,UserPlus,Package,MapPin} from 'lucide-react';
 import {useEffect,useState,useRef,useMemo} from 'react';
 import {useLocation,Link,useNavigate,useSearchParams} from 'react-router-dom';
 import useCartStore from '../../stores/cartStore.js';
 import {useProducts} from '../../hooks/useProducts.js';
+import useAuthStore from '../../stores/authStore.js';
+import useLocationStore from '../../stores/locationStore.js';
 
 function Navbar() {
   const [isScrolled,setIsScrolled] = useState(false);
@@ -33,6 +35,27 @@ function Navbar() {
   }, [searchedProducts, debouncedQuery]);
 
   const itemCount = useCartStore((state) => state.getItemCount());
+  const { isAuthenticated, user, logout } = useAuthStore();
+  const { name: branchName, openModal } = useLocationStore();
+
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsProfileOpen(false);
+    navigate('/');
+  };
 
   const navItems = [
     {name: 'Ana Sayfa',href: '/'},
@@ -246,6 +269,18 @@ function Navbar() {
           {/* DESKTOP NAVIGATION */}
           <div className="hidden md:flex items-center space-x-1">
 
+            {/* BRANCH SELECTOR */}
+            <button
+              onClick={openModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 mr-2 rounded-lg bg-[#C46A2B]/10 text-[#C46A2B] hover:bg-[#C46A2B]/20 transition-colors duration-300"
+              aria-label="Şube Seçimi"
+            >
+              <MapPin className="w-4 h-4" />
+              <span className="text-sm font-medium truncate max-w-[150px]">
+                {branchName || 'Şube Seçin'}
+              </span>
+            </button>
+
             {/* NAVIGATION LINKS */}
             {navItems.map((item, index) => (
               <Link
@@ -289,6 +324,63 @@ function Navbar() {
                 isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
               )} />
             </Link>
+
+            {/* PROFILE ICON */}
+            <div className="relative ml-2" ref={profileRef}>
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="relative p-2 rounded-lg transition-all duration-300 text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5 group"
+                aria-label="Kullanıcı Menüsü"
+              >
+                {isAuthenticated && user?.name ? (
+                  <div className="w-6 h-6 rounded-full bg-[#C46A2B] text-white flex items-center justify-center text-xs font-bold uppercase transition-transform group-hover:scale-110 shadow-sm">
+                    {user.name.charAt(0)}
+                  </div>
+                ) : (
+                  <User className="w-6 h-6 transition-transform group-hover:scale-110" />
+                )}
+              </button>
+
+              {/* PROFILE DROPDOWN */}
+              {isProfileOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-[#E8E0D5] overflow-hidden z-50">
+                  {isAuthenticated ? (
+                    <div className="py-2 text-sm text-[#2B1E17]">
+                      <div className="px-4 py-3 border-b border-[#E8E0D5]">
+                        <p className="font-semibold truncate">{user?.name}</p>
+                        <p className="text-xs text-[#8B7E75] truncate mt-0.5">{user?.email}</p>
+                      </div>
+                      <Link to="/profile" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                        <User className="w-4 h-4 text-[#8B7E75]" />
+                        <span className="font-medium">Profilim</span>
+                      </Link>
+                      <Link to="/order-history" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                        <Package className="w-4 h-4 text-[#8B7E75]" />
+                        <span className="font-medium">Siparişlerim</span>
+                      </Link>
+                      <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors text-left border-t border-[#E8E0D5]">
+                        <LogOut className="w-4 h-4" />
+                        <span className="font-medium">Çıkış Yap</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="py-2 text-sm text-[#2B1E17]">
+                      <div className="px-4 py-3 border-b border-[#E8E0D5]">
+                        <p className="font-medium text-[#8B7E75]">Hesabınız yok mu?</p>
+                      </div>
+                      <Link to="/sign-in" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                        <LogIn className="w-4 h-4 text-[#C46A2B]" />
+                        <span className="font-medium">Giriş Yap</span>
+                      </Link>
+                      <Link to="/sign-up" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                        <UserPlus className="w-4 h-4 text-[#C46A2B]" />
+                        <span className="font-medium">Kayıt Ol</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* MOBILE MENU BUTTON */}
@@ -343,6 +435,17 @@ function Navbar() {
             )}
           </div>
 
+          {/* LOCATION - MOBILE */}
+          <button
+            onClick={() => { openModal(); setIsMenuOpen(false); }}
+            className="flex items-center justify-between w-full px-4 py-3 mb-2 rounded-lg transition-all duration-300 bg-[#C46A2B]/10 text-[#C46A2B] font-medium"
+          >
+            <div className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 flex-shrink-0" />
+              <span className="truncate max-w-[200px] text-left">{branchName || 'Lütfen şube seçin'}</span>
+            </div>
+          </button>
+
           {/* NAVIGATION LINKS - MOBILE */}
           {navItems.map((item, index) => (
             <Link
@@ -381,6 +484,55 @@ function Navbar() {
               </span>
             )}
           </Link>
+
+          {/* PROFILE - MOBILE */}
+          <div className="mt-2 pt-2 border-t border-[#E8E0D5]">
+            {isAuthenticated ? (
+              <>
+                <div className="px-4 py-3 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#C46A2B] text-white flex items-center justify-center text-lg font-bold uppercase shrink-0 shadow-sm">
+                    {user?.name?.charAt(0) || <User className="w-5 h-5" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-[#2B1E17] truncate">{user?.name}</p>
+                    <p className="text-sm text-[#8B7E75] truncate">{user?.email}</p>
+                  </div>
+                </div>
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 px-4 py-3 text-[#2B1E17] hover:bg-[#F5F1EB] rounded-lg transition-colors text-left"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <User className="w-5 h-5 text-[#8B7E75]" />
+                  <span className="font-medium">Profilim</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-left"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Çıkış Yap</span>
+                </button>
+              </>
+            ) : (
+              <div className="px-4 py-3 space-y-3">
+                <Link
+                  to="/sign-in"
+                  className="flex items-center justify-center w-full py-2.5 bg-[#C46A2B]/10 text-[#C46A2B] font-semibold rounded-lg hover:bg-[#C46A2B]/20 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Giriş Yap
+                </Link>
+                <Link
+                  to="/sign-up"
+                  className="flex items-center justify-center w-full py-2.5 bg-[#C46A2B] text-white font-semibold rounded-lg hover:bg-[#A85A24] transition-colors shadow-sm"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Kayıt Ol
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

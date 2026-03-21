@@ -1,9 +1,8 @@
 import {useParams,useNavigate} from 'react-router-dom';
 import {useEffect} from 'react';
-import {useProduct} from '../../hooks/useProducts.js';
-import ProductDetailSection from '../../components/product/ProductDetailSection';
-import Layout from '../../components/layout/Layout';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import {useProduct} from '../hooks/useProducts.js';
+import ProductDetailSection from '../components/product/ProductDetailSection';
+import Layout from '../components/layout/Layout';
 
 function ProductDetail() {
     const {id} = useParams();
@@ -21,7 +20,7 @@ function ProductDetail() {
         return (
             <Layout>
                 <div className="min-h-[50vh] flex flex-col items-center justify-center">
-                    <LoadingSpinner />
+                    <p className="text-[#8B7E75]">Ürün detayları yükleniyor...</p>
                 </div>
             </Layout>
         );

@@ -32,12 +32,12 @@ function ProductDetailSection({product}) {
             const editItem = location.state?.cartItem;
             if (editItem && String(editItem.productId) === String(product.id)) {
                 setEditingItem(editItem);
-                const size = product.sizes?.find(sizeOption => sizeOption.name === editItem.size?.name);
+                const size = product.options?.size?.find(sizeOption => sizeOption.name === editItem.size?.name);
                 setSelectedSize(size || editItem.size || null);
-                const milk = product.milkOptions?.find(milkOption => milkOption.name === editItem.milkOption?.name);
+                const milk = product.options?.milk?.find(milkOption => milkOption.name === editItem.milkOption?.name);
                 setSelectedMilk(milk || editItem.milkOption || null);
-                if (editItem.extras && product.extras) {
-                    const restoredExtras = editItem.extras.map(extraItem => product.extras.find(productExtra => productExtra.name === extraItem.name)).filter(Boolean);
+                if (editItem.extras && product.options?.extra) {
+                    const restoredExtras = editItem.extras.map(extraItem => product.options.extra.find(productExtra => productExtra.name === extraItem.name)).filter(Boolean);
                     setSelectedExtras(restoredExtras);
                 } else {
                     setSelectedExtras([]);
@@ -46,10 +46,10 @@ function ProductDetailSection({product}) {
                 setNote(editItem.note || '');
             } else {
                 setEditingItem(null);
-                const defaultSize = product.sizes?.find(sizeOption => sizeOption.name === 'Tall') || product.sizes?.[0];
+                const defaultSize = product.options?.size?.find(sizeOption => sizeOption.name === 'Tall') || product.options?.size?.[0];
                 setSelectedSize(defaultSize);
-                if (product.milkOptions?.length > 0) {
-                    const defaultMilk = product.milkOptions.find(milkOption => milkOption.name === 'Standart Süt') || product.milkOptions[0];
+                if (product.options?.milk?.length > 0) {
+                    const defaultMilk = product.options.milk.find(milkOption => milkOption.name === 'Standart Süt') || product.options.milk[0];
                     setSelectedMilk(defaultMilk);
                 }
                 setSelectedExtras([]);
@@ -62,10 +62,10 @@ function ProductDetailSection({product}) {
     /* PRICE CALCULATION */
     useEffect(() => {
         if (!product) return;
-        let total = product.price;
-        if (selectedSize) total += selectedSize.price;
-        if (selectedMilk) total += selectedMilk.price;
-        const extrasTotal = selectedExtras.reduce((sum,extra) => sum + extra.price,0);
+        let total = Number(product.base_price || 0);
+        if (selectedSize) total += Number(selectedSize.extra_price || 0);
+        if (selectedMilk) total += Number(selectedMilk.extra_price || 0);
+        const extrasTotal = selectedExtras.reduce((sum,extra) => sum + Number(extra.extra_price || 0),0);
         total += extrasTotal;
         setTotalPrice(total);
     }, [product,selectedSize,selectedMilk,selectedExtras]);
@@ -82,10 +82,18 @@ function ProductDetailSection({product}) {
 
     const handleAction = async () => {
         setIsAdded(true);
+        const payload = {
+            productId: product.id,
+            quantity,
+            sizeName: selectedSize?.name || null,
+            milkOptionName: selectedMilk?.name || null,
+            extras: selectedExtras.map(e => ({ name: e.name })),
+            note
+        };
         if (editingItem) {
-            updateItem(editingItem.itemId, product, quantity, selectedSize, selectedMilk, selectedExtras, note);
+            await updateItem(editingItem.id || editingItem.itemId, payload);
         } else {
-            addToCart(product, quantity, selectedSize, selectedMilk, selectedExtras, note);
+            await addToCart(payload);
         }
         setTimeout(() => {
             setIsAdded(false);
@@ -108,12 +116,12 @@ function ProductDetailSection({product}) {
                     {/* PRODUCT IMAGE */}
                     <div className="space-y-6">
                         <div className="aspect-square w-full rounded-2xl overflow-hidden bg-[#F5F1EB] border border-[#E8E0D5] relative md:sticky md:top-24">
-                            <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                            <img src={product.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                             <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-                                {product.isPopular && (
+                                {product.is_popular && (
                                     <span className="h-8 px-3 flex items-center justify-center bg-[#2B1E17] text-[#D4A574] rounded-lg border border-[#D4A574]/30 shadow-lg"><Star className="w-5 h-5 fill-current" /></span>
                                 )}
-                                {product.isNew && (
+                                {product.is_new && (
                                     <span className="h-8 px-3 flex items-center justify-center bg-[#C46A2B] text-white text-sm font-medium rounded-lg border border-[#D4A574]/50 shadow-lg">Yeni</span>
                                 )}
                                 {product.discount > 0 && (
@@ -132,10 +140,10 @@ function ProductDetailSection({product}) {
 
                         {/* NUTRITION */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            <NutritionItem icon={Flame} label="Kalori" value={product.nutrition.calories} unit=" kcal" />
-                            <NutritionItem icon={Dumbbell} label="Protein" value={product.nutrition.protein} unit="g" />
-                            <NutritionItem icon={Droplet} label="Yağ" value={product.nutrition.fat} unit="g" />
-                            <NutritionItem icon={Bean} label="Karb" value={product.nutrition.carbs} unit="g" />
+                            <NutritionItem icon={Flame} label="Kalori" value={product.nutrition_calories} unit=" kcal" />
+                            <NutritionItem icon={Dumbbell} label="Protein" value={product.nutrition_protein} unit="g" />
+                            <NutritionItem icon={Droplet} label="Yağ" value={product.nutrition_fat} unit="g" />
+                            <NutritionItem icon={Bean} label="Karb" value={product.nutrition_carbs} unit="g" />
                         </div>
 
                         <div className="h-px bg-[#E8E0D5]" />
@@ -144,18 +152,18 @@ function ProductDetailSection({product}) {
                         <div className="space-y-8">
 
                             {/* SIZE */}
-                            {product.sizes && product.sizes.length > 0 && (
+                            {product.options?.size && product.options.size.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold text-[#2B1E17] mb-3 flex items-center gap-2"><Coffee className="w-5 h-5 text-[#C46A2B]" /> Porsiyon Seçimi</h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                        {product.sizes.map((size) => (
+                                        {product.options.size.map((size) => (
                                             <button
                                                 key={size.name}
                                                 onClick={() => setSelectedSize(size)}
                                                 className={`p-3 rounded-xl border-2 transition-all text-center ${selectedSize?.name === size.name ? 'border-[#C46A2B] bg-[#C46A2B]/5 text-[#C46A2B]' : 'border-[#E8E0D5] text-[#8B7E75] hover:border-[#C46A2B]/50'}`}
                                             >
                                                 <div className="font-medium">{size.name}</div>
-                                                <div className="text-xs mt-1">{size.price === 0 ? 'Standart' : `+₺${size.price}`}</div>
+                                                <div className="text-xs mt-1">{Number(size.extra_price) === 0 ? 'Standart' : `+₺${size.extra_price}`}</div>
                                             </button>
                                         ))}
                                     </div>
@@ -163,18 +171,18 @@ function ProductDetailSection({product}) {
                             )}
 
                             {/* MILK */}
-                            {product.milkOptions && product.milkOptions.length > 0 && (
+                            {product.options?.milk && product.options.milk.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold text-[#2B1E17] mb-3 flex items-center gap-2"><Droplet className="w-5 h-5 text-[#C46A2B]" /> Süt Seçimi</h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        {product.milkOptions.map((milk) => (
+                                        {product.options.milk.map((milk) => (
                                             <button
                                                 key={milk.name}
                                                 onClick={() => setSelectedMilk(milk)}
                                                 className={`flex items-center justify-between p-3 rounded-xl border-2 transition-all text-left ${selectedMilk?.name === milk.name ? 'border-[#C46A2B] bg-[#C46A2B]/5 text-[#C46A2B]' : 'border-[#E8E0D5] text-[#8B7E75] hover:border-[#C46A2B]/50'}`}
                                             >
                                                 <span className="font-medium text-sm">{milk.name}</span>
-                                                <span className="text-xs">{milk.price === 0 ? '' : `+₺${milk.price}`}</span>
+                                                <span className="text-xs">{Number(milk.extra_price) === 0 ? '' : `+₺${milk.extra_price}`}</span>
                                             </button>
                                         ))}
                                     </div>
@@ -182,11 +190,11 @@ function ProductDetailSection({product}) {
                             )}
 
                             {/* EXTRAS */}
-                            {product.extras && product.extras.length > 0 && (
+                            {product.options?.extra && product.options.extra.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold text-[#2B1E17] mb-3 flex items-center gap-2"><Star className="w-5 h-5 text-[#C46A2B]" /> Ekstralar</h3>
                                     <div className="space-y-2">
-                                        {product.extras.map((extra) => {
+                                        {product.options.extra.map((extra) => {
                                             const isSelected = selectedExtras.some(extraItem => extraItem.name === extra.name);
                                             return (
                                                 <button
@@ -200,7 +208,7 @@ function ProductDetailSection({product}) {
                                                         </div>
                                                         <span className="font-medium text-sm">{extra.name}</span>
                                                     </div>
-                                                    <span className="text-sm font-semibold">+₺{extra.price}</span>
+                                                    <span className="text-sm font-semibold">+₺{extra.extra_price}</span>
                                                 </button>
                                             );
                                         })}

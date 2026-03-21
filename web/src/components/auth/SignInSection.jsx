@@ -3,9 +3,9 @@ import {useNavigate, Link} from 'react-router-dom';
 import {Mail, Lock, ArrowRight, Loader2, AlertCircle} from 'lucide-react';
 import useAuthStore from '../../stores/authStore.js';
 
-function Login() {
+function SignInSection() {
     const navigate = useNavigate();
-    const {login, isLoading} = useAuthStore();
+    const {signIn, isLoading} = useAuthStore();
     
     const [formData, setFormData] = useState({
         email: '',
@@ -28,7 +28,7 @@ function Login() {
             return;
         }
 
-        const result = await login(formData);
+        const result = await signIn(formData);
         
         if (result.success) {
             navigate('/menu');
@@ -112,7 +112,7 @@ function Login() {
                 <div className="px-8 py-6 bg-[#F5F1EB] border-t border-[#E8E0D5] text-center">
                     <p className="text-[#8B7E75] text-sm gap-1 flex items-center justify-center">
                         Hesabınız yok mu? 
-                        <Link to="/register" className="font-semibold text-[#C46A2B] hover:text-[#A85A24] transition-colors">
+                        <Link to="/sign-up" className="font-semibold text-[#C46A2B] hover:text-[#A85A24] transition-colors">
                             Kayıt Olun
                         </Link>
                     </p>
@@ -122,4 +122,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default SignInSection;

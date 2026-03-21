@@ -46,7 +46,7 @@ function HomeDailyDeals() {
     );
 
     const DealCard = ({product}) => {
-        const priceNum = Number(product.price || 0);
+        const priceNum = Number(product.base_price || 0);
         const discountNum = Number(product.discount || 0);
         const discountedPrice = priceNum - (priceNum * discountNum / 100);
 
@@ -56,7 +56,7 @@ function HomeDailyDeals() {
                 className="group flex gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/15 transition-all duration-300"
             >
                 <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden">
-                    <img src={product.image || '/assets/caffee-pictures/placeholder.jpg'} alt={product.name} className="w-full h-full object-cover" />
+                    <img src={product.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={product.name} className="w-full h-full object-cover" />
                 </div>
 
                 <div className="flex-1 min-w-0">

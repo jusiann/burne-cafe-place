@@ -1,5 +1,5 @@
-import CartSection from '../../components/cart/CartSection';
-import Layout from '../../components/layout/Layout';
+import CartSection from '../components/cart/CartSection';
+import Layout from '../components/layout/Layout';
 
 function Cart() {
     return (

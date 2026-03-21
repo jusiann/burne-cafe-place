@@ -1,37 +1,37 @@
-import {useState} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
-import {Mail, Lock, User, Phone, ArrowRight, Loader2, AlertCircle} from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Mail, Lock, User, Phone, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import useAuthStore from '../../stores/authStore.js';
 
-function Register() {
+function SignUpSection() {
     const navigate = useNavigate();
-    const {register, isLoading} = useAuthStore();
-    
+    const { signUp, isLoading } = useAuthStore();
+
     const [formData, setFormData] = useState({
         fullname: '',
         phone: '',
         email: '',
         password: '',
     });
-    
+
     const [error, setError] = useState('');
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData(prev => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
         if (error) setError('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!formData.fullname || !formData.phone || !formData.email || !formData.password) {
             setError('Lütfen tüm alanları doldurun.');
             return;
         }
 
-        const result = await register(formData);
-        
+        const result = await signUp(formData);
+
         if (result.success) {
             navigate('/menu');
         } else {
@@ -145,11 +145,11 @@ function Register() {
                         </button>
                     </form>
                 </div>
-                
+
                 <div className="px-8 py-6 bg-[#F5F1EB] border-t border-[#E8E0D5] text-center">
                     <p className="text-[#8B7E75] text-sm gap-1 flex items-center justify-center">
-                        Zaten hesabınız var mı? 
-                        <Link to="/login" className="font-semibold text-[#C46A2B] hover:text-[#A85A24] transition-colors">
+                        Zaten hesabınız var mı?
+                        <Link to="/sign-in" className="font-semibold text-[#C46A2B] hover:text-[#A85A24] transition-colors">
                             Giriş Yapın
                         </Link>
                     </p>
@@ -159,4 +159,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default SignUpSection;

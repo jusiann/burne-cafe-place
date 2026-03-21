@@ -1,5 +1,5 @@
-import Layout from '../../components/layout/Layout';
-import OrderHistorySection from '../../components/order/OrderHistorySection';
+import Layout from '../components/layout/Layout';
+import OrderHistorySection from '../components/order/OrderHistorySection';
 
 function OrderHistory() {
     return (
