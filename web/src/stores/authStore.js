@@ -7,6 +7,9 @@ const useAuthStore = create((set, get) => ({
     token: getItem(STORAGE_KEYS.TOKEN),
     isLoading: false,
     isAuthenticated: !!getItem(STORAGE_KEYS.TOKEN),
+    authModalView: null,
+    openAuthModal: (view = 'signIn') => set({ authModalView: view }),
+    closeAuthModal: () => set({ authModalView: null }),
     signUp: async (data) => {
         set({ isLoading: true });
 
