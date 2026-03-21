@@ -1,33 +1,32 @@
-import {BrowserRouter,Routes,Route,useLocation} from 'react-router-dom';
-import {useEffect, useState} from 'react';
-import Home from './pages/customer/Home';
-import Menu from './pages/customer/Menu';
-import ProductDetail from './pages/customer/ProductDetail';
-import Cart from './pages/customer/Cart';
-import Checkout from './pages/customer/Checkout';
-import OrderConfirmation from './pages/customer/OrderConfirmation';
-import OrderHistory from './pages/customer/OrderHistory';
-import Login from './pages/customer/Login';
-import Register from './pages/customer/Register';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import Home from './pages/Home';
+import Menu from './pages/Menu';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import OrderConfirmation from './pages/OrderConfirmation';
+import OrderHistory from './pages/OrderHistory';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 
-import ErrorBoundary from './components/common/ErrorBoundary';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import OnboardingModal from './components/common/OnboardingModal';
-import LoadingSpinner from './components/common/LoadingSpinner';
+import LocationSelectionModal from './components/common/LocationSelectionModal';
 import useAuthStore from './stores/authStore';
 
 function ScrollToTop() {
-    const {pathname} = useLocation();
+    const { pathname } = useLocation();
     useEffect(() => {
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }, [pathname]);
     return null;
 }
 
 function App() {
     const [isInit, setIsInit] = useState(true);
-    const {checkAuth} = useAuthStore();
+    const { checkAuth } = useAuthStore();
 
     useEffect(() => {
         const init = async () => {
@@ -37,47 +36,30 @@ function App() {
         init();
     }, [checkAuth]);
 
-    if (isInit) {
-        return <LoadingSpinner fullScreen />;
-    }
+    if (isInit)
+        return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Sistem başlatılıyor...</div>;
 
     return (
-        <ErrorBoundary>
-            <BrowserRouter>
-                <ScrollToTop />
-                <OnboardingModal />
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/menu' element={<Menu />} />
-                    <Route path='/product/:id' element={<ProductDetail />} />
-                    
-                    <Route path='/cart' element={
-                        <ProtectedRoute>
-                            <Cart />
-                        </ProtectedRoute>
-                    } />
-                    <Route path='/checkout' element={
-                        <ProtectedRoute>
-                            <Checkout />
-                        </ProtectedRoute>
-                    } />
-                    <Route path='/order-confirmation' element={
-                        <ProtectedRoute>
-                            <OrderConfirmation />
-                        </ProtectedRoute>
-                    } />
-                    <Route path='/order-history' element={
-                        <ProtectedRoute>
-                            <OrderHistory />
-                        </ProtectedRoute>
-                    } />
-                    
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/register' element={<Register />} />
-                    <Route path='*' element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
-        </ErrorBoundary>
+        <BrowserRouter>
+            <ScrollToTop />
+            <LocationSelectionModal />
+            <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/menu' element={<Menu />} />
+                <Route path='/product/:id' element={<ProductDetail />} />
+                <Route path='/sign-in' element={<SignIn />} />
+                <Route path='/sign-up' element={<SignUp />} />
+                {/* PROTECTED ROUTES */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path='/profile' element={<Profile />} />
+                    <Route path='/cart' element={<Cart />} />
+                    <Route path='/checkout' element={<Checkout />} />
+                    <Route path='/order-confirmation' element={<OrderConfirmation />} />
+                    <Route path='/order-history' element={<OrderHistory />} />
+                </Route>
+                <Route path='*' element={<NotFound />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

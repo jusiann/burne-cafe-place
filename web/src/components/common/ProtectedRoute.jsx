@@ -1,24 +1,20 @@
-import {Navigate, useLocation} from 'react-router-dom';
+import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import useAuthStore from '../../stores/authStore.js';
-import LoadingSpinner from './LoadingSpinner.jsx';
 
-function ProtectedRoute({children, requireRole}) {
-    const {isAuthenticated, user, isLoading} = useAuthStore();
+function ProtectedRoute({ children, requireRole }) {
+    const { isAuthenticated, user, isLoading } = useAuthStore();
     const location = useLocation();
 
-    if (isLoading) {
-        return <LoadingSpinner fullScreen />;
-    }
+    if (isLoading)
+        return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Yetki kontrol ediliyor...</div>;
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" state={{from: location}} replace />;
-    }
+    if (!isAuthenticated)
+        return <Navigate to="/sign-in" state={{ from: location }} replace />;
 
-    if (requireRole && user?.role !== requireRole) {
+    if (requireRole && user?.role !== requireRole)
         return <Navigate to="/" replace />;
-    }
 
-    return children;
+    return children ? children : <Outlet />;
 }
 
 export default ProtectedRoute;

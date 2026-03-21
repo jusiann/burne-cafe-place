@@ -16,7 +16,6 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-
 api.interceptors.response.use(
     (response) => response.data,
     async (error) => {
@@ -46,13 +45,13 @@ api.interceptors.response.use(
                     removeItem(STORAGE_KEYS.TOKEN);
                     removeItem(STORAGE_KEYS.REFRESH_TOKEN);
                     removeItem(STORAGE_KEYS.USER);
-                    window.location.href = '/login';
+                    window.location.href = '/sign-in';
                 }
             } else {
                 removeItem(STORAGE_KEYS.TOKEN);
                 removeItem(STORAGE_KEYS.REFRESH_TOKEN);
                 removeItem(STORAGE_KEYS.USER);
-                window.location.href = '/login';
+                window.location.href = '/sign-in';
             }
         }
 
