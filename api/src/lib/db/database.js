@@ -43,6 +43,12 @@ export const connectDB = async () => {
 export const runSeed = async () => {
     const time = new Date().toLocaleTimeString('tr-TR', { hour12: false });
     try {
+        const { rows } = await db.query('SELECT COUNT(*) FROM products');
+        if (parseInt(rows[0].count, 10) > 0) {
+            console.log(`[DB - ${time}] Seeding skipped (Database already contains data)`);
+            return;
+        }
+
         const seedPath = path.join(__dirname, 'seed.sql');
         const seedSql = fs.readFileSync(seedPath, 'utf8');
         await db.query(seedSql);
