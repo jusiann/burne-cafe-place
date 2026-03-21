@@ -175,7 +175,7 @@ export const createOrder = async (req, res) => {
         );
 
         const { rows: items } = await db.query(
-            'SELECT id, order_id, product_id, product_name, quantity, size_name, size_extra_price, milk_option_name, milk_option_extra_price, extras, unit_price, total_price, note FROM order_items WHERE order_id = $1 ORDER BY id ASC',
+            'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id = $1 ORDER BY oi.id ASC',
             [order.id],
         );
 
@@ -238,9 +238,9 @@ export const getMyOrders = async (req, res) => {
                 .join(', ');
 
             const result = await db.query(
-                'SELECT id, order_id, product_id, product_name, quantity, size_name, size_extra_price, milk_option_name, milk_option_extra_price, extras, unit_price, total_price, note FROM order_items WHERE order_id IN (' +
+                'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id IN (' +
                     placeholders +
-                    ') ORDER BY id ASC',
+                    ') ORDER BY oi.id ASC',
                 orderIds,
             );
 
@@ -389,7 +389,7 @@ export const getOrderById = async (req, res) => {
         }
 
         const { rows: items } = await db.query(
-            'SELECT id, order_id, product_id, product_name, quantity, size_name, size_extra_price, milk_option_name, milk_option_extra_price, extras, unit_price, total_price, note FROM order_items WHERE order_id = $1 ORDER BY id ASC',
+            'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id = $1 ORDER BY oi.id ASC',
             [id],
         );
 
