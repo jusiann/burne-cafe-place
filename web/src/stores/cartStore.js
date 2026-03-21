@@ -96,7 +96,7 @@ const useCartStore = create((set, get) => ({
     },
     applyCoupon: async (code) => {
         try {
-            const response = await cartService.validateCoupon({ code });
+            const response = await cartService.validateCoupon({ code, cartId: get().id });
             await get().fetchCart();
             return { success: true, message: response.message };
         } catch (error) {

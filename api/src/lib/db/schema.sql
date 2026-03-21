@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     role user_role DEFAULT 'customer',
     is_active BOOLEAN DEFAULT TRUE,
-    reset_code VARCHAR(10),
+    reset_code VARCHAR(255),
     reset_code_expires TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP

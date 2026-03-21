@@ -110,8 +110,9 @@ export const createOrder = async (req, res) => {
             couponId = coupon.id;
         }
 
-        const tax = 0;
-        const total = subtotal + tax - discount;
+        const afterDiscount = subtotal - discount;
+        const tax = afterDiscount * 0.20;
+        const total = afterDiscount + tax;
 
         if (total < 0)
             throw ApiError.badRequest('Order total cannot be negative.');
