@@ -7,13 +7,13 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
 import OrderHistory from './pages/OrderHistory';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import StaffOrders from './pages/StaffOrders';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LocationSelectionModal from './components/common/LocationSelectionModal';
+import AuthModal from './components/auth/AuthModal';
 import useAuthStore from './stores/authStore';
 
 function ScrollToTop() {
@@ -43,12 +43,11 @@ function App() {
         <BrowserRouter>
             <ScrollToTop />
             <LocationSelectionModal />
+            <AuthModal />
             <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/menu' element={<Menu />} />
                 <Route path='/product/:id' element={<ProductDetail />} />
-                <Route path='/sign-in' element={<SignIn />} />
-                <Route path='/sign-up' element={<SignUp />} />
                 {/* PROTECTED ROUTES */}
                 <Route element={<ProtectedRoute />}>
                     <Route path='/profile' element={<Profile />} />
@@ -56,6 +55,7 @@ function App() {
                     <Route path='/checkout' element={<Checkout />} />
                     <Route path='/order-confirmation' element={<OrderConfirmation />} />
                     <Route path='/order-history' element={<OrderHistory />} />
+                    <Route path='/orders' element={<StaffOrders />} />
                 </Route>
                 <Route path='*' element={<NotFound />} />
             </Routes>

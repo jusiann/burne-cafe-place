@@ -35,7 +35,8 @@ function Navbar() {
   }, [searchedProducts, debouncedQuery]);
 
   const itemCount = useCartStore((state) => state.getItemCount());
-  const { isAuthenticated, user, logout } = useAuthStore();
+  const { isAuthenticated, user, logout, openAuthModal } = useAuthStore();
+  const role = isAuthenticated ? user?.role : 'guest';
   const { name: branchName, openModal } = useLocationStore();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -57,11 +58,25 @@ function Navbar() {
     navigate('/');
   };
 
-  const navItems = [
-    {name: 'Ana Sayfa',href: '/'},
-    {name: 'Menü',href: '/menu'},
-    {name: 'Siparişlerim',href: '/order-history'},
-  ];
+  const navItems = useMemo(() => {
+    if (role === 'staff') {
+      return [
+        {name: 'Menü',href: '/menu'},
+        {name: 'Siparişler',href: '/orders'},
+      ];
+    } else if (role === 'customer') {
+      return [
+        {name: 'Ana Sayfa',href: '/'},
+        {name: 'Menü',href: '/menu'},
+        {name: 'Siparişlerim',href: '/order-history'},
+      ];
+    } else {
+      return [
+        {name: 'Ana Sayfa',href: '/'},
+        {name: 'Menü',href: '/menu'},
+      ];
+    }
+  }, [role]);
 
   /* CHECK ACTIVE ROUTE */
   const isActiveRoute = (href) => {
@@ -354,10 +369,18 @@ function Navbar() {
                         <User className="w-4 h-4 text-[#8B7E75]" />
                         <span className="font-medium">Profilim</span>
                       </Link>
-                      <Link to="/order-history" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
-                        <Package className="w-4 h-4 text-[#8B7E75]" />
-                        <span className="font-medium">Siparişlerim</span>
-                      </Link>
+                      {role === 'customer' && (
+                        <Link to="/order-history" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                          <Package className="w-4 h-4 text-[#8B7E75]" />
+                          <span className="font-medium">Siparişlerim</span>
+                        </Link>
+                      )}
+                      {role === 'staff' && (
+                        <Link to="/orders" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                          <Package className="w-4 h-4 text-[#8B7E75]" />
+                          <span className="font-medium">Siparişler</span>
+                        </Link>
+                      )}
                       <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors text-left border-t border-[#E8E0D5]">
                         <LogOut className="w-4 h-4" />
                         <span className="font-medium">Çıkış Yap</span>
@@ -368,14 +391,14 @@ function Navbar() {
                       <div className="px-4 py-3 border-b border-[#E8E0D5]">
                         <p className="font-medium text-[#8B7E75]">Hesabınız yok mu?</p>
                       </div>
-                      <Link to="/sign-in" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                      <button onClick={() => { setIsProfileOpen(false); openAuthModal('signIn'); }} className="w-full flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors text-left">
                         <LogIn className="w-4 h-4 text-[#C46A2B]" />
                         <span className="font-medium">Giriş Yap</span>
-                      </Link>
-                      <Link to="/sign-up" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                      </button>
+                      <button onClick={() => { setIsProfileOpen(false); openAuthModal('signUp'); }} className="w-full flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors text-left">
                         <UserPlus className="w-4 h-4 text-[#C46A2B]" />
                         <span className="font-medium">Kayıt Ol</span>
-                      </Link>
+                      </button>
                     </div>
                   )}
                 </div>
@@ -516,20 +539,18 @@ function Navbar() {
               </>
             ) : (
               <div className="px-4 py-3 space-y-3">
-                <Link
-                  to="/sign-in"
+                <button
+                  onClick={() => { setIsMenuOpen(false); openAuthModal('signIn'); }}
                   className="flex items-center justify-center w-full py-2.5 bg-[#C46A2B]/10 text-[#C46A2B] font-semibold rounded-lg hover:bg-[#C46A2B]/20 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
                 >
                   Giriş Yap
-                </Link>
-                <Link
-                  to="/sign-up"
+                </button>
+                <button
+                  onClick={() => { setIsMenuOpen(false); openAuthModal('signUp'); }}
                   className="flex items-center justify-center w-full py-2.5 bg-[#C46A2B] text-white font-semibold rounded-lg hover:bg-[#A85A24] transition-colors shadow-sm"
-                  onClick={() => setIsMenuOpen(false)}
                 >
                   Kayıt Ol
-                </Link>
+                </button>
               </div>
             )}
           </div>
