@@ -17,7 +17,7 @@ router.get('/my', verifyToken, requireRole('customer'), getMyOrders);
 router.get('/', verifyToken, requireRole('staff'), getOrders);
 router.get('/:id', verifyToken, getOrderById);
 
-router.patch('/:id/status', verifyToken, requireRole('staff'), updateOrderStatus);
-router.patch('/:id/cancel', verifyToken, requireRole('staff'), cancelOrder);
+router.patch('/:id/status', verifyToken, requireRole('staff', 'admin'), updateOrderStatus);
+router.patch('/:id/cancel', verifyToken, cancelOrder);
 
 export default router;

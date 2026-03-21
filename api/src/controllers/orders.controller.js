@@ -512,6 +512,13 @@ export const cancelOrder = async (req, res) => {
                 throw ApiError.forbidden('You can only access orders of your assigned branch.');
         }
 
+        if (user.role === 'customer') {
+            if (!order.user_id || order.user_id !== user.id)
+                throw ApiError.forbidden('You can only cancel your own orders.');
+            if (order.status !== 'preparing')
+                throw ApiError.badRequest('You can only cancel orders that are being prepared.');
+        }
+
         const { rows } = await db.query(
             'UPDATE orders SET status = $1::order_status, staff_note = $2, completed_by = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $3 RETURNING id, order_number, user_id, branch_id, customer_name, customer_phone, status, scheduled_time, payment_method, order_note, staff_note, subtotal, tax, discount, coupon_id, total, completed_by, created_at, updated_at',
             ['cancelled', staffNote, id],
