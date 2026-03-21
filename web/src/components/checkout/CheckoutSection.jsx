@@ -42,7 +42,7 @@ function CheckoutSection() {
     
     const { user } = useAuthStore();
     const locationStore = useLocationStore();
-    const activeBranchId = locationStore.branchId || 1; // Default to 1 if not selected
+    const activeBranchId = locationStore.branchId || locationStore.id || null;
 
     const [formData, setFormData] = useState({
         deliveryTime: 'asap',
@@ -125,6 +125,13 @@ function CheckoutSection() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (!activeBranchId) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showError('Lütfen siparişin gönderileceği şubeyi seçin.');
+            locationStore.openModal();
+            return;
+        }
 
         if (!validateForm()) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
