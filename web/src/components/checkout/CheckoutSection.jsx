@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {User,Phone,MapPin,Clock,CreditCard,FileText,ShoppingBag,Tag,AlertCircle,X} from 'lucide-react';
 import useCartStore from '../../stores/cartStore.js';
 import useLocationStore from '../../stores/locationStore.js';
+import useAuthStore from '../../stores/authStore.js';
 import * as orderService from '../../services/order.service.js';
 import {showSuccess, showError} from '../../constants/alert.utils.js';
 
@@ -39,16 +40,11 @@ function CheckoutSection() {
     const cartTotals = store.getCartTotals();
     const isEmpty = store.isEmpty();
     
+    const { user } = useAuthStore();
     const locationStore = useLocationStore();
     const activeBranchId = locationStore.branchId || 1; // Default to 1 if not selected
 
     const [formData, setFormData] = useState({
-        customerName: '',
-        customerPhone: '',
-        city: locationStore.city || '',
-        district: locationStore.district || '',
-        neighborhood: '',
-        fullAddress: '',
         deliveryTime: 'asap',
         customTime: '',
         paymentMethod: 'cash',
@@ -63,7 +59,7 @@ function CheckoutSection() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const deliveryTimeOptions = [
-        {value: 'asap',label: 'Şimdi (15-20 dk)'},
+        {value: 'asap',label: 'Şimdi (5-10 dk)'},
         {value: 'custom',label: 'Belirli Bir Saat'}
     ];
 
@@ -99,17 +95,6 @@ function CheckoutSection() {
 
     const validateForm = () => {
         const newErrors = {};
-
-        if (!formData.customerName.trim()) newErrors.customerName = 'İsim gereklidir';
-        if (!formData.customerPhone.trim()) {
-            newErrors.customerPhone = 'Telefon numarası gereklidir';
-        } else if (!/^[0-9]{10}$/.test(formData.customerPhone.replace(/[-]/g, ''))) {
-            newErrors.customerPhone = 'Geçerli bir telefon numarası girin (10 haneli)';
-        }
-        if (!formData.city.trim()) newErrors.city = 'Şehir gereklidir';
-        if (!formData.district.trim()) newErrors.district = 'İlçe gereklidir';
-        if (!formData.neighborhood.trim()) newErrors.neighborhood = 'Mahalle gereklidir';
-        if (!formData.fullAddress.trim()) newErrors.fullAddress = 'Adres gereklidir';
 
         if (formData.deliveryTime === 'custom' && !formData.customTime) {
             newErrors.customTime = 'Lütfen bir saat seçin';
@@ -161,8 +146,8 @@ function CheckoutSection() {
 
             const orderData = {
                 branchId: activeBranchId,
-                customerName: formData.customerName.trim(),
-                customerPhone: formData.customerPhone.replace(/[-]/g, ''),
+                customerName: user?.name || 'Müşteri',
+                customerPhone: user?.phone || '0000000000',
                 scheduledTime: scheduledTime,
                 paymentMethod: paymentMethod,
                 orderNote: formData.orderNote.trim() || null,
@@ -216,86 +201,6 @@ function CheckoutSection() {
 
                     {/* FORMS */}
                     <div className="lg:col-span-2 space-y-6">
-
-                        {/* CUSTOMER INFO */}
-                        <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
-                            <h2 className="font-semibold text-lg text-[#2B1E17] mb-4 flex items-center gap-2">
-                                <User className="w-5 h-5 text-[#C46A2B]" />
-                                Müşteri Bilgileri
-                            </h2>
-                            <div className="grid sm:grid-cols-2 gap-4">
-                                <InputField name="customerName" label="Ad Soyad" icon={User} placeholder="Adınız ve soyadınız" formData={formData} errors={errors} handleChange={handleChange} />
-                                <div>
-                                    <label htmlFor="customerPhone" className="block text-sm font-medium text-[#2B1E17] mb-2">
-                                        Telefon <span className="text-[#C46A2B]">*</span>
-                                    </label>
-                                    <div className="relative">
-                                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8B7E75]" />
-                                        <input
-                                            id="customerPhone"
-                                            name="customerPhone"
-                                            type="tel"
-                                            value={formData.customerPhone}
-                                            onChange={(event) => {
-                                                let value = event.target.value.replace(/\D/g,'');
-                                                if (value.length > 10) value = value.slice(0,10);
-                                                if (value.length > 3 && value.length <= 6) {
-                                                    value = value.slice(0,3) + '-' + value.slice(3);
-                                                } else if (value.length > 6) {
-                                                    value = value.slice(0,3) + '-' + value.slice(3,6) + '-' + value.slice(6);
-                                                }
-                                                setFormData(previous => ({...previous,customerPhone: value}));
-                                                if (errors.customerPhone) setErrors(previous => ({...previous,customerPhone: ''}));
-                                            }}
-                                            placeholder="5XX-XXX-XXXX"
-                                            maxLength="12"
-                                            className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors.customerPhone ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
-                                        />
-                                    </div>
-                                    {errors.customerPhone && (
-                                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                                            <AlertCircle className="w-4 h-4" />
-                                            {errors.customerPhone}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* ADDRESS INFO */}
-                        <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
-                            <h2 className="font-semibold text-lg text-[#2B1E17] mb-4 flex items-center gap-2">
-                                <MapPin className="w-5 h-5 text-[#C46A2B]" />
-                                Teslimat Adresi
-                            </h2>
-                            <div className="space-y-4">
-                                <div className="grid sm:grid-cols-3 gap-4">
-                                    <InputField name="city" label="Şehir" icon={MapPin} placeholder="İstanbul" formData={formData} errors={errors} handleChange={handleChange} />
-                                    <InputField name="district" label="İlçe" icon={MapPin} placeholder="Kadıköy" formData={formData} errors={errors} handleChange={handleChange} />
-                                    <InputField name="neighborhood" label="Mahalle" icon={MapPin} placeholder="Moda" formData={formData} errors={errors} handleChange={handleChange} />
-                                </div>
-                                <div>
-                                    <label htmlFor="fullAddress" className="block text-sm font-medium text-[#2B1E17] mb-2">
-                                        Tam Adres <span className="text-[#C46A2B]">*</span>
-                                    </label>
-                                    <textarea
-                                        id="fullAddress"
-                                        name="fullAddress"
-                                        value={formData.fullAddress}
-                                        onChange={handleChange}
-                                        rows="3"
-                                        placeholder="Sokak, bina no, kat, daire no..."
-                                        className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none resize-none transition-all ${errors.fullAddress ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
-                                    />
-                                    {errors.fullAddress && (
-                                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                                            <AlertCircle className="w-4 h-4" />
-                                            {errors.fullAddress}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
 
                         {/* DELIVERY TIME */}
                         <div className="bg-white rounded-xl border border-[#E8E0D5] p-6">
@@ -511,7 +416,7 @@ function CheckoutSection() {
                                 {items.map((item) => (
                                     <div key={item.id} className="flex items-center gap-3 pb-3 border-b border-[#E8E0D5]">
                                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F5F1EB] flex-shrink-0">
-                                            <img src={item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.name || item.product_name} className="w-full h-full object-cover" />
+                                            <img src={item.product_image || item.image || item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.name || item.product_name} className="w-full h-full object-cover" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-medium text-[#2B1E17] truncate">{item.name || item.product_name}</p>
