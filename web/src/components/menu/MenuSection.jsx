@@ -5,6 +5,7 @@ import {cn} from '../../lib/utils';
 import {useProducts} from '../../hooks/useProducts.js';
 import {useCategories} from '../../hooks/useCategories.js';
 import useCartStore from '../../stores/cartStore.js';
+import useAuthStore from '../../stores/authStore.js';
 import {showSuccess, showError} from '../../constants/alert.utils.js';
 
 function MenuSection() {
@@ -110,6 +111,7 @@ function MenuSection() {
     /* PRODUCT CARD COMPONENT */
     const ProductCard = ({product}) => {
         const navigate = useNavigate();
+        const {isAuthenticated} = useAuthStore();
         const [isAdded, setIsAdded] = useState(false);
         const priceNum = Number(product.base_price || 0);
         const discountNum = Number(product.discount || 0);
@@ -118,14 +120,24 @@ function MenuSection() {
 
         const handleAddToCart = async (e) => {
             e.stopPropagation();
+            if (!isAuthenticated) {
+                showError('Sipariş vermek için giriş yapmalısınız');
+                navigate('/sign-in');
+                return;
+            }
             if (isCartLoading) return;
             
+            // Default options selection logic
+            const defaultSize = product.options?.size?.find(opt => opt.name === 'Tall') || product.options?.size?.[0] || null;
+            const defaultMilk = product.options?.milk?.find(opt => opt.name === 'Standart Süt') || product.options?.milk?.[0] || null;
+
             const result = await addToCart({
-                product_id: product.id,
+                productId: product.id,
                 quantity: 1,
-                unit_price: discountedPrice,
-                product_name: product.name,
-                image_url: product.image_url
+                sizeName: defaultSize?.name || null,
+                milkOptionName: defaultMilk?.name || null,
+                extras: [],
+                note: ''
             });
 
             if (result.success) {
@@ -133,7 +145,11 @@ function MenuSection() {
                 showSuccess(`${product.name} sepete eklendi`);
                 setTimeout(() => setIsAdded(false), 2000);
             } else {
-                showError('Sepete eklenirken hata oluştu');
+                if (result.message === 'User not found. Please sign in again.') {
+                    showError('Oturumunuz süresi doldu, giriş ekranına yönlendiriliyorsunuz...');
+                } else {
+                    showError(result.message || 'Sepete eklenirken hata oluştu');
+                }
             }
         };
 

@@ -50,7 +50,7 @@ function CartSection() {
         return (
             <div className="flex gap-4 p-4 bg-white rounded-xl border border-[#E8E0D5] hover:shadow-md transition-shadow duration-300">
                 <Link to={`/product/${item.product_id}`} state={{cartItem: item}} className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-[#F5F1EB]">
-                    <img src={item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.product_name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-300" />
+                    <img src={item.product_image || item.image || item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.product_name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-300" />
                 </Link>
                 <div className="flex-1 min-w-0 flex flex-col">
                     <div className="flex items-start justify-between gap-2 mb-1">

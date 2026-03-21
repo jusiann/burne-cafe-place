@@ -139,7 +139,7 @@ function OrderHistorySection() {
                                                 {order.items?.slice(0, 2).map((item, itemIndex) => (
                                                     <div key={itemIndex} className="flex items-center gap-3">
                                                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F5F1EB] flex-shrink-0">
-                                                            <div className="w-full h-full flex items-center justify-center text-[#8B7E75] text-xs">A</div>
+                                                            <img src={item.product_image || item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.product_name} className="w-full h-full object-cover" />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <p className="text-sm font-medium text-[#2B1E17] truncate">{item.product_name}</p>

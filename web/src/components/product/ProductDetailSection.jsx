@@ -90,15 +90,27 @@ function ProductDetailSection({product}) {
             extras: selectedExtras.map(e => ({ name: e.name })),
             note
         };
+        
+        let result;
         if (editingItem) {
-            await updateItem(editingItem.id || editingItem.itemId, payload);
+            result = await updateItem(editingItem.id || editingItem.itemId, payload);
         } else {
-            await addToCart(payload);
+            result = await addToCart(payload);
         }
-        setTimeout(() => {
+
+        if (result?.success) {
+            setTimeout(() => {
+                setIsAdded(false);
+                navigate('/cart');
+            }, 1000);
+        } else {
             setIsAdded(false);
-            navigate('/cart');
-        }, 1000);
+            if (result?.message === 'User not found. Please sign in again.') {
+                // Ignore, api interceptor handles redirect
+            } else {
+                alert(result?.message || 'İşlem başarısız oldu.');
+            }
+        }
     };
 
     return (
