@@ -4,6 +4,7 @@ import { STORAGE_KEYS, getItem, setItem, removeItem } from '../constants/storage
 
 /* CART STORE */
 const useCartStore = create((set, get) => ({
+    id: null,
     items: [],
     appliedCoupon: null,
     isLoading: false,
@@ -17,8 +18,9 @@ const useCartStore = create((set, get) => ({
             const cart = response.cart || response;
 
             set({
+                id: cart.id || cart.cart_id || null,
                 items: cart.items || [],
-                appliedCoupon: cart.applied_coupon || null,
+                appliedCoupon: cart.coupon || cart.applied_coupon || null,
                 isLoading: false,
             });
         } catch {
