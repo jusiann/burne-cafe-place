@@ -2,14 +2,11 @@ import { create } from 'zustand';
 import * as cartService from '../services/cart.service.js';
 import { STORAGE_KEYS, getItem, setItem, removeItem } from '../constants/storage.utils.js';
 
-/* CART STORE */
 const useCartStore = create((set, get) => ({
     id: null,
     items: [],
     appliedCoupon: null,
     isLoading: false,
-
-    /* FETCH CART (backend sync) */
     fetchCart: async () => {
         set({ isLoading: true });
 
@@ -29,8 +26,6 @@ const useCartStore = create((set, get) => ({
             set({ items: localItems, isLoading: false });
         }
     },
-
-    /* ADD TO CART */
     addToCart: async (productData) => {
         try {
             await cartService.addItemToCart(productData);
@@ -43,8 +38,6 @@ const useCartStore = create((set, get) => ({
             };
         }
     },
-
-    /* REMOVE FROM CART */
     removeFromCart: async (itemId) => {
         try {
             await cartService.removeCartItem(itemId);
@@ -57,8 +50,21 @@ const useCartStore = create((set, get) => ({
             };
         }
     },
+    updateItem: async (itemId, updateData) => {
+        if (updateData.quantity <= 0)
+            return get().removeFromCart(itemId);
 
-    /* UPDATE QUANTITY */
+        try {
+            await cartService.updateCartItem(itemId, updateData);
+            await get().fetchCart();
+            return { success: true };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Ürün güncellenemedi.',
+            };
+        }
+    },
     updateQuantity: async (itemId, quantity) => {
         if (quantity <= 0)
             return get().removeFromCart(itemId);
@@ -74,8 +80,6 @@ const useCartStore = create((set, get) => ({
             };
         }
     },
-
-    /* CLEAR CART */
     clearCart: async () => {
         try {
             await cartService.clearCart();
@@ -90,8 +94,6 @@ const useCartStore = create((set, get) => ({
             };
         }
     },
-
-    /* COUPON OPERATIONS */
     applyCoupon: async (code) => {
         try {
             const response = await cartService.validateCoupon({ code });
@@ -104,13 +106,10 @@ const useCartStore = create((set, get) => ({
             };
         }
     },
-
     removeCoupon: () => {
         set({ appliedCoupon: null });
         removeItem(STORAGE_KEYS.COUPON);
     },
-
-    /* COMPUTED HELPERS */
     getCartTotals: () => {
         const { items, appliedCoupon } = get();
         const subtotal = items.reduce((sum, item) => sum + (item.unit_price * item.quantity), 0);
