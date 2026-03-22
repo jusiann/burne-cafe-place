@@ -20,12 +20,12 @@ const InputField = ({name,label,icon: Icon,type = 'text',required = true,formDat
                 type={type}
                 value={formData[name]}
                 onChange={handleChange}
-                className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                className={`w-full pl-11 pr-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors[name] ? 'border-[#C46A2B] focus:ring-2 focus:ring-[#C46A2B]/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
                 {...props}
             />
         </div>
         {errors[name] && (
-            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+            <p className="mt-1 text-sm text-[#C46A2B] flex items-center gap-1">
                 <AlertCircle className="w-4 h-4" />
                 {errors[name]}
             </p>
@@ -244,7 +244,7 @@ function CheckoutSection() {
                                             name="customTime"
                                             value={formData.customTime}
                                             onChange={handleChange}
-                                            className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] outline-none transition-all ${errors.customTime ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                                            className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] outline-none transition-all ${errors.customTime ? 'border-[#C46A2B] focus:ring-2 focus:ring-[#C46A2B]/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
                                         >
                                             <option value="">Saat seçin...</option>
                                             {timeOptions.map((time) => (
@@ -254,7 +254,7 @@ function CheckoutSection() {
                                             ))}
                                         </select>
                                         {errors.customTime && (
-                                            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                                            <p className="mt-1 text-sm text-[#C46A2B] flex items-center gap-1">
                                                 <AlertCircle className="w-4 h-4" />
                                                 {errors.customTime}
                                             </p>
@@ -307,10 +307,10 @@ function CheckoutSection() {
                                                 }}
                                                 placeholder="1234 5678 9012 3456"
                                                 maxLength="19"
-                                                className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors.cardNumber ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                                                className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors.cardNumber ? 'border-[#C46A2B] focus:ring-2 focus:ring-[#C46A2B]/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
                                             />
                                             {errors.cardNumber && (
-                                                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                                                <p className="mt-1 text-sm text-[#C46A2B] flex items-center gap-1">
                                                     <AlertCircle className="w-4 h-4" />
                                                     {errors.cardNumber}
                                                 </p>
@@ -326,10 +326,10 @@ function CheckoutSection() {
                                                 value={formData.cardName}
                                                 onChange={handleChange}
                                                 placeholder="AD SOYAD"
-                                                className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all uppercase ${errors.cardName ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                                                className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all uppercase ${errors.cardName ? 'border-[#C46A2B] focus:ring-2 focus:ring-[#C46A2B]/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
                                             />
                                             {errors.cardName && (
-                                                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                                                <p className="mt-1 text-sm text-[#C46A2B] flex items-center gap-1">
                                                     <AlertCircle className="w-4 h-4" />
                                                     {errors.cardName}
                                                 </p>
@@ -354,10 +354,10 @@ function CheckoutSection() {
                                                     }}
                                                     placeholder="AA/YY"
                                                     maxLength="5"
-                                                    className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors.cardExpiry ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                                                    className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors.cardExpiry ? 'border-[#C46A2B] focus:ring-2 focus:ring-[#C46A2B]/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
                                                 />
                                                 {errors.cardExpiry && (
-                                                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                                                    <p className="mt-1 text-sm text-[#C46A2B] flex items-center gap-1">
                                                         <AlertCircle className="w-4 h-4" />
                                                         {errors.cardExpiry}
                                                     </p>
@@ -378,10 +378,10 @@ function CheckoutSection() {
                                                     }}
                                                     placeholder="123"
                                                     maxLength="3"
-                                                    className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors.cardCvv ? 'border-red-500 focus:ring-2 focus:ring-red-500/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
+                                                    className={`w-full px-4 py-3 bg-white border rounded-xl text-[#2B1E17] placeholder:text-[#8B7E75]/50 outline-none transition-all ${errors.cardCvv ? 'border-[#C46A2B] focus:ring-2 focus:ring-[#C46A2B]/30' : 'border-[#E8E0D5] focus:ring-2 focus:ring-[#C46A2B]/30'}`}
                                                 />
                                                 {errors.cardCvv && (
-                                                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                                                    <p className="mt-1 text-sm text-[#C46A2B] flex items-center gap-1">
                                                         <AlertCircle className="w-4 h-4" />
                                                         {errors.cardCvv}
                                                     </p>
@@ -462,7 +462,7 @@ function CheckoutSection() {
 
                             {/* SUBMIT */}
                             {errors.submit && (
-                                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-center gap-2">
+                                <div className="mb-4 p-3 bg-[#C46A2B]/10 border border-[#C46A2B]/20 rounded-lg text-sm text-[#C46A2B] flex items-center gap-2">
                                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                                     {errors.submit}
                                 </div>

@@ -103,13 +103,13 @@ export const signIn = async (req, res) => {
 
         if (email) {
             const result = await db.query(
-                'SELECT id, name, email, phone, password, role, is_active FROM users WHERE email = $1 OR phone = $2 LIMIT 1',
+                'SELECT u.id, u.name, u.email, u.phone, u.password, u.role, u.is_active, sb.branch_id FROM users u LEFT JOIN staff_branches sb ON u.id = sb.user_id WHERE u.email = $1 OR u.phone = $2 LIMIT 1',
                 [email.toLowerCase(), phone || null],
             );
             existingRows = result.rows;
         } else if (phone) {
             const result = await db.query(
-                'SELECT id, name, email, phone, password, role, is_active FROM users WHERE phone = $1 LIMIT 1',
+                'SELECT u.id, u.name, u.email, u.phone, u.password, u.role, u.is_active, sb.branch_id FROM users u LEFT JOIN staff_branches sb ON u.id = sb.user_id WHERE u.phone = $1 LIMIT 1',
                 [phone],
             );
             existingRows = result.rows;
@@ -134,18 +134,24 @@ export const signIn = async (req, res) => {
 
         const { accessToken, refreshToken } = generateTokens(existingUser);
 
+        const userResponse = {
+            id: existingUser.id,
+            name: existingUser.name,
+            email: existingUser.email,
+            phone: existingUser.phone,
+            role: existingUser.role,
+        };
+
+        if (existingUser.role === 'staff' && existingUser.branch_id) {
+            userResponse.branch_id = existingUser.branch_id;
+        }
+
         res.status(200).json({
             success: true,
             message: 'Sign-in successful',
             access_token: accessToken,
             refresh_token: refreshToken,
-            user: {
-                id: existingUser.id,
-                name: existingUser.name,
-                email: existingUser.email,
-                phone: existingUser.phone,
-                role: existingUser.role,
-            },
+            user: userResponse,
         });
     } catch (error) {
         const statusCode = error.statusCode || 500;
@@ -342,7 +348,7 @@ export const refreshToken = async (req, res) => {
         );
 
         const { rows } = await db.query(
-            'SELECT id, name, email, phone, role, is_active FROM users WHERE id = $1 LIMIT 1',
+            'SELECT u.id, u.name, u.email, u.phone, u.role, u.is_active, sb.branch_id FROM users u LEFT JOIN staff_branches sb ON u.id = sb.user_id WHERE u.id = $1 LIMIT 1',
             [decoded.userId],
         );
         const user = rows[0];
@@ -355,18 +361,24 @@ export const refreshToken = async (req, res) => {
         const { accessToken, refreshToken: newRefreshToken } =
             generateTokens(user);
 
+        const userResponse = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+        };
+
+        if (user.role === 'staff' && user.branch_id) {
+            userResponse.branch_id = user.branch_id;
+        }
+
         res.status(200).json({
             success: true,
             message: 'Token refreshed successfully',
             access_token: accessToken,
             refresh_token: newRefreshToken,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                role: user.role,
-            },
+            user: userResponse,
         });
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
@@ -509,16 +521,22 @@ export const getMe = async (req, res) => {
     try {
         const userId = req.user.id;
         const { rows } = await db.query(
-            'SELECT id, name, email, phone, role FROM users WHERE id = $1 LIMIT 1',
+            'SELECT u.id, u.name, u.email, u.phone, u.role, sb.branch_id FROM users u LEFT JOIN staff_branches sb ON u.id = sb.user_id WHERE u.id = $1 LIMIT 1',
             [userId],
         );
         const user = rows[0];
 
         if (!user) throw ApiError.notFound('User not found.');
 
+        const userResponse = { id: user.id, name: user.name, email: user.email, phone: user.phone, role: user.role };
+
+        if (user.role === 'staff' && user.branch_id) {
+            userResponse.branch_id = user.branch_id;
+        }
+
         res.status(200).json({
             success: true,
-            user: user,
+            user: userResponse,
         });
     } catch (error) {
         const statusCode = error.statusCode || 500;

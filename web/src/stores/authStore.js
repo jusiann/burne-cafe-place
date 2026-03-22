@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import * as authService from '../services/auth.service.js';
+import * as branchService from '../services/branch.service.js';
 import { STORAGE_KEYS, getItem, setItem, removeItem } from '../constants/storage.utils.js';
+import useLocationStore from './locationStore.js';
 
 const useAuthStore = create((set, get) => ({
     user: getItem(STORAGE_KEYS.USER),
@@ -53,6 +55,8 @@ const useAuthStore = create((set, get) => ({
                 isLoading: false,
             });
 
+            await get()._syncStaffBranch(response.user);
+
             return { success: true, message: response.message };
         } catch (error) {
             set({ isLoading: false });
@@ -60,6 +64,19 @@ const useAuthStore = create((set, get) => ({
                 success: false,
                 message: error.response?.data?.message || 'Giriş başarısız.',
             };
+        }
+    },
+    _syncStaffBranch: async (user) => {
+        if (user?.role === 'staff' && user?.branch_id) {
+            try {
+                const response = await branchService.getBranchById(user.branch_id);
+                const branch = response.branch;
+                if (branch) {
+                    useLocationStore.getState().setLocation(branch.name, branch.city, branch.district, branch.id);
+                }
+            } catch {
+                useLocationStore.getState().setLocation('Şube', null, null, user.branch_id);
+            }
         }
     },
     logout: async () => {
@@ -96,6 +113,8 @@ const useAuthStore = create((set, get) => ({
                 isAuthenticated: true,
                 isLoading: false,
             });
+
+            await get()._syncStaffBranch(response.user);
         } catch {
             removeItem(STORAGE_KEYS.TOKEN);
             removeItem(STORAGE_KEYS.REFRESH_TOKEN);

@@ -38,6 +38,7 @@ function Navbar() {
   const { isAuthenticated, user, logout, openAuthModal } = useAuthStore();
   const role = isAuthenticated ? user?.role : 'guest';
   const { name: branchName, openModal } = useLocationStore();
+  const isStaff = role === 'staff';
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -285,16 +286,19 @@ function Navbar() {
           <div className="hidden md:flex items-center space-x-1">
 
             {/* BRANCH SELECTOR */}
+            {isAuthenticated && (
             <button
-              onClick={openModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 mr-2 rounded-lg bg-[#C46A2B]/10 text-[#C46A2B] hover:bg-[#C46A2B]/20 transition-colors duration-300"
+              onClick={isStaff ? undefined : openModal}
+              className={`flex items-center gap-1.5 px-3 py-1.5 mr-2 rounded-lg transition-colors duration-300 ${isStaff ? 'bg-[#C46A2B]/10 text-[#C46A2B] cursor-default' : 'bg-[#C46A2B]/10 text-[#C46A2B] hover:bg-[#C46A2B]/20'}`}
               aria-label="Şube Seçimi"
             >
               <MapPin className="w-4 h-4" />
               <span className="text-sm font-medium truncate max-w-[150px]">
                 {branchName || 'Şube Seçin'}
               </span>
+              {isStaff && <span className="text-[10px] opacity-60">(Personel)</span>}
             </button>
+            )}
 
             {/* NAVIGATION LINKS */}
             {navItems.map((item, index) => (
@@ -381,7 +385,7 @@ function Navbar() {
                           <span className="font-medium">Siparişler</span>
                         </Link>
                       )}
-                      <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors text-left border-t border-[#E8E0D5]">
+                      <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 transition-colors text-left border-t border-[#E8E0D5]">
                         <LogOut className="w-4 h-4" />
                         <span className="font-medium">Çıkış Yap</span>
                       </button>
@@ -459,15 +463,18 @@ function Navbar() {
           </div>
 
           {/* LOCATION - MOBILE */}
+          {isAuthenticated && (
           <button
-            onClick={() => { openModal(); setIsMenuOpen(false); }}
-            className="flex items-center justify-between w-full px-4 py-3 mb-2 rounded-lg transition-all duration-300 bg-[#C46A2B]/10 text-[#C46A2B] font-medium"
+            onClick={isStaff ? undefined : () => { openModal(); setIsMenuOpen(false); }}
+            className={`flex items-center justify-between w-full px-4 py-3 mb-2 rounded-lg transition-all duration-300 bg-[#C46A2B]/10 text-[#C46A2B] font-medium ${isStaff ? 'cursor-default' : ''}`}
           >
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 flex-shrink-0" />
               <span className="truncate max-w-[200px] text-left">{branchName || 'Lütfen şube seçin'}</span>
+              {isStaff && <span className="text-[10px] opacity-60">(Personel)</span>}
             </div>
           </button>
+          )}
 
           {/* NAVIGATION LINKS - MOBILE */}
           {navItems.map((item, index) => (
@@ -531,7 +538,7 @@ function Navbar() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-left"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 rounded-lg transition-colors text-left"
                 >
                   <LogOut className="w-5 h-5" />
                   <span className="font-medium">Çıkış Yap</span>

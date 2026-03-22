@@ -63,7 +63,7 @@ function CartSection() {
                                 `${item.product_name} ürününü sepetten silmek istediğinize emin misiniz?`,
                                 () => removeFromCart(item.id)
                             );
-                        }} className="p-1.5 text-[#8B7E75] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                        }} className="p-1.5 text-[#8B7E75] hover:text-[#C46A2B] hover:bg-[#C46A2B]/10 rounded-lg transition-colors">
                             <Trash2 className="w-4 h-4" />
                         </button>
                     </div>
@@ -158,7 +158,7 @@ function CartSection() {
                             Uygula
                         </button>
                     </div>
-                    {message && <div className={`flex items-center gap-2 text-sm p-2 rounded-lg ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>{message.type === 'success' ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}{message.text}</div>}
+                    {message && <div className={`flex items-center gap-2 text-sm p-2 rounded-lg ${message.type === 'success' ? 'bg-[#6B5D4F]/10 text-[#6B5D4F]' : 'bg-[#C46A2B]/10 text-[#C46A2B]'}`}>{message.type === 'success' ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}{message.text}</div>}
                 </form>
             </div>
         );

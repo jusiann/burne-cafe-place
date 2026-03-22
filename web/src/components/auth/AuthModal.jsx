@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import useAuthStore from '../../stores/authStore.js';
 import SignInSection from './SignInSection';
 import SignUpSection from './SignUpSection';
+import ForgotPasswordSection from './ForgotPasswordSection';
 
 function AuthModal() {
     const { authModalView, closeAuthModal } = useAuthStore();
@@ -35,6 +36,7 @@ function AuthModal() {
                 
                 {authModalView === 'signIn' && <SignInSection />}
                 {authModalView === 'signUp' && <SignUpSection />}
+                {authModalView === 'forgotPassword' && <ForgotPasswordSection />}
             </div>
         </div>
     );

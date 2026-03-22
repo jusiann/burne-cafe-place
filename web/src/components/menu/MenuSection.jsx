@@ -203,7 +203,7 @@ function MenuSection() {
                             <button 
                                 onClick={handleAddToCart} 
                                 disabled={isCartLoading || isAdded}
-                                className={`p-2 rounded-lg transition-all duration-300 ${isAdded ? 'bg-green-500 text-white' : 'bg-[#C46A2B]/10 hover:bg-[#C46A2B] text-[#C46A2B] hover:text-white'} disabled:opacity-50`} 
+                                className={`p-2 rounded-lg transition-all duration-300 ${isAdded ? 'bg-[#6B5D4F] text-white' : 'bg-[#C46A2B]/10 hover:bg-[#C46A2B] text-[#C46A2B] hover:text-white'} disabled:opacity-50`} 
                                 aria-label="Sepete Ekle"
                             >
                                 {isAdded ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}

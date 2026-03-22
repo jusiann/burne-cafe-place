@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { User, Mail, Phone, Lock, Save, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Phone, Lock, Save, Loader2, AlertCircle, CheckCircle2, Trash2, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../stores/authStore.js';
+import * as authService from '../../services/auth.service.js';
 
 function ProfileSection() {
-    const { user, updateProfile, isLoading } = useAuthStore();
+    const { user, updateProfile, logout, isLoading } = useAuthStore();
+    const navigate = useNavigate();
     
     const [formData, setFormData] = useState({
         fullname: '',
@@ -14,6 +17,8 @@ function ProfileSection() {
     });
 
     const [status, setStatus] = useState({ type: '', message: '' });
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -72,6 +77,20 @@ function ProfileSection() {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        setIsDeleting(true);
+        try {
+            await authService.deleteAccount();
+            await logout();
+            navigate('/');
+        } catch (err) {
+            setStatus({ type: 'error', message: err.response?.data?.message || 'Hesap silinemedi.' });
+            setDeleteModal(false);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 mt-16">
             <div className="mb-8">
@@ -83,7 +102,7 @@ function ProfileSection() {
                 <div className="p-8">
                     {status.message && (
                         <div className={`mb-8 p-4 rounded-xl flex items-start gap-3 border ${
-                            status.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'
+                            status.type === 'success' ? 'bg-[#6B5D4F]/10 text-[#6B5D4F] border-[#6B5D4F]/20' : 'bg-[#C46A2B]/10 text-[#C46A2B] border-[#C46A2B]/20'
                         }`}>
                             {status.type === 'success' ? (
                                 <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -211,6 +230,64 @@ function ProfileSection() {
                     </form>
                 </div>
             </div>
+
+            {/* DANGER ZONE */}
+            <div className="mt-8 bg-white rounded-2xl shadow-sm border-2 border-[#3D2817]/20 overflow-hidden">
+                <div className="p-8">
+                    <h3 className="text-lg font-semibold text-[#3D2817] mb-2 flex items-center gap-2">
+                        <AlertCircle className="w-5 h-5" />
+                        Tehlikeli Bölge
+                    </h3>
+                    <p className="text-sm text-[#8B7E75] mb-6">
+                        Hesabınızı silmek geri alınamaz bir işlemdir. Tüm verileriniz (siparişler, sepet, profil bilgileri) kalıcı olarak silinecektir.
+                    </p>
+                    <button
+                        onClick={() => setDeleteModal(true)}
+                        className="flex items-center gap-2 px-6 py-3 bg-[#3D2817]/10 text-[#3D2817] font-semibold rounded-xl border border-[#3D2817]/20 hover:bg-[#3D2817]/20 hover:border-[#3D2817]/30 transition-all"
+                    >
+                        <Trash2 className="w-5 h-5" />
+                        Hesabımı Sil
+                    </button>
+                </div>
+            </div>
+
+            {/* DELETE CONFIRMATION MODAL */}
+            {deleteModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="px-6 py-4 border-b border-[#E8E0D5] flex items-center justify-between bg-[#3D2817]/10">
+                            <h3 className="font-heading text-lg text-[#3D2817] flex items-center gap-2">
+                                <AlertCircle className="w-5 h-5" />
+                                Hesabı Sil
+                            </h3>
+                            <button onClick={() => setDeleteModal(false)} className="text-[#8B7E75] hover:text-[#2B1E17] transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="p-6">
+                            <p className="text-[#8B7E75] text-base leading-relaxed">
+                                Hesabınızı silmek istediğinizden <strong className="text-[#3D2817]">emin misiniz?</strong> Bu işlem geri alınamaz ve tüm verileriniz kalıcı olarak silinecektir.
+                            </p>
+                        </div>
+                        <div className="px-6 py-4 bg-[#F5F1EB]/50 border-t border-[#E8E0D5] flex justify-end gap-3">
+                            <button
+                                onClick={() => setDeleteModal(false)}
+                                className="px-4 py-2 rounded-xl text-[#8B7E75] font-medium hover:bg-[#E8E0D5]/50 transition-colors"
+                            >
+                                Vazgeç
+                            </button>
+                            <button
+                                onClick={handleDeleteAccount}
+                                disabled={isDeleting}
+                                className="px-4 py-2 rounded-xl bg-[#3D2817] text-white font-medium hover:bg-[#2B1E17] transition-colors shadow-lg shadow-[#3D2817]/20 disabled:opacity-70 flex items-center gap-2"
+                            >
+                                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                Evet, Hesabımı Sil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,19 +1,22 @@
 import { useEffect } from 'react';
 import { MapPin, X, Loader2 } from 'lucide-react';
 import useLocationStore from '../../stores/locationStore.js';
+import useAuthStore from '../../stores/authStore.js';
 import { useBranches } from '../../hooks/useBranches.js';
 
 function LocationSelectionModal() {
     const { isModalOpen, closeModal, isSet, setLocation, openModal } = useLocationStore();
+    const { user } = useAuthStore();
+    const isStaff = user?.role === 'staff';
     const { branches, isLoading, error } = useBranches();
 
     useEffect(() => {
-        if (!isSet) {
+        if (!isSet && !isStaff) {
             openModal();
         }
-    }, [isSet, openModal]);
+    }, [isSet, isStaff, openModal]);
 
-    if (!isModalOpen) return null;
+    if (!isModalOpen || isStaff) return null;
 
     const handleSelect = (branch) => {
         setLocation(branch.name, branch.city, branch.district, branch.id);

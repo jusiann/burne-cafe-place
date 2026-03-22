@@ -44,7 +44,7 @@ function SignInSection() {
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl flex items-start gap-3 border border-red-100">
+                    <div className="mb-6 p-4 bg-[#C46A2B]/10 text-[#C46A2B] rounded-xl flex items-start gap-3 border border-[#C46A2B]/20">
                         <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                         <p className="text-sm">{error}</p>
                     </div>
@@ -86,6 +86,11 @@ function SignInSection() {
                                 placeholder="••••••••"
                                 required
                             />
+                        </div>
+                        <div className="flex justify-end mt-1.5">
+                            <button type="button" onClick={() => openAuthModal('forgotPassword')} className="text-xs text-[#C46A2B] hover:text-[#A85A24] font-medium transition-colors">
+                                Şifremi Unuttum
+                            </button>
                         </div>
                     </div>
 
