@@ -47,7 +47,7 @@ function CheckoutSection() {
     const [formData, setFormData] = useState({
         deliveryTime: 'asap',
         customTime: '',
-        paymentMethod: 'cash',
+        paymentMethod: 'online_card',
         cardNumber: '',
         cardName: '',
         cardExpiry: '',
@@ -80,8 +80,6 @@ function CheckoutSection() {
     }, []);
 
     const paymentMethods = [
-        {value: 'cash',label: 'Kapıda Nakit Ödeme',icon: CreditCard},
-        {value: 'card_on_delivery',label: 'Kapıda Kredi Kartı',icon: CreditCard},
         {value: 'online_card',label: 'Online Kredi Kartı ile Ödeme',icon: CreditCard}
     ];
 
@@ -271,26 +269,8 @@ function CheckoutSection() {
                                 Ödeme Yöntemi
                             </h2>
                             <div className="space-y-4">
-                                {paymentMethods.map((method) => (
-                                    <label
-                                        key={method.value}
-                                        className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${formData.paymentMethod === method.value ? 'border-[#C46A2B] bg-[#C46A2B]/5' : 'border-[#E8E0D5] hover:border-[#C46A2B]/50'}`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="paymentMethod"
-                                            value={method.value}
-                                            checked={formData.paymentMethod === method.value}
-                                            onChange={handleChange}
-                                            className="w-4 h-4 text-[#C46A2B] focus:ring-[#C46A2B]"
-                                        />
-                                        <method.icon className="ml-3 w-5 h-5 text-[#8B7E75]" />
-                                        <span className="ml-3 text-sm text-[#2B1E17] font-medium">{method.label}</span>
-                                    </label>
-                                ))}
-
                                 {formData.paymentMethod === 'online_card' && (
-                                    <div className="mt-4 p-4 bg-[#F5F1EB] rounded-xl space-y-4">
+                                    <div className="space-y-4 mt-2">
                                         <div>
                                             <label className="block text-sm font-medium text-[#2B1E17] mb-2">
                                                 Kart Numarası <span className="text-[#C46A2B]">*</span>

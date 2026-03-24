@@ -368,23 +368,23 @@ function Navbar() {
                         <p className="text-xs text-[#8B7E75] truncate mt-0.5">{user?.email}</p>
                       </div>
                       <Link to="/profile" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
-                        <User className="w-4 h-4 text-[#8B7E75]" />
+                        <User className="w-4 h-4 text-[#C46A2B]" />
                         <span className="font-medium">Profilim</span>
                       </Link>
                       {role === 'customer' && (
                         <Link to="/order-history" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
-                          <Package className="w-4 h-4 text-[#8B7E75]" />
+                          <Package className="w-4 h-4 text-[#C46A2B]" />
                           <span className="font-medium">Siparişlerim</span>
                         </Link>
                       )}
                       {role === 'staff' && (
                         <Link to="/orders" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
-                          <Package className="w-4 h-4 text-[#8B7E75]" />
+                          <Package className="w-4 h-4 text-[#C46A2B]" />
                           <span className="font-medium">Siparişler</span>
                         </Link>
                       )}
                       <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 transition-colors text-left border-t border-[#E8E0D5]">
-                        <LogOut className="w-4 h-4" />
+                        <LogOut className="w-4 h-4 text-[#C46A2B]" />
                         <span className="font-medium">Çıkış Yap</span>
                       </button>
                     </div>
@@ -529,14 +529,14 @@ function Navbar() {
                   className="flex items-center gap-2 px-4 py-3 text-[#2B1E17] hover:bg-[#F5F1EB] rounded-lg transition-colors text-left"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <User className="w-5 h-5 text-[#8B7E75]" />
+                  <User className="w-5 h-5 text-[#C46A2B]" />
                   <span className="font-medium">Profilim</span>
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 rounded-lg transition-colors text-left"
                 >
-                  <LogOut className="w-5 h-5" />
+                  <LogOut className="w-5 h-5 text-[#C46A2B]" />
                   <span className="font-medium">Çıkış Yap</span>
                 </button>
               </>

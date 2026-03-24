@@ -52,7 +52,7 @@ function SignInSection() {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-[#2B1E17] mb-2 shadow-sm">
+                        <label className="block text-sm font-medium text-[#2B1E17] mb-2">
                             E-posta Adresi
                         </label>
                         <div className="relative">
@@ -71,7 +71,7 @@ function SignInSection() {
 
                     <div>
                         <div className="flex items-center justify-between mb-2">
-                            <label className="block text-sm font-medium text-[#2B1E17] shadow-sm">
+                            <label className="block text-sm font-medium text-[#2B1E17]">
                                 Şifre
                             </label>
                         </div>

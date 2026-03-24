@@ -116,15 +116,26 @@ function OrderConfirmationSection() {
                         <div className="border-t border-[#E8E0D5] pt-4">
                             <p className="text-sm text-[#8B7E75] mb-3">Sipariş Özeti</p>
                             <div className="space-y-2 mb-4">
-                                {order.items?.slice(0, 3).map((item, index) => (
-                                    <div key={index} className="flex items-center justify-between text-sm">
-                                        <span className="text-[#2B1E17]">{item.quantity}x {item.product_name}</span>
-                                        <span className="text-[#8B7E75]">₺{Number(item.total_price).toFixed(2)}</span>
+                                {order.items?.map((item, index) => (
+                                    <div key={index} className="flex flex-col text-sm border-b border-[#E8E0D5]/50 pb-3 mb-3 last:border-0 last:mb-0 last:pb-0">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[#2B1E17] font-medium">{item.quantity}x {item.product_name}</span>
+                                            <span className="text-[#8B7E75] font-medium">₺{Number(item.total_price).toFixed(2)}</span>
+                                        </div>
+                                        {item.size_name && (
+                                            <p className="text-xs text-[#8B7E75] ml-4 mt-1">Boy: {item.size_name}</p>
+                                        )}
+                                        {item.milk_option_name && (
+                                            <p className="text-xs text-[#8B7E75] ml-4 mt-0.5">Süt: {item.milk_option_name}</p>
+                                        )}
+                                        {item.extras?.length > 0 && (
+                                            <p className="text-xs text-[#8B7E75] italic ml-4 mt-0.5">Ekstralar: {item.extras.map(e => e.name).join(', ')}</p>
+                                        )}
+                                        {item.note && (
+                                            <p className="text-xs text-[#C46A2B] ml-4 mt-0.5">Not: {item.note}</p>
+                                        )}
                                     </div>
                                 ))}
-                                {order.items?.length > 3 && (
-                                    <p className="text-sm text-[#8B7E75] italic">+ {order.items.length - 3} ürün daha...</p>
-                                )}
                             </div>
 
                             {/* PRICE BREAKDOWN */}

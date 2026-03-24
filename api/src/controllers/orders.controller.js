@@ -332,12 +332,44 @@ export const getOrders = async (req, res) => {
 
         query += ' ORDER BY o.created_at DESC';
 
-        const { rows } = await db.query(query, values);
+        const { rows: orderRows } = await db.query(query, values);
+
+        const orderIds = orderRows.map((order) => order.id);
+
+        let itemRows = [];
+        if (orderIds.length > 0) {
+            const placeholders = orderIds
+                .map((_, index) => '$' + (index + 1))
+                .join(', ');
+
+            const result = await db.query(
+                'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id IN (' +
+                    placeholders +
+                    ') ORDER BY oi.id ASC',
+                orderIds,
+            );
+
+            itemRows = result.rows;
+        }
+
+        const itemsByOrderId = new Map();
+
+        for (const item of itemRows) {
+            if (!itemsByOrderId.has(item.order_id))
+                itemsByOrderId.set(item.order_id, []);
+
+            itemsByOrderId.get(item.order_id).push(item);
+        }
+
+        const orders = orderRows.map((order) => ({
+            ...order,
+            items: itemsByOrderId.get(order.id) || [],
+        }));
 
         res.status(200).json({
             success: true,
             message: 'Orders fetched successfully',
-            orders: rows,
+            orders,
         });
     } catch (error) {
         const statusCode = error.statusCode || 500;

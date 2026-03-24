@@ -2,9 +2,11 @@ import {useState,useEffect} from 'react';
 import {Link,useNavigate,useLocation} from 'react-router-dom';
 import {Minus,Plus,ShoppingBag,Check,Coffee,Droplet,Star,Flame,Dumbbell,Bean,ChevronLeft,RefreshCw} from 'lucide-react';
 import useCartStore from '../../stores/cartStore.js';
+import useAuthStore from '../../stores/authStore.js';
 
 function ProductDetailSection({product}) {
     const {addToCart,updateItem} = useCartStore();
+    const {isAuthenticated, openAuthModal} = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -81,6 +83,11 @@ function ProductDetailSection({product}) {
     };
 
     const handleAction = async () => {
+        if (!isAuthenticated) {
+            openAuthModal('signIn');
+            return;
+        }
+
         setIsAdded(true);
         const payload = {
             productId: product.id,
