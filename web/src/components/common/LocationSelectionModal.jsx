@@ -35,7 +35,6 @@ function LocationSelectionModal() {
                 )}
 
                 <div className="h-32 bg-[#F5F1EB] relative flex flex-col items-center justify-center">
-                    <MapPin className="w-16 h-16 text-[#C46A2B] opacity-10 absolute" />
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center border border-[#E8E0D5] shadow-lg mb-2">
                         <MapPin className="w-8 h-8 text-[#C46A2B]" />
                     </div>
