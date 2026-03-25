@@ -9,7 +9,7 @@ function ProtectedRoute({ children, requireRole }) {
         return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Yetki kontrol ediliyor...</div>;
 
     if (!isAuthenticated)
-        return <Navigate to="/sign-in" state={{ from: location }} replace />;
+        return <Navigate to="/" state={{ from: location }} replace />;
 
     if (requireRole && user?.role !== requireRole)
         return <Navigate to="/" replace />;

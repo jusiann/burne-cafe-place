@@ -111,7 +111,7 @@ function MenuSection() {
     /* PRODUCT CARD COMPONENT */
     const ProductCard = ({product}) => {
         const navigate = useNavigate();
-        const {isAuthenticated} = useAuthStore();
+        const {isAuthenticated, openAuthModal} = useAuthStore();
         const [isAdded, setIsAdded] = useState(false);
         const priceNum = Number(product.base_price || 0);
         const discountNum = Number(product.discount || 0);
@@ -121,8 +121,7 @@ function MenuSection() {
         const handleAddToCart = async (e) => {
             e.stopPropagation();
             if (!isAuthenticated) {
-                showError('Sipariş vermek için giriş yapmalısınız');
-                navigate('/sign-in');
+                openAuthModal('signIn');
                 return;
             }
             if (isCartLoading) return;

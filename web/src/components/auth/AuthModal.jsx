@@ -29,7 +29,7 @@ function AuthModal() {
             <div className="relative w-full max-w-md animate-in zoom-in-95 duration-200 z-10">
                 <button
                     onClick={closeAuthModal}
-                    className="absolute -top-3 -right-3 text-[#8B7E75] hover:text-[#2B1E17] transition-colors z-50 bg-white rounded-full p-1.5 shadow-lg cursor-pointer border border-[#E8E0D5]"
+                    className="absolute top-4 right-4 text-[#8B7E75] hover:text-[#2B1E17] transition-colors z-50 p-2"
                 >
                     <X className="w-5 h-5" />
                 </button>

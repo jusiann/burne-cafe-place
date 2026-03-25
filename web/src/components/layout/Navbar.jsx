@@ -286,7 +286,6 @@ function Navbar() {
           <div className="hidden md:flex items-center space-x-1">
 
             {/* BRANCH SELECTOR */}
-            {isAuthenticated && (
             <button
               onClick={isStaff ? undefined : openModal}
               className={`flex items-center gap-1.5 px-3 py-1.5 mr-2 rounded-lg transition-colors duration-300 ${isStaff ? 'bg-[#C46A2B]/10 text-[#C46A2B] cursor-default' : 'bg-[#C46A2B]/10 text-[#C46A2B] hover:bg-[#C46A2B]/20'}`}
@@ -296,9 +295,8 @@ function Navbar() {
               <span className="text-sm font-medium truncate max-w-[150px]">
                 {branchName || 'Şube Seçin'}
               </span>
-              {isStaff && <span className="text-[10px] opacity-60">(Personel)</span>}
+              {isStaff ? <span className="text-[10px] opacity-60">(Personel)</span> : null}
             </button>
-            )}
 
             {/* NAVIGATION LINKS */}
             {navItems.map((item, index) => (
@@ -370,23 +368,23 @@ function Navbar() {
                         <p className="text-xs text-[#8B7E75] truncate mt-0.5">{user?.email}</p>
                       </div>
                       <Link to="/profile" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
-                        <User className="w-4 h-4 text-[#8B7E75]" />
+                        <User className="w-4 h-4 text-[#C46A2B]" />
                         <span className="font-medium">Profilim</span>
                       </Link>
                       {role === 'customer' && (
                         <Link to="/order-history" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
-                          <Package className="w-4 h-4 text-[#8B7E75]" />
+                          <Package className="w-4 h-4 text-[#C46A2B]" />
                           <span className="font-medium">Siparişlerim</span>
                         </Link>
                       )}
                       {role === 'staff' && (
                         <Link to="/orders" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
-                          <Package className="w-4 h-4 text-[#8B7E75]" />
+                          <Package className="w-4 h-4 text-[#C46A2B]" />
                           <span className="font-medium">Siparişler</span>
                         </Link>
                       )}
                       <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 transition-colors text-left border-t border-[#E8E0D5]">
-                        <LogOut className="w-4 h-4" />
+                        <LogOut className="w-4 h-4 text-[#C46A2B]" />
                         <span className="font-medium">Çıkış Yap</span>
                       </button>
                     </div>
@@ -423,8 +421,8 @@ function Navbar() {
 
       {/* MOBILE MENU */}
       <div className={cn(
-        "fixed top-16 left-0 right-0 bg-white shadow-lg md:hidden transition-all duration-300 overflow-hidden border-b border-[#E8E0D5]",
-        isMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+        "fixed top-16 left-0 right-0 bg-white shadow-lg md:hidden transition-all duration-300 overflow-y-auto border-b border-[#E8E0D5]",
+        isMenuOpen ? "max-h-[85vh] opacity-100" : "max-h-0 opacity-0"
       )}>
         <div className="px-4 py-3 space-y-1">
 
@@ -463,7 +461,6 @@ function Navbar() {
           </div>
 
           {/* LOCATION - MOBILE */}
-          {isAuthenticated && (
           <button
             onClick={isStaff ? undefined : () => { openModal(); setIsMenuOpen(false); }}
             className={`flex items-center justify-between w-full px-4 py-3 mb-2 rounded-lg transition-all duration-300 bg-[#C46A2B]/10 text-[#C46A2B] font-medium ${isStaff ? 'cursor-default' : ''}`}
@@ -471,10 +468,9 @@ function Navbar() {
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 flex-shrink-0" />
               <span className="truncate max-w-[200px] text-left">{branchName || 'Lütfen şube seçin'}</span>
-              {isStaff && <span className="text-[10px] opacity-60">(Personel)</span>}
+              {isStaff ? <span className="text-[10px] opacity-60">(Personel)</span> : null}
             </div>
           </button>
-          )}
 
           {/* NAVIGATION LINKS - MOBILE */}
           {navItems.map((item, index) => (
@@ -533,14 +529,14 @@ function Navbar() {
                   className="flex items-center gap-2 px-4 py-3 text-[#2B1E17] hover:bg-[#F5F1EB] rounded-lg transition-colors text-left"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <User className="w-5 h-5 text-[#8B7E75]" />
+                  <User className="w-5 h-5 text-[#C46A2B]" />
                   <span className="font-medium">Profilim</span>
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 rounded-lg transition-colors text-left"
                 >
-                  <LogOut className="w-5 h-5" />
+                  <LogOut className="w-5 h-5 text-[#C46A2B]" />
                   <span className="font-medium">Çıkış Yap</span>
                 </button>
               </>

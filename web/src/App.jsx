@@ -15,6 +15,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import LocationSelectionModal from './components/common/LocationSelectionModal';
 import AuthModal from './components/auth/AuthModal';
 import useAuthStore from './stores/authStore';
+import useCartStore from './stores/cartStore';
 
 function ScrollToTop() {
     const { pathname } = useLocation();
@@ -26,15 +27,23 @@ function ScrollToTop() {
 
 function App() {
     const [isInit, setIsInit] = useState(true);
-    const { checkAuth } = useAuthStore();
+    const { checkAuth, isAuthenticated } = useAuthStore();
+    const fetchCart = useCartStore((state) => state.fetchCart);
 
     useEffect(() => {
         const init = async () => {
             await checkAuth();
+            await fetchCart();
             setIsInit(false);
         };
         init();
-    }, [checkAuth]);
+    }, [checkAuth, fetchCart]);
+
+    useEffect(() => {
+        if (!isInit) {
+            fetchCart();
+        }
+    }, [isAuthenticated, isInit, fetchCart]);
 
     if (isInit)
         return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Sistem başlatılıyor...</div>;

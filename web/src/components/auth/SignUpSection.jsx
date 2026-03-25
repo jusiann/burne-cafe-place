@@ -54,7 +54,7 @@ function SignUpSection() {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-sm font-medium text-[#2B1E17] mb-2 shadow-sm">
+                        <label className="block text-sm font-medium text-[#2B1E17] mb-2">
                             Ad Soyad
                         </label>
                         <div className="relative">
@@ -72,7 +72,7 @@ function SignUpSection() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-[#2B1E17] mb-2 shadow-sm">
+                        <label className="block text-sm font-medium text-[#2B1E17] mb-2">
                             Telefon Numarası
                         </label>
                         <div className="relative">
@@ -90,7 +90,7 @@ function SignUpSection() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-[#2B1E17] mb-2 shadow-sm">
+                        <label className="block text-sm font-medium text-[#2B1E17] mb-2">
                             E-posta Adresi
                         </label>
                         <div className="relative">
@@ -108,7 +108,7 @@ function SignUpSection() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-[#2B1E17] mb-2 shadow-sm">
+                        <label className="block text-sm font-medium text-[#2B1E17] mb-2">
                             Şifre
                         </label>
                         <div className="relative">

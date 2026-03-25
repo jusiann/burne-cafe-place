@@ -74,9 +74,10 @@ function StaffOrdersSection() {
         );
     }
 
-    // Filter orders
-    const activeStatus = ['preparing', 'ready'];
-    const pastStatus = ['completed', 'cancelled'];
+    const [selectedOrder, setSelectedOrder] = useState(null);
+
+    const activeStatus = ['preparing'];
+    const pastStatus = ['ready', 'completed', 'cancelled'];
 
     const filteredOrders = orders.filter(o => 
         activeTab === 'active' ? activeStatus.includes(o.status) : pastStatus.includes(o.status)
@@ -85,7 +86,7 @@ function StaffOrdersSection() {
     /* STATUS LABELS */
     const statusLabels = {
         'preparing': 'Hazırlanıyor',
-        'ready': 'Hazır',
+        'ready': 'Hazır (Teslim Edilmeyi Bekliyor)',
         'completed': 'Teslim Edildi',
         'cancelled': 'İptal Edildi'
     };
@@ -99,7 +100,7 @@ function StaffOrdersSection() {
     };
 
     return (
-        <section className="py-8 min-h-[80vh]">
+        <section className="py-8 min-h-[80vh] relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
@@ -137,16 +138,15 @@ function StaffOrdersSection() {
                             <Package className="w-12 h-12 text-[#C46A2B]" />
                         </div>
                         <h3 className="font-heading text-xl text-[#2B1E17] mb-2">Sipariş Bulunamadı</h3>
-                        <p className="text-[#8B7E75]">{activeTab === 'active' ? 'Şu anda hazırlanmayı bekleyen sipariş yok.' : 'Henüz tamamlanmış sipariş bulunmuyor.'}</p>
+                        <p className="text-[#8B7E75]">{activeTab === 'active' ? 'Şu anda hazırlanmayı bekleyen sipariş yok.' : 'Bu sekmede görüntülenecek sipariş bulunmuyor.'}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {filteredOrders.map(order => {
                             const statusConfig = statusIcons[order.status] || statusIcons['preparing'];
-                            const StatusIcon = statusConfig.icon;
 
                             return (
-                                <div key={order.id} className="bg-white rounded-xl border border-[#E8E0D5] overflow-hidden hover:shadow-md transition-shadow">
+                                <div key={order.id} className="bg-white rounded-xl border border-[#E8E0D5] overflow-hidden hover:shadow-md transition-shadow flex flex-col">
                                     <div className="p-4 bg-[#F5F1EB] border-b border-[#E8E0D5] flex items-center justify-between">
                                         <div>
                                             <p className="font-semibold text-[#2B1E17]">{order.order_number}</p>
@@ -156,15 +156,24 @@ function StaffOrdersSection() {
                                             {statusLabels[order.status]}
                                         </span>
                                     </div>
-                                    <div className="p-4">
-                                        <div className="space-y-3 mb-4">
+                                    <div className="p-4 flex-1 flex flex-col">
+                                        <div className="space-y-3 mb-4 flex-1">
                                             {order.items?.map((item, idx) => (
                                                 <div key={idx} className="flex justify-between items-center text-sm border-b border-[#E8E0D5]/50 pb-2 last:border-0 last:pb-0">
                                                     <div>
                                                         <span className="font-bold text-[#C46A2B] mr-2">{item.quantity}x</span>
                                                         <span className="font-medium text-[#2B1E17]">{item.product_name}</span>
-                                                        {(item.size_name || item.milk_option_name) && (
-                                                            <p className="text-xs text-[#8B7E75] ml-6">{item.size_name && `Boy: ${item.size_name}`}{item.milk_option_name && ` | Süt: ${item.milk_option_name}`}</p>
+                                                        {item.size_name && (
+                                                            <p className="text-xs text-[#8B7E75] ml-6 mt-0.5">Boy: {item.size_name}</p>
+                                                        )}
+                                                        {item.milk_option_name && (
+                                                            <p className="text-xs text-[#8B7E75] ml-6 mt-0.5">Süt: {item.milk_option_name}</p>
+                                                        )}
+                                                        {item.extras?.length > 0 && (
+                                                            <p className="text-xs text-[#8B7E75] ml-6 mt-0.5">Ekstralar: {item.extras.map(e => e.name).join(', ')}</p>
+                                                        )}
+                                                        {item.note && (
+                                                            <p className="text-xs text-[#C46A2B] ml-6 mt-0.5" title="Ürün Notu">Not: {item.note}</p>
                                                         )}
                                                     </div>
                                                 </div>
@@ -177,34 +186,33 @@ function StaffOrdersSection() {
                                             )}
                                         </div>
                                         <div className="flex justify-between items-center pt-4 border-t border-[#E8E0D5]">
-                                            <span className="font-bold text-[#C46A2B]">₺{Number(order.total).toFixed(2)}</span>
+                                            <span className="font-bold text-[#C46A2B] text-lg">₺{Number(order.total).toFixed(2)}</span>
                                             
-                                            {activeTab === 'active' && (
-                                                <div className="flex gap-2">
+                                            <div className="flex gap-2">
+                                                <button 
+                                                    onClick={() => setSelectedOrder(order)}
+                                                    className="px-4 py-2 border-2 border-[#E8E0D5] text-[#8B7E75] bg-white text-sm font-semibold rounded-lg hover:border-[#C46A2B] hover:text-[#C46A2B] transition-colors"
+                                                >
+                                                    Detay
+                                                </button>
+                                                
+                                                {order.status === 'preparing' && (
                                                     <button 
-                                                        onClick={() => handleCancelOrder(order.id)}
-                                                        className="px-4 py-2 border border-[#C46A2B] text-[#C46A2B] bg-white text-sm font-semibold rounded-lg hover:bg-[#C46A2B]/10 transition-colors"
+                                                        onClick={() => handleStatusUpdate(order.id, 'ready')}
+                                                        className="px-4 py-2 bg-[#9B7F57] text-white text-sm font-semibold rounded-lg hover:bg-[#7A6242] transition-colors"
                                                     >
-                                                        İptal Et
+                                                        Hazır
                                                     </button>
-                                                    {order.status === 'preparing' && (
-                                                        <button 
-                                                            onClick={() => handleStatusUpdate(order.id, 'ready')}
-                                                            className="px-4 py-2 bg-[#9B7F57] text-white text-sm font-semibold rounded-lg hover:bg-[#7A6242] transition-colors"
-                                                        >
-                                                            Hazır
-                                                        </button>
-                                                    )}
-                                                    {order.status === 'ready' && (
-                                                        <button 
-                                                            onClick={() => handleStatusUpdate(order.id, 'completed')}
-                                                            className="px-4 py-2 bg-[#6B5D4F] text-white text-sm font-semibold rounded-lg hover:bg-[#4A4036] transition-colors"
-                                                        >
-                                                            Teslim Et
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            )}
+                                                )}
+                                                {order.status === 'ready' && (
+                                                    <button 
+                                                        onClick={() => handleStatusUpdate(order.id, 'completed')}
+                                                        className="px-4 py-2 bg-[#6B5D4F] text-white text-sm font-semibold rounded-lg hover:bg-[#4A4036] transition-colors"
+                                                    >
+                                                        Teslim Et
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -213,6 +221,81 @@ function StaffOrdersSection() {
                     </div>
                 )}
             </div>
+
+            {/* ORDER DETAILS MODAL */}
+            {selectedOrder && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-[#2B1E17]/50 backdrop-blur-sm" onClick={() => setSelectedOrder(null)}>
+                    <div 
+                        className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200 p-6 relative max-h-[90vh] flex flex-col"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <button 
+                            onClick={() => setSelectedOrder(null)}
+                            className="absolute right-4 top-4 p-2 text-[#8B7E75] hover:text-[#C46A2B] transition-colors rounded-full hover:bg-[#C46A2B]/10"
+                        >
+                            <XCircle className="w-6 h-6" />
+                        </button>
+                        
+                        <h2 className="text-2xl font-heading text-[#2B1E17] mb-1">Sipariş Detayı</h2>
+                        <p className="text-[#8B7E75] mb-6">{selectedOrder.order_number}</p>
+
+                        <div className="overflow-y-auto flex-1 pr-2 space-y-6">
+                            {/* Products */}
+                            <div>
+                                <h3 className="font-semibold text-[#2B1E17] mb-3 border-b border-[#E8E0D5] pb-2">Ürünler</h3>
+                                <div className="space-y-3">
+                                    {selectedOrder.items?.map((item, idx) => (
+                                        <div key={idx} className="flex justify-between items-start text-sm border-b border-[#E8E0D5]/50 pb-3 last:border-0 last:pb-0">
+                                            <div className="flex-1">
+                                                <div className="flex gap-2">
+                                                    <span className="font-bold text-[#C46A2B]">{item.quantity}x</span>
+                                                    <span className="font-medium text-[#2B1E17]">{item.product_name}</span>
+                                                </div>
+                                                {item.size_name && (
+                                                    <p className="text-xs text-[#8B7E75] ml-6 mt-1">Boy: {item.size_name}</p>
+                                                )}
+                                                {item.milk_option_name && (
+                                                    <p className="text-xs text-[#8B7E75] ml-6 mt-0.5">Süt: {item.milk_option_name}</p>
+                                                )}
+                                                {item.extras?.length > 0 && (
+                                                    <p className="text-xs text-[#8B7E75] italic ml-6 mt-0.5">Ekstralar: {item.extras.map(e => e.name).join(', ')}</p>
+                                                )}
+                                                {item.note && (
+                                                    <p className="text-xs text-[#C46A2B] ml-6 mt-0.5" title="Ürün Notu">Not: {item.note}</p>
+                                                )}
+                                            </div>
+                                            <span className="font-semibold text-[#2B1E17] ml-4">₺{(Number(item.unit_price) * item.quantity).toFixed(2)}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Order Note */}
+                            {selectedOrder.order_note && (
+                                <div className="bg-[#C46A2B]/10 p-4 rounded-xl border border-[#C46A2B]/20">
+                                    <h3 className="font-semibold text-[#C46A2B] mb-1">Sipariş Notu</h3>
+                                    <p className="text-sm text-[#2B1E17] italic">{selectedOrder.order_note}</p>
+                                </div>
+                            )}
+
+                            {/* Customer Info */}
+                            <div className="bg-[#F5F1EB] p-4 rounded-xl space-y-2">
+                                <h3 className="font-semibold text-[#2B1E17] mb-2">Alışveriş Bilgileri</h3>
+                                <p className="text-sm"><span className="text-[#8B7E75] inline-block w-24">İsim:</span> <span className="font-medium text-[#2B1E17]">{selectedOrder.customer_name}</span></p>
+                                <p className="text-sm"><span className="text-[#8B7E75] inline-block w-24">Telefon:</span> <span className="font-medium text-[#2B1E17]">{selectedOrder.customer_phone || 'Belirtilmedi'}</span></p>
+                                <p className="text-sm"><span className="text-[#8B7E75] inline-block w-24">Zaman:</span> <span className="font-medium text-[#2B1E17]">{new Date(selectedOrder.created_at).toLocaleString('tr-TR')}</span></p>
+                                <p className="text-sm"><span className="text-[#8B7E75] inline-block w-24">Ödeme:</span> <span className="font-medium text-[#2B1E17] uppercase">{selectedOrder.payment_method === 'cash' ? 'Nakit' : 'Kredi Kartı'}</span></p>
+                            </div>
+                        </div>
+
+                        {/* Total Footer */}
+                        <div className="mt-6 pt-4 border-t-2 border-[#E8E0D5] flex justify-between items-center text-xl">
+                            <span className="font-heading text-[#2B1E17]">Toplam Tutar</span>
+                            <span className="font-bold text-[#C46A2B]">₺{Number(selectedOrder.total).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

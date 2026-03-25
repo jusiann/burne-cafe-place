@@ -137,18 +137,29 @@ function OrderHistorySection() {
                                             <p className="text-sm text-[#8B7E75] mb-2">Ürünler</p>
                                             <div className="space-y-2">
                                                 {order.items?.slice(0, 2).map((item, itemIndex) => (
-                                                    <div key={itemIndex} className="flex items-center gap-3">
-                                                        <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F5F1EB] flex-shrink-0">
+                                                    <div key={itemIndex} className="flex items-start gap-3">
+                                                        <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F5F1EB] flex-shrink-0 mt-0.5">
                                                             <img src={item.product_image || item.image_url || '/assets/caffee-pictures/placeholder.jpg'} alt={item.product_name} className="w-full h-full object-cover" />
                                                         </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <p className="text-sm font-medium text-[#2B1E17] truncate">{item.product_name}</p>
-                                                            <p className="text-xs text-[#8B7E75]">{item.quantity} adet</p>
+                                                        <div className="flex-1 min-w-0 pb-1">
+                                                            <p className="text-sm font-medium text-[#2B1E17] truncate">{item.quantity}x {item.product_name}</p>
+                                                            {item.size_name && (
+                                                                <p className="text-xs text-[#8B7E75] truncate mt-0.5">Boy: {item.size_name}</p>
+                                                            )}
+                                                            {item.milk_option_name && (
+                                                                <p className="text-xs text-[#8B7E75] truncate mt-0.5">Süt: {item.milk_option_name}</p>
+                                                            )}
+                                                            {item.extras?.length > 0 && (
+                                                                <p className="text-xs text-[#8B7E75] truncate mt-0.5">Ekstralar: {item.extras.map(e => e.name).join(', ')}</p>
+                                                            )}
+                                                            {item.note && (
+                                                                <p className="text-xs text-[#C46A2B] truncate mt-0.5">Not: {item.note}</p>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 ))}
                                                 {order.items?.length > 2 && (
-                                                    <p className="text-xs text-[#8B7E75] italic">+ {order.items.length - 2} ürün daha</p>
+                                                    <p className="text-xs text-[#8B7E75] italic ml-[60px]">+ {order.items.length - 2} ürün daha</p>
                                                 )}
                                             </div>
                                         </div>

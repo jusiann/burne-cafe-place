@@ -7,6 +7,28 @@ import {Toaster} from 'sonner';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
-    <Toaster position="top-right" richColors />
+    <Toaster 
+      position="top-right" 
+      duration={3000}
+      toastOptions={{
+        style: {
+          background: '#F5F1EB',
+          color: '#C46A2B',
+          borderColor: '#C46A2B',
+        },
+        success: {
+          iconTheme: {
+            primary: '#C46A2B',
+            secondary: '#F5F1EB',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#8b4b1e',
+            secondary: '#F5F1EB',
+          },
+        },
+      }}
+    />
   </StrictMode>,
 );
