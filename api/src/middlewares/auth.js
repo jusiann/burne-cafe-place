@@ -10,8 +10,15 @@ export const verifyToken = async (req, res, next) => {
             });
         
         const accessToken = authHeader.replace('Bearer ', '');
-        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
+        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY, { algorithms: ['HS256'] });
         
+        if (decoded.type !== 'access') {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid token type'
+            });
+        }
+
         if (decoded.is_active === false) {
             return res.status(403).json({
                 success: false,

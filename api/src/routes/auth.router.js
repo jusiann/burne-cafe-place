@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import { verifyToken } from '../middlewares/auth.js';
 import {
     signUp,
@@ -15,11 +16,17 @@ import {
 
 const router = express.Router();
 
-router.post('/sign-up', signUp);
-router.post('/sign-in', signIn);
-router.post('/forgot-password', forgotPassword);
-router.post('/check-reset-code', checkResetCode);
-router.post('/reset-password', resetPassword);
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { success: false, message: 'Too many requests. Please try again later.' },
+});
+
+router.post('/sign-up', authLimiter, signUp);
+router.post('/sign-in', authLimiter, signIn);
+router.post('/forgot-password', authLimiter, forgotPassword);
+router.post('/check-reset-code', authLimiter, checkResetCode);
+router.post('/reset-password', authLimiter, resetPassword);
 router.post('/refresh-token', refreshToken);
 
 router.put('/update-profile', verifyToken, updateProfile);

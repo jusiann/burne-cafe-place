@@ -8,13 +8,21 @@ function LocationSelectionModal() {
     const { isModalOpen, closeModal, isSet, setLocation, openModal } = useLocationStore();
     const { user } = useAuthStore();
     const isStaff = user?.role === 'staff';
-    const { branches, isLoading, error } = useBranches();
+    const { branches, isLoading, error, refetch } = useBranches();
 
     useEffect(() => {
         if (!isSet && !isStaff) {
             openModal();
         }
     }, [isSet, isStaff, openModal]);
+
+    // Modalı her açıldığında ve kapanmadığında şubeleri en güncel haliyle veritabanından çek.
+    // Bu sayede admin panelinde yapılan aktif/pasife alma işlemleri sayfayı yenilemeden modalda görülür.
+    useEffect(() => {
+        if (isModalOpen) {
+            refetch();
+        }
+    }, [isModalOpen, refetch]);
 
     if (!isModalOpen || isStaff) return null;
 

@@ -36,7 +36,7 @@ export const getProducts = async (req, res) => {
         if (querySegments.length > 0)
             query += ' AND ' + querySegments.join(' AND ');
 
-        query += ' ORDER BY c.sort_order ASC, p.name ASC';
+        query += ' ORDER BY c.sort_order ASC, p.name ASC LIMIT 200';
 
         const { rows } = await db.query(query, queryValues);
 

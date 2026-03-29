@@ -140,10 +140,14 @@ export const createOrder = async (req, res) => {
         );
         const order = orderRows[0];
 
-        for (const item of cartItemRows) {
-            await client.query(
-                'INSERT INTO order_items (order_id, product_id, product_name, quantity, size_name, size_extra_price, milk_option_name, milk_option_extra_price, extras, unit_price, total_price, note) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::jsonb, $10, $11, $12)',
-                [
+        if (cartItemRows.length > 0) {
+            const values = [];
+            const placeholders = [];
+            let idx = 1;
+
+            for (const item of cartItemRows) {
+                placeholders.push(`($${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}::jsonb, $${idx++}, $${idx++}, $${idx++})`);
+                values.push(
                     order.id,
                     item.product_id,
                     item.product_name || 'Deleted Product',
@@ -155,17 +159,21 @@ export const createOrder = async (req, res) => {
                     JSON.stringify(Array.isArray(item.extras) ? item.extras : []),
                     item.unit_price,
                     item.total_price,
-                    item.note,
-                ],
+                    item.note
+                );
+            }
+
+            await client.query(
+                `INSERT INTO order_items (order_id, product_id, product_name, quantity, size_name, size_extra_price, milk_option_name, milk_option_extra_price, extras, unit_price, total_price, note) VALUES ${placeholders.join(', ')}`,
+                values
             );
         }
 
-        await client.query('DELETE FROM cart_items WHERE cart_id = $1', [cartId]);
-        await client.query('DELETE FROM cart_coupons WHERE cart_id = $1', [cartId]);
-        await client.query(
-            'UPDATE carts SET updated_at = CURRENT_TIMESTAMP WHERE id = $1',
-            [cartId],
-        );
+        await Promise.all([
+            client.query('DELETE FROM cart_items WHERE cart_id = $1', [cartId]),
+            client.query('DELETE FROM cart_coupons WHERE cart_id = $1', [cartId]),
+            client.query('UPDATE carts SET updated_at = CURRENT_TIMESTAMP WHERE id = $1', [cartId])
+        ]);
 
         await client.query('COMMIT');
         transactionStarted = false;
@@ -287,6 +295,16 @@ export const getOrders = async (req, res) => {
         const user = req.user;
         const { status, date } = req.query;
 
+        const page = Number(req.query.page || 1);
+        const limit = Number(req.query.limit || 100);
+
+        if (!Number.isInteger(page) || page < 1)
+            throw ApiError.badRequest('page must be a positive integer.');
+        if (!Number.isInteger(limit) || limit < 1 || limit > 1000)
+            throw ApiError.badRequest('limit must be between 1 and 1000.');
+
+        const offset = (page - 1) * limit;
+
         if (!user)
             throw ApiError.unauthorized('User authentication is required.');
 
@@ -331,6 +349,9 @@ export const getOrders = async (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
 
         query += ' ORDER BY o.created_at DESC';
+        
+        values.push(limit, offset);
+        query += ' LIMIT $' + (values.length - 1) + ' OFFSET $' + values.length;
 
         const { rows: orderRows } = await db.query(query, values);
 
@@ -520,7 +541,7 @@ export const cancelOrder = async (req, res) => {
             throw ApiError.badRequest('Order ID is required.');
 
         const { rows: orderRows } = await db.query(
-            'SELECT id, branch_id FROM orders WHERE id = $1 LIMIT 1',
+            'SELECT id, user_id, branch_id, status FROM orders WHERE id = $1 LIMIT 1',
             [id],
         );
 

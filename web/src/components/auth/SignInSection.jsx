@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Mail, Lock, ArrowRight, Loader2, AlertCircle} from 'lucide-react';
 import useAuthStore from '../../stores/authStore.js';
+import {showSuccess} from '../../constants/alert.utils.js';
 
 function SignInSection() {
     const {signIn, isLoading, openAuthModal, closeAuthModal} = useAuthStore();
@@ -29,7 +30,10 @@ function SignInSection() {
         const result = await signIn(formData);
         
         if (result.success) {
-            closeAuthModal();
+            showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
+            setTimeout(() => {
+                closeAuthModal();
+            }, 1000);
         } else {
             setError(result.message);
         }

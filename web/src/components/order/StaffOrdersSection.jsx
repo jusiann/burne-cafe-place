@@ -76,8 +76,8 @@ function StaffOrdersSection() {
 
     const [selectedOrder, setSelectedOrder] = useState(null);
 
-    const activeStatus = ['preparing'];
-    const pastStatus = ['ready', 'completed', 'cancelled'];
+    const activeStatus = ['preparing', 'ready'];
+    const pastStatus = ['completed', 'cancelled'];
 
     const filteredOrders = orders.filter(o => 
         activeTab === 'active' ? activeStatus.includes(o.status) : pastStatus.includes(o.status)
@@ -138,7 +138,7 @@ function StaffOrdersSection() {
                             <Package className="w-12 h-12 text-[#C46A2B]" />
                         </div>
                         <h3 className="font-heading text-xl text-[#2B1E17] mb-2">Sipariş Bulunamadı</h3>
-                        <p className="text-[#8B7E75]">{activeTab === 'active' ? 'Şu anda hazırlanmayı bekleyen sipariş yok.' : 'Bu sekmede görüntülenecek sipariş bulunmuyor.'}</p>
+                        <p className="text-[#8B7E75]">{activeTab === 'active' ? 'Şu anda aktif sipariş bulunmuyor.' : 'Bu sekmede görüntülenecek sipariş bulunmuyor.'}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

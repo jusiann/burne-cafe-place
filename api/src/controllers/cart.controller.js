@@ -11,10 +11,10 @@ const normalizeExtras = (extras) => {
         .filter((extra) => extra.name.length > 0);
 };
 
-const findOptionPrice = async (productId, optionType, optionName) => {
+const findOptionPrice = async (productId, optionType, optionName, client = db) => {
     if (!optionName) return 0;
 
-    const { rows } = await db.query(
+    const { rows } = await client.query(
         'SELECT extra_price FROM product_options WHERE product_id = $1 AND option_type = $2 AND name = $3 AND is_available = true LIMIT 1',
         [productId, optionType, optionName],
     );
@@ -25,12 +25,12 @@ const findOptionPrice = async (productId, optionType, optionName) => {
     return Number(rows[0].extra_price);
 };
 
-const findExtras = async (productId, extras) => {
+const findExtras = async (productId, extras, client = db) => {
     if (extras.length === 0) return { extras: [], total_extra_price: 0 };
 
     const names = extras.map((item) => item.name);
     const namePlaceholders = names.map((_, index) => '$' + (index + 2)).join(', ');
-    const { rows } = await db.query(
+    const { rows } = await client.query(
         "SELECT name, extra_price FROM product_options WHERE product_id = $1 AND option_type = 'extra' AND is_available = true AND name IN (" + namePlaceholders + ')',
         [productId, ...names],
     );
@@ -107,10 +107,16 @@ const getCartWithItems = async (userId) => {
 
     const cart = cartRows[0];
 
-    const { rows: items } = await db.query(
-        'SELECT item.id, item.cart_id, item.product_id, item.quantity, item.size_name, item.size_extra_price, item.milk_option_name, item.milk_option_extra_price, item.extras, item.unit_price, item.total_price, item.note, item.created_at, item.updated_at, p.name AS product_name, p.image_url AS product_image, p.base_price FROM cart_items item JOIN products p ON item.product_id = p.id WHERE item.cart_id = $1 ORDER BY item.created_at ASC',
-        [cart.id],
-    );
+    const [{ rows: items }, { rows: appliedCouponRows }] = await Promise.all([
+        db.query(
+            'SELECT item.id, item.cart_id, item.product_id, item.quantity, item.size_name, item.size_extra_price, item.milk_option_name, item.milk_option_extra_price, item.extras, item.unit_price, item.total_price, item.note, item.created_at, item.updated_at, p.name AS product_name, p.image_url AS product_image, p.base_price FROM cart_items item JOIN products p ON item.product_id = p.id WHERE item.cart_id = $1 ORDER BY item.created_at ASC',
+            [cart.id]
+        ),
+        db.query(
+            'SELECT cc.coupon_id, c.code, c.discount_type, c.discount_value, c.min_order_amount, c.conditions, c.is_active FROM cart_coupons cc JOIN coupons c ON cc.coupon_id = c.id WHERE cc.cart_id = $1 LIMIT 1',
+            [cart.id]
+        )
+    ]);
 
     const totalPrice = items.reduce(
         (sum, item) => sum + Number(item.total_price),
@@ -118,11 +124,6 @@ const getCartWithItems = async (userId) => {
     );
 
     const productIds = items.map((item) => item.product_id).filter(Boolean);
-
-    const { rows: appliedCouponRows } = await db.query(
-        'SELECT cc.coupon_id, c.code, c.discount_type, c.discount_value, c.min_order_amount, c.conditions, c.is_active FROM cart_coupons cc JOIN coupons c ON cc.coupon_id = c.id WHERE cc.cart_id = $1 LIMIT 1',
-        [cart.id],
-    );
 
     const appliedCoupon = appliedCouponRows[0] || null;
 
@@ -235,17 +236,11 @@ export const addItemToCart = async (req, res) => {
 
         const safeExtras = normalizeExtras(extras);
 
-        const sizeExtraPrice = await findOptionPrice(
-            productId,
-            'size',
-            sizeName,
-        );
-        const milkOptionExtraPrice = await findOptionPrice(
-            productId,
-            'milk',
-            milkOptionName,
-        );
-        const extrasData = await findExtras(productId, safeExtras);
+        const [sizeExtraPrice, milkOptionExtraPrice, extrasData] = await Promise.all([
+            findOptionPrice(productId, 'size', sizeName, client),
+            findOptionPrice(productId, 'milk', milkOptionName, client),
+            findExtras(productId, safeExtras, client)
+        ]);
 
         const unitPrice =
             Number(product.base_price) +
@@ -361,20 +356,11 @@ export const updateCartItem = async (req, res) => {
                 ? normalizeExtras(extras)
                 : normalizeExtras(currentItem.extras);
 
-        const sizeExtraPrice = await findOptionPrice(
-            currentItem.product_id,
-            'size',
-            nextSizeName,
-        );
-        const milkOptionExtraPrice = await findOptionPrice(
-            currentItem.product_id,
-            'milk',
-            nextMilkOptionName,
-        );
-        const extrasData = await findExtras(
-            currentItem.product_id,
-            nextExtrasInput,
-        );
+        const [sizeExtraPrice, milkOptionExtraPrice, extrasData] = await Promise.all([
+            findOptionPrice(currentItem.product_id, 'size', nextSizeName, client),
+            findOptionPrice(currentItem.product_id, 'milk', nextMilkOptionName, client),
+            findExtras(currentItem.product_id, nextExtrasInput, client)
+        ]);
 
         const unitPrice =
             Number(currentItem.base_price) +
@@ -447,11 +433,10 @@ export const removeCartItem = async (req, res) => {
         if (item.user_id !== userId)
             throw ApiError.forbidden('You can only remove your own cart item.');
 
-        await db.query('DELETE FROM cart_items WHERE id = $1', [itemId]);
-        await db.query(
-            'UPDATE carts SET updated_at = CURRENT_TIMESTAMP WHERE id = $1',
-            [item.cart_id],
-        );
+        await Promise.all([
+            db.query('DELETE FROM cart_items WHERE id = $1', [itemId]),
+            db.query('UPDATE carts SET updated_at = CURRENT_TIMESTAMP WHERE id = $1', [item.cart_id])
+        ]);
 
         const cart = await getCartWithItems(userId);
 
@@ -478,12 +463,11 @@ export const clearCart = async (req, res) => {
 
         const cart = await getOrCreateUserCart(userId);
 
-        await db.query('DELETE FROM cart_items WHERE cart_id = $1', [cart.id]);
-        await db.query('DELETE FROM cart_coupons WHERE cart_id = $1', [cart.id]);
-        await db.query(
-            'UPDATE carts SET updated_at = CURRENT_TIMESTAMP WHERE id = $1',
-            [cart.id],
-        );
+        await Promise.all([
+            db.query('DELETE FROM cart_items WHERE cart_id = $1', [cart.id]),
+            db.query('DELETE FROM cart_coupons WHERE cart_id = $1', [cart.id]),
+            db.query('UPDATE carts SET updated_at = CURRENT_TIMESTAMP WHERE id = $1', [cart.id])
+        ]);
 
         res.status(200).json({
             success: true,
@@ -505,9 +489,9 @@ export const clearCart = async (req, res) => {
 
 export const validateCoupon = async (req, res) => {
     try {
-        const { code, cartId, userId } = req.body;
-        const effectiveUserId = userId || req.user?.id || null;
+        const { code, cartId } = req.body;
         const authUserId = req.user?.id;
+        const effectiveUserId = authUserId;
 
         if (!code || !cartId)
             throw ApiError.badRequest('code and cartId are required.');
@@ -542,15 +526,16 @@ export const validateCoupon = async (req, res) => {
                 valid: false,
             });
 
-        const { rows: subtotalRows } = await db.query(
-            'SELECT COALESCE(SUM(total_price), 0) AS subtotal FROM cart_items WHERE cart_id = $1',
-            [cartId],
-        );
-
-        const { rows: productRows } = await db.query(
-            'SELECT product_id FROM cart_items WHERE cart_id = $1 AND product_id IS NOT NULL',
-            [cartId],
-        );
+        const [{ rows: subtotalRows }, { rows: productRows }] = await Promise.all([
+            db.query(
+                'SELECT COALESCE(SUM(total_price), 0) AS subtotal FROM cart_items WHERE cart_id = $1',
+                [cartId]
+            ),
+            db.query(
+                'SELECT product_id FROM cart_items WHERE cart_id = $1 AND product_id IS NOT NULL',
+                [cartId]
+            )
+        ]);
 
         const subtotal = Number(subtotalRows[0]?.subtotal || 0);
         const productIds = productRows.map((row) => row.product_id);

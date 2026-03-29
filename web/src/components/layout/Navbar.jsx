@@ -6,6 +6,7 @@ import useCartStore from '../../stores/cartStore.js';
 import {useProducts} from '../../hooks/useProducts.js';
 import useAuthStore from '../../stores/authStore.js';
 import useLocationStore from '../../stores/locationStore.js';
+import { showInfo } from '../../constants/alert.utils.js';
 
 function Navbar() {
   const [isScrolled,setIsScrolled] = useState(false);
@@ -56,11 +57,19 @@ function Navbar() {
   const handleLogout = async () => {
     await logout();
     setIsProfileOpen(false);
-    navigate('/');
+    showInfo('Başarıyla çıkış yapıldı.');
+    setTimeout(() => {
+        navigate('/');
+    }, 500);
   };
 
-  const navItems = useMemo(() => {
-    if (role === 'staff') {
+    const navItems = useMemo(() => {
+    if (role === 'admin') {
+      return [
+        {name: 'Şubeler',href: '/admin/branches'},
+        {name: 'Ürünler',href: '/admin/products'},
+      ];
+    } else if (role === 'staff') {
       return [
         {name: 'Menü',href: '/menu'},
         {name: 'Siparişler',href: '/orders'},
@@ -160,6 +169,7 @@ function Navbar() {
             </Link>
 
             {/* SEARCH BAR - DESKTOP */}
+            {role !== 'admin' && (
             <div className="hidden md:flex items-center relative">
               <div className={cn(
                 "relative flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-lg",
@@ -280,23 +290,26 @@ function Navbar() {
                 </div>
               )}
             </div>
+            )}
           </div>
 
           {/* DESKTOP NAVIGATION */}
           <div className="hidden md:flex items-center space-x-1">
 
             {/* BRANCH SELECTOR */}
-            <button
-              onClick={isStaff ? undefined : openModal}
-              className={`flex items-center gap-1.5 px-3 py-1.5 mr-2 rounded-lg transition-colors duration-300 ${isStaff ? 'bg-[#C46A2B]/10 text-[#C46A2B] cursor-default' : 'bg-[#C46A2B]/10 text-[#C46A2B] hover:bg-[#C46A2B]/20'}`}
-              aria-label="Şube Seçimi"
-            >
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm font-medium truncate max-w-[150px]">
-                {branchName || 'Şube Seçin'}
-              </span>
-              {isStaff ? <span className="text-[10px] opacity-60">(Personel)</span> : null}
-            </button>
+            {role !== 'admin' && (
+              <button
+                onClick={isStaff ? undefined : openModal}
+                className={`flex items-center gap-1.5 px-3 py-1.5 mr-2 rounded-lg transition-colors duration-300 ${isStaff ? 'bg-[#C46A2B]/10 text-[#C46A2B] cursor-default' : 'bg-[#C46A2B]/10 text-[#C46A2B] hover:bg-[#C46A2B]/20'}`}
+                aria-label="Şube Seçimi"
+              >
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm font-medium truncate max-w-[150px]">
+                  {branchName || 'Şube Seçin'}
+                </span>
+                {isStaff ? <span className="text-[10px] opacity-60">(Personel)</span> : null}
+              </button>
+            )}
 
             {/* NAVIGATION LINKS */}
             {navItems.map((item, index) => (
@@ -322,25 +335,27 @@ function Navbar() {
             ))}
 
             {/* CART ICON */}
-            <Link
-              to="/cart"
-              className={cn(
-                'relative p-2 ml-2 rounded-lg transition-all duration-300 group',
-                isActiveRoute('/cart')
-                  ? 'text-[#C46A2B] bg-[#C46A2B]/10'
-                  : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
-              )}
-              aria-label={`Sepet - ${itemCount} ürün`}
-            >
-              <ShoppingCart className="w-6 h-6 transition-transform group-hover:scale-110" />
-              {itemCount > 0 && (
-                <span className="absolute top-0 right-0 w-4 h-4 bg-[#C46A2B] rounded-full border-2 border-white animate-pulse" />
-              )}
-              <div className={cn(
-                'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
-                isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
-              )} />
-            </Link>
+            {role !== 'admin' && (
+              <Link
+                to="/cart"
+                className={cn(
+                  'relative p-2 ml-2 rounded-lg transition-all duration-300 group',
+                  isActiveRoute('/cart')
+                    ? 'text-[#C46A2B] bg-[#C46A2B]/10'
+                    : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+                )}
+                aria-label={`Sepet - ${itemCount} ürün`}
+              >
+                <ShoppingCart className="w-6 h-6 transition-transform group-hover:scale-110" />
+                {itemCount > 0 && (
+                  <span className="absolute top-0 right-0 w-4 h-4 bg-[#C46A2B] rounded-full border-2 border-white animate-pulse" />
+                )}
+                <div className={cn(
+                  'absolute bottom-0 left-2 right-2 h-0.5 bg-[#C46A2B] rounded-full transition-transform duration-300',
+                  isActiveRoute('/cart') ? 'scale-x-100' : 'scale-x-0'
+                )} />
+              </Link>
+            )}
 
             {/* PROFILE ICON */}
             <div className="relative ml-2" ref={profileRef}>
@@ -382,8 +397,12 @@ function Navbar() {
                           <Package className="w-4 h-4 text-[#C46A2B]" />
                           <span className="font-medium">Siparişler</span>
                         </Link>
-                      )}
-                      <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 transition-colors text-left border-t border-[#E8E0D5]">
+                      )}                        {role === 'admin' && (
+                          <Link to="/admin/branches" className="flex items-center gap-2 px-4 py-3 hover:bg-[#F5F1EB] transition-colors" onClick={() => setIsProfileOpen(false)}>
+                            <Package className="w-4 h-4 text-[#C46A2B]" />
+                            <span className="font-medium">Yönetim Paneli</span>
+                          </Link>
+                        )}                      <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 transition-colors text-left border-t border-[#E8E0D5]">
                         <LogOut className="w-4 h-4 text-[#C46A2B]" />
                         <span className="font-medium">Çıkış Yap</span>
                       </button>
@@ -426,8 +445,7 @@ function Navbar() {
       )}>
         <div className="px-4 py-3 space-y-1">
 
-          {/* SEARCH BAR - MOBILE */}
-          <div className="mb-3">
+          {/* SEARCH BAR - MOBILE */}            {role !== 'admin' && (          <div className="mb-3">
             {hasActiveSearch ? (
               <div className="flex items-center justify-between px-4 py-2.5 bg-[#C46A2B]/10 border border-[#C46A2B]/20 rounded-lg">
                 <div className="flex items-center gap-2 text-[#C46A2B]">
@@ -459,18 +477,21 @@ function Navbar() {
               </form>
             )}
           </div>
+          )}
 
           {/* LOCATION - MOBILE */}
-          <button
-            onClick={isStaff ? undefined : () => { openModal(); setIsMenuOpen(false); }}
-            className={`flex items-center justify-between w-full px-4 py-3 mb-2 rounded-lg transition-all duration-300 bg-[#C46A2B]/10 text-[#C46A2B] font-medium ${isStaff ? 'cursor-default' : ''}`}
-          >
-            <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 flex-shrink-0" />
-              <span className="truncate max-w-[200px] text-left">{branchName || 'Lütfen şube seçin'}</span>
-              {isStaff ? <span className="text-[10px] opacity-60">(Personel)</span> : null}
-            </div>
-          </button>
+          {role !== 'admin' && (
+            <button
+              onClick={isStaff ? undefined : () => { openModal(); setIsMenuOpen(false); }}
+              className={`flex items-center justify-between w-full px-4 py-3 mb-2 rounded-lg transition-all duration-300 bg-[#C46A2B]/10 text-[#C46A2B] font-medium ${isStaff ? 'cursor-default' : ''}`}
+            >
+              <div className="flex items-center gap-2">
+                <MapPin className="w-5 h-5 flex-shrink-0" />
+                <span className="truncate max-w-[200px] text-left">{branchName || 'Lütfen şube seçin'}</span>
+                {isStaff ? <span className="text-[10px] opacity-60">(Personel)</span> : null}
+              </div>
+            </button>
+          )}
 
           {/* NAVIGATION LINKS - MOBILE */}
           {navItems.map((item, index) => (
@@ -490,26 +511,28 @@ function Navbar() {
           ))}
 
           {/* CART - MOBILE */}
-          <Link
-            to="/cart"
-            className={cn(
-              'flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300',
-              isActiveRoute('/cart')
-                ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
-                : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
-            )}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <div className="flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5" />
-              <span>Sepetim</span>
-            </div>
-            {itemCount > 0 && (
-              <span className="px-2 py-0.5 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
-                {itemCount}
-              </span>
-            )}
-          </Link>
+          {role !== 'admin' && (
+            <Link
+              to="/cart"
+              className={cn(
+                'flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300',
+                isActiveRoute('/cart')
+                  ? 'text-[#C46A2B] bg-[#C46A2B]/10 font-medium'
+                  : 'text-[#2B1E17] hover:text-[#C46A2B] hover:bg-[#C46A2B]/5'
+              )}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                <span>Sepetim</span>
+              </div>
+              {itemCount > 0 && (
+                <span className="px-2 py-0.5 bg-[#C46A2B] text-white text-xs font-bold rounded-full">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+          )}
 
           {/* PROFILE - MOBILE */}
           <div className="mt-2 pt-2 border-t border-[#E8E0D5]">
@@ -532,6 +555,26 @@ function Navbar() {
                   <User className="w-5 h-5 text-[#C46A2B]" />
                   <span className="font-medium">Profilim</span>
                 </Link>
+                {role === 'staff' && (
+                  <Link
+                    to="/orders"
+                    className="flex items-center gap-2 px-4 py-3 text-[#2B1E17] hover:bg-[#F5F1EB] rounded-lg transition-colors text-left"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Package className="w-5 h-5 text-[#C46A2B]" />
+                    <span className="font-medium">Siparişler</span>
+                  </Link>
+                )}
+                {role === 'admin' && (
+                  <Link
+                    to="/admin/branches"
+                    className="flex items-center gap-2 px-4 py-3 text-[#2B1E17] hover:bg-[#F5F1EB] rounded-lg transition-colors text-left"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Package className="w-5 h-5 text-[#C46A2B]" />
+                    <span className="font-medium">Yönetim Paneli</span>
+                  </Link>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 px-4 py-3 text-[#3D2817] hover:bg-[#3D2817]/10 rounded-lg transition-colors text-left"

@@ -18,7 +18,7 @@ export const getBranches = async (req, res) => {
             query += ' AND district = $' + params.length;
         }
 
-        query += ' ORDER BY city ASC, district ASC, name ASC';
+        query += ' ORDER BY city ASC, district ASC, name ASC LIMIT 200';
 
         const { rows } = await db.query(query, params);
 

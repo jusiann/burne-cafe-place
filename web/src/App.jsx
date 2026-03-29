@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Home from './pages/Home';
 import Menu from './pages/Menu';
@@ -10,6 +10,9 @@ import OrderHistory from './pages/OrderHistory';
 import StaffOrders from './pages/StaffOrders';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
+
+import { AdminBranches } from './pages/admin/AdminBranches';
+import { AdminProducts } from './pages/admin/AdminProducts';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LocationSelectionModal from './components/common/LocationSelectionModal';
@@ -65,6 +68,12 @@ function App() {
                     <Route path='/order-confirmation' element={<OrderConfirmation />} />
                     <Route path='/order-history' element={<OrderHistory />} />
                     <Route path='/orders' element={<StaffOrders />} />
+                </Route>
+                {/* ADMIN ROUTES */}
+                <Route element={<ProtectedRoute requireRole="admin" />}>
+                    <Route path='/admin' element={<Navigate to="/admin/branches" replace />} />
+                    <Route path='/admin/branches' element={<AdminBranches />} />
+                    <Route path='/admin/products' element={<AdminProducts />} />
                 </Route>
                 <Route path='*' element={<NotFound />} />
             </Routes>

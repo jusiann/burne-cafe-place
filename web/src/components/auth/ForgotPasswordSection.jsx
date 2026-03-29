@@ -6,7 +6,6 @@ import useAuthStore from '../../stores/authStore.js';
 function ForgotPasswordSection() {
     const { openAuthModal } = useAuthStore();
 
-    // Steps: 1 = email, 2 = code, 3 = new password
     const [step, setStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -56,7 +55,6 @@ function ForgotPasswordSection() {
         }
     };
 
-    /* STEP 3: Set new password */
     const handleResetPassword = async (e) => {
         e.preventDefault();
         if (!newPassword || !confirmPassword) { setError('Lütfen tüm alanları doldurun.'); return; }

@@ -211,11 +211,20 @@ function ProfileSection() {
                             </div>
                         </div>
 
-                        <div className="pt-4 flex justify-end">
+                        <div className="pt-6 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#E8E0D5]">
+                            <button
+                                type="button"
+                                onClick={(e) => { e.preventDefault(); setDeleteModal(true); }}
+                                className="flex items-center gap-2 px-4 py-2 text-[#8B7E75] text-sm font-medium rounded-lg hover:text-[#3D2817] hover:bg-[#3D2817]/5 transition-all order-2 sm:order-1"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Hesabımı Sil
+                            </button>
+
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="flex items-center gap-2 px-8 py-3 bg-[#C46A2B] text-white font-semibold rounded-xl hover:bg-[#A85A24] transition-all disabled:opacity-70 shadow-lg shadow-[#C46A2B]/20"
+                                className="flex items-center justify-center gap-2 px-8 py-3 bg-[#C46A2B] text-white font-semibold rounded-xl hover:bg-[#A85A24] transition-all disabled:opacity-70 shadow-lg shadow-[#C46A2B]/20 w-full sm:w-auto order-1 sm:order-2"
                             >
                                 {isLoading ? (
                                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -228,26 +237,6 @@ function ProfileSection() {
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
-
-            {/* DANGER ZONE */}
-            <div className="mt-8 bg-white rounded-2xl shadow-sm border-2 border-[#3D2817]/20 overflow-hidden">
-                <div className="p-8">
-                    <h3 className="text-lg font-semibold text-[#3D2817] mb-2 flex items-center gap-2">
-                        <AlertCircle className="w-5 h-5" />
-                        Tehlikeli Bölge
-                    </h3>
-                    <p className="text-sm text-[#8B7E75] mb-6">
-                        Hesabınızı silmek geri alınamaz bir işlemdir. Tüm verileriniz (siparişler, sepet, profil bilgileri) kalıcı olarak silinecektir.
-                    </p>
-                    <button
-                        onClick={() => setDeleteModal(true)}
-                        className="flex items-center gap-2 px-6 py-3 bg-[#3D2817]/10 text-[#3D2817] font-semibold rounded-xl border border-[#3D2817]/20 hover:bg-[#3D2817]/20 hover:border-[#3D2817]/30 transition-all"
-                    >
-                        <Trash2 className="w-5 h-5" />
-                        Hesabımı Sil
-                    </button>
                 </div>
             </div>
 
