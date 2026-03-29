@@ -48,8 +48,7 @@ export const getProducts = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch products',
+            success: false, error: error.message || 'Failed to fetch products',
         });
     }
 };
@@ -87,8 +86,7 @@ export const getProductById = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch product details',
+            success: false, error: error.message || 'Failed to fetch product details',
         });
     }
 };

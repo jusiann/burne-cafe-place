@@ -9,7 +9,7 @@ import CART_ROUTER from './src/routes/cart.router.js';
 import ORDERS_ROUTER from './src/routes/orders.router.js';
 import ADMIN_ROUTER from './src/routes/admin.routes.js';
 
-import { connectDB, runSeed } from './src/lib/db/database.js';
+import { connectDB } from './src/lib/db/database.js';
 
 import helmet from 'helmet';
 import cors from 'cors';
@@ -57,7 +57,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use((req, res) => {
-    res.status(404).json({ success: false, message: 'Route not found' });
+    res.status(404).json({ success: false, error: 'Route not found' });
 });
 
 app.use((err, req, res, next) => {
@@ -67,12 +67,11 @@ app.use((err, req, res, next) => {
         ? 'Internal server error' 
         : (err.message || 'Internal server error');
         
-    res.status(statusCode).json({ success: false, message });
+    res.status(statusCode).json({ success: false, error: message });
 });
 
 app.listen(PORT, async () => {
     const time = new Date().toLocaleTimeString('tr-TR', { hour12: false });
     console.log(`[SERVER - ${time}] Started on port ${PORT}`);
     await connectDB();
-    await runSeed();
 });

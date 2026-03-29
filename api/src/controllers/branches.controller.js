@@ -30,8 +30,7 @@ export const getBranches = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch branches',
+            success: false, error: error.message || 'Failed to fetch branches',
         });
     }
 };
@@ -59,8 +58,7 @@ export const getBranchId = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch branch details',
+            success: false, error: error.message || 'Failed to fetch branch details',
         });
     }
 };

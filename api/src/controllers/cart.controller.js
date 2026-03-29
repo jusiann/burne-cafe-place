@@ -193,8 +193,7 @@ export const getCart = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch cart',
+            success: false, error: error.message || 'Failed to fetch cart',
         });
     }
 };
@@ -301,8 +300,7 @@ export const addItemToCart = async (req, res) => {
         await client.query('ROLLBACK');
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to add item to cart',
+            success: false, error: error.message || 'Failed to add item to cart',
         });
     } finally {
         client.release();
@@ -403,8 +401,7 @@ export const updateCartItem = async (req, res) => {
         await client.query('ROLLBACK');
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to update cart item',
+            success: false, error: error.message || 'Failed to update cart item',
         });
     } finally {
         client.release();
@@ -448,8 +445,7 @@ export const removeCartItem = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to remove cart item',
+            success: false, error: error.message || 'Failed to remove cart item',
         });
     }
 };
@@ -481,8 +477,7 @@ export const clearCart = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to clear cart',
+            success: false, error: error.message || 'Failed to clear cart',
         });
     }
 };
@@ -594,8 +589,7 @@ export const validateCoupon = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Coupon validation failed',
+            success: false, error: error.message || 'Coupon validation failed',
         });
     }
 };

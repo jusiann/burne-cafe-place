@@ -5,8 +5,7 @@ export const verifyToken = async (req, res, next) => {
         const authHeader = req.header('Authorization');
         if (!authHeader || !authHeader.startsWith('Bearer '))
             return res.status(401).json({ 
-                success: false, 
-                message: 'Access token is required' 
+                success: false, error: 'Access token is required' 
             });
         
         const accessToken = authHeader.replace('Bearer ', '');
@@ -14,15 +13,13 @@ export const verifyToken = async (req, res, next) => {
         
         if (decoded.type !== 'access') {
             return res.status(401).json({
-                success: false,
-                message: 'Invalid token type'
+                success: false, error: 'Invalid token type'
             });
         }
 
         if (decoded.is_active === false) {
             return res.status(403).json({
-                success: false,
-                message: 'Account is deactivated'
+                success: false, error: 'Account is deactivated'
             });
         }
 
@@ -39,13 +36,11 @@ export const verifyToken = async (req, res, next) => {
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError)
             return res.status(401).json({ 
-                success: false, 
-                message: 'Access token has expired' 
+                success: false, error: 'Access token has expired' 
             });     
 
         return res.status(401).json({ 
-            success: false, 
-            message: 'Invalid access token' 
+            success: false, error: 'Invalid access token' 
         });
     }
 };

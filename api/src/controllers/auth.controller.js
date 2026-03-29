@@ -9,26 +9,20 @@ import sendEmail from '../utils/send.mail.js';
 const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!emailRegex.test(email))
-        throw ApiError.badRequest(
-            'Invalid email format. Please enter a valid email address.',
-        );
+        return 'Invalid email format. Please enter a valid email address.';
+    return null;
 };
 
 const validatePassword = (password) => {
     if (password.length < 8)
-        throw ApiError.badRequest(
-            'Password must be at least 8 characters long.',
-        );
+        return 'Password must be at least 8 characters long.';
     if (!/[A-Z]/.test(password))
-        throw ApiError.badRequest(
-            'Password must contain at least one uppercase letter.',
-        );
+        return 'Password must contain at least one uppercase letter.';
     if (!/[a-z]/.test(password))
-        throw ApiError.badRequest(
-            'Password must contain at least one lowercase letter.',
-        );
+        return 'Password must contain at least one lowercase letter.';
     if (!/[0-9]/.test(password))
-        throw ApiError.badRequest('Password must contain at least one number.');
+        return 'Password must contain at least one number.';
+    return null;
 };
 
 export const signUp = async (req, res) => {
@@ -39,14 +33,16 @@ export const signUp = async (req, res) => {
                 'fullname, email, phone and password are required.',
             );
 
-        validateEmail(email);
+        const emailError = validateEmail(email);
+        if (emailError) throw ApiError.badRequest(emailError);
 
         if (fullname.length < 2 || fullname.length > 50)
             throw ApiError.badRequest(
                 'Full name must be between 2 and 50 characters long.',
             );
 
-        validatePassword(password);
+        const passError = validatePassword(password);
+        if (passError) throw ApiError.badRequest(passError);
 
         const { rows: existingRows } = await db.query(
             'SELECT id FROM users WHERE email = $1 OR phone = $2 LIMIT 1',
@@ -84,8 +80,7 @@ export const signUp = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Sign-up Failed',
+            success: false, error: error.message || 'Sign-up Failed',
         });
     }
 };
@@ -156,8 +151,7 @@ export const signIn = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Sign-in Failed',
+            success: false, error: error.message || 'Sign-in Failed',
         });
     }
 };
@@ -167,7 +161,8 @@ export const forgotPassword = async (req, res) => {
         const { email } = req.body;
         if (!email) throw ApiError.badRequest('Email is required.');
 
-        validateEmail(email);
+        const emailError = validateEmail(email);
+        if (emailError) throw ApiError.badRequest(emailError);
 
         const { rows } = await db.query(
             'SELECT id FROM users WHERE email = $1 LIMIT 1',
@@ -224,8 +219,7 @@ export const forgotPassword = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Password reset failed',
+            success: false, error: error.message || 'Password reset failed',
         });
     }
 };
@@ -272,8 +266,7 @@ export const checkResetCode = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Reset code verification failed',
+            success: false, error: error.message || 'Reset code verification failed',
         });
     }
 };
@@ -287,7 +280,8 @@ export const resetPassword = async (req, res) => {
                 'Password and temporary token are required.',
             );
 
-        validatePassword(password);
+        const passError = validatePassword(password);
+        if (passError) throw ApiError.badRequest(passError);
 
         let decoded;
         try {
@@ -330,8 +324,7 @@ export const resetPassword = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Password reset failed',
+            success: false, error: error.message || 'Password reset failed',
         });
     }
 };
@@ -383,19 +376,16 @@ export const refreshToken = async (req, res) => {
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
             res.status(401).json({
-                success: false,
-                message: 'Refresh token has expired',
+                success: false, error: 'Refresh token has expired',
             });
         } else if (error instanceof jwt.JsonWebTokenError) {
             res.status(403).json({
-                success: false,
-                message: 'Invalid refresh token',
+                success: false, error: 'Invalid refresh token',
             });
         } else {
             const statusCode = error.statusCode || 500;
             res.status(statusCode).json({
-                success: false,
-                message: error.message || 'Token refresh failed',
+                success: false, error: error.message || 'Token refresh failed',
             });
         }
     }
@@ -455,7 +445,8 @@ export const updateProfile = async (req, res) => {
             if (!isCurrentPasswordValid)
                 throw ApiError.unauthorized('Current password is incorrect.');
 
-            validatePassword(newPassword);
+            const passError = validatePassword(newPassword);
+            if (passError) throw ApiError.badRequest(passError);
 
             const isSamePassword = await bcrypt.compare(
                 newPassword,
@@ -504,15 +495,13 @@ export const updateProfile = async (req, res) => {
     } catch (error) {
         if (error.code === '23505') {
             res.status(409).json({
-                success: false,
-                message: 'Phone number is already in use.',
+                success: false, error: 'Phone number is already in use.',
             });
             return;
         }
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Profile update failed',
+            success: false, error: error.message || 'Profile update failed',
         });
     }
 };
@@ -541,8 +530,7 @@ export const getMe = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to get user data',
+            success: false, error: error.message || 'Failed to get user data',
         });
     }
 };
@@ -566,8 +554,7 @@ export const logout = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Logout failed',
+            success: false, error: error.message || 'Logout failed',
         });
     }
 };
@@ -593,8 +580,7 @@ export const deleteUser = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Account deletion failed',
+            success: false, error: error.message || 'Account deletion failed',
         });
     }
 };

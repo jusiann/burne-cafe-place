@@ -16,8 +16,7 @@ export const getCategories = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch categories',
+            success: false, error: error.message || 'Failed to fetch categories',
         });
     }
 };
@@ -44,8 +43,7 @@ export const getCategoryById = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch category details',
+            success: false, error: error.message || 'Failed to fetch category details',
         });
     }
 };

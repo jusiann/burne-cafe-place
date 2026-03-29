@@ -202,8 +202,7 @@ export const createOrder = async (req, res) => {
 
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to create order',
+            success: false, error: error.message || 'Failed to create order',
         });
     } finally {
         if (client)
@@ -284,8 +283,7 @@ export const getMyOrders = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch my orders',
+            success: false, error: error.message || 'Failed to fetch my orders',
         });
     }
 };
@@ -395,8 +393,7 @@ export const getOrders = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch orders',
+            success: false, error: error.message || 'Failed to fetch orders',
         });
     }
 };
@@ -458,8 +455,7 @@ export const getOrderById = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to fetch order',
+            success: false, error: error.message || 'Failed to fetch order',
         });
     }
 };
@@ -522,8 +518,7 @@ export const updateOrderStatus = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to update order status',
+            success: false, error: error.message || 'Failed to update order status',
         });
     }
 };
@@ -585,8 +580,7 @@ export const cancelOrder = async (req, res) => {
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
-            success: false,
-            message: error.message || 'Failed to cancel order',
+            success: false, error: error.message || 'Failed to cancel order',
         });
     }
 };

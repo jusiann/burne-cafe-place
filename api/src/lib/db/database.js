@@ -14,48 +14,12 @@ export const connectDB = async () => {
     try {
         await db.query('SELECT 1');
         console.log(`[DB - ${time}] PostgreSQL connected`);
-
-        const schemaPath = path.join(__dirname, 'schema.sql');
-        const schema = fs.readFileSync(schemaPath, 'utf8');
-
-        const statements = schema.split(';').filter(stmt => stmt.trim() !== '');
-
-        for (const stmt of statements) {
-            try {
-                await db.query(stmt);
-            } catch (err) {
-                if (err.code !== '42710') {
-                    throw err;
-                }
-            }
-        }
-
-        console.log(`[DB - ${time}] Schema verified`);
     } catch (error) {
         console.error(
             `[DB - ${time}] PostgreSQL connection failed:`,
             error.message,
         );
         process.exit(1);
-    }
-};
-
-export const runSeed = async () => {
-    const time = new Date().toLocaleTimeString('tr-TR', { hour12: false });
-    try {
-        const { rows } = await db.query('SELECT COUNT(*) FROM products');
-        if (parseInt(rows[0].count, 10) > 0) {
-            console.log(`[DB - ${time}] Seeding skipped (Database already contains data)`);
-            return;
-        }
-
-        const seedPath = path.join(__dirname, 'seed.sql');
-        const seedSql = fs.readFileSync(seedPath, 'utf8');
-        await db.query(seedSql);
-        console.log(`[DB - ${time}] Seeding completed`);
-    } catch (error) {
-        console.error(`[DB - ${time}] Seeding failed:`, error.message);
-        throw error;
     }
 };
 

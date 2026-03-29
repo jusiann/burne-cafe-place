@@ -19,7 +19,7 @@ const router = express.Router();
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 10,
-    message: { success: false, message: 'Too many requests. Please try again later.' },
+    message: { success: false, error: 'Too many requests. Please try again later.' },
 });
 
 router.post('/sign-up', authLimiter, signUp);
