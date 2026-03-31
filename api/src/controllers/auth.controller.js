@@ -112,20 +112,23 @@ export const signIn = async (req, res) => {
 
         const existingUser = existingRows[0];
 
-        if (!existingUser)
-            throw ApiError.notFound(
-                'User not found. Please check your email or phone.',
+        let isPasswordValid = false;
+        const dummyHash = '$2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa';
+
+        if (existingUser) {
+            isPasswordValid = await bcrypt.compare(
+                password,
+                existingUser.password,
             );
+        } else {
+            await bcrypt.compare(password, dummyHash);
+        }
+
+        if (!existingUser || !isPasswordValid)
+            throw ApiError.unauthorized('Invalid email/phone or password.');
 
         if (!existingUser.is_active)
             throw ApiError.forbidden('Account is deactivated.');
-
-        const isPasswordValid = await bcrypt.compare(
-            password,
-            existingUser.password,
-        );
-        if (!isPasswordValid)
-            throw ApiError.unauthorized('Invalid password. Please try again.');
 
         const { accessToken, refreshToken } = generateTokens(existingUser);
 
