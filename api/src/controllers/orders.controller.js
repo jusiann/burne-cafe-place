@@ -1,6 +1,7 @@
 import ApiError from '../utils/error.js';
 import db from '../lib/db/database.js';
 import { calculateCouponDiscount } from '../utils/coupon.util.js';
+import { getPaginationOptions, getPaginationResult } from '../utils/pagination.util.js';
 
 export const createOrder = async (req, res) => {
     let client;
@@ -210,22 +211,45 @@ export const createOrder = async (req, res) => {
     }
 };
 
+const injectItemsToOrders = async (orders) => {
+    if (!orders || orders.length === 0) return [];
+
+    const orderIds = orders.map((order) => order.id);
+    const placeholders = orderIds.map((_, index) => '$' + (index + 1)).join(', ');
+
+    const { rows: itemRows } = await db.query(
+        'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id IN (' +
+            placeholders +
+            ') ORDER BY oi.id ASC',
+        orderIds,
+    );
+
+    const itemsByOrderId = new Map();
+    for (const item of itemRows) {
+        if (!itemsByOrderId.has(item.order_id)) itemsByOrderId.set(item.order_id, []);
+        itemsByOrderId.get(item.order_id).push(item);
+    }
+
+    return orders.map((order) => ({
+        ...order,
+        items: itemsByOrderId.get(order.id) || [],
+    }));
+};
+
 export const getMyOrders = async (req, res) => {
     try {
         const userId = req.user?.id;
-        const page = Number(req.query.page || 1);
-        const limit = Number(req.query.limit || 10);
+        
+        let pagination;
+        try {
+            pagination = getPaginationOptions(req.query, 100);
+        } catch (err) {
+            throw ApiError.badRequest(err.message);
+        }
+        const { page, limit, offset } = pagination;
 
         if (!userId)
             throw ApiError.unauthorized('User authentication is required.');
-
-        if (!Number.isInteger(page) || page < 1)
-            throw ApiError.badRequest('page must be a positive integer.');
-
-        if (!Number.isInteger(limit) || limit < 1 || limit > 100)
-            throw ApiError.badRequest('limit must be between 1 and 100.');
-
-        const offset = (page - 1) * limit;
 
         const { rows: totalRows } = await db.query(
             'SELECT COUNT(*)::int AS total_count FROM orders WHERE user_id = $1',
@@ -237,47 +261,12 @@ export const getMyOrders = async (req, res) => {
             [userId, limit, offset],
         );
 
-        const orderIds = orderRows.map((order) => order.id);
-
-        let itemRows = [];
-        if (orderIds.length > 0) {
-            const placeholders = orderIds
-                .map((_, index) => '$' + (index + 1))
-                .join(', ');
-
-            const result = await db.query(
-                'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id IN (' +
-                    placeholders +
-                    ') ORDER BY oi.id ASC',
-                orderIds,
-            );
-
-            itemRows = result.rows;
-        }
-
-        const itemsByOrderId = new Map();
-
-        for (const item of itemRows) {
-            if (!itemsByOrderId.has(item.order_id))
-                itemsByOrderId.set(item.order_id, []);
-
-            itemsByOrderId.get(item.order_id).push(item);
-        }
-
-        const orders = orderRows.map((order) => ({
-            ...order,
-            items: itemsByOrderId.get(order.id) || [],
-        }));
+        const orders = await injectItemsToOrders(orderRows);
 
         res.status(200).json({
             success: true,
             message: 'My orders fetched successfully',
-            pagination: {
-                page,
-                limit,
-                total_count: totalRows[0]?.total_count || 0,
-                total_pages: Math.ceil((totalRows[0]?.total_count || 0) / limit),
-            },
+            pagination: getPaginationResult(totalRows[0]?.total_count || 0, page, limit),
             orders,
         });
     } catch (error) {
@@ -293,15 +282,13 @@ export const getOrders = async (req, res) => {
         const user = req.user;
         const { status, date } = req.query;
 
-        const page = Number(req.query.page || 1);
-        const limit = Number(req.query.limit || 100);
-
-        if (!Number.isInteger(page) || page < 1)
-            throw ApiError.badRequest('page must be a positive integer.');
-        if (!Number.isInteger(limit) || limit < 1 || limit > 1000)
-            throw ApiError.badRequest('limit must be between 1 and 1000.');
-
-        const offset = (page - 1) * limit;
+        let pagination;
+        try {
+            pagination = getPaginationOptions(req.query, 1000);
+        } catch (err) {
+            throw ApiError.badRequest(err.message);
+        }
+        const { page, limit, offset } = pagination;
 
         if (!user)
             throw ApiError.unauthorized('User authentication is required.');
@@ -353,37 +340,7 @@ export const getOrders = async (req, res) => {
 
         const { rows: orderRows } = await db.query(query, values);
 
-        const orderIds = orderRows.map((order) => order.id);
-
-        let itemRows = [];
-        if (orderIds.length > 0) {
-            const placeholders = orderIds
-                .map((_, index) => '$' + (index + 1))
-                .join(', ');
-
-            const result = await db.query(
-                'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id IN (' +
-                    placeholders +
-                    ') ORDER BY oi.id ASC',
-                orderIds,
-            );
-
-            itemRows = result.rows;
-        }
-
-        const itemsByOrderId = new Map();
-
-        for (const item of itemRows) {
-            if (!itemsByOrderId.has(item.order_id))
-                itemsByOrderId.set(item.order_id, []);
-
-            itemsByOrderId.get(item.order_id).push(item);
-        }
-
-        const orders = orderRows.map((order) => ({
-            ...order,
-            items: itemsByOrderId.get(order.id) || [],
-        }));
+        const orders = await injectItemsToOrders(orderRows);
 
         res.status(200).json({
             success: true,

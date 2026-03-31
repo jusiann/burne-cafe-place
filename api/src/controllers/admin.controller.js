@@ -308,9 +308,7 @@ export const updateStaffBranch = async (req, res) => {
             error: error.message || 'Failed to update staff branch'
         });
     }
-};// -------------------------------------------------------------
-// Product Management
-// -------------------------------------------------------------
+};
 
 export const createProduct = async (req, res) => {
     try {
