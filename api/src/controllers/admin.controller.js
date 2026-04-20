@@ -77,10 +77,12 @@ export const getBranches = async (req, res) => {
 };
 
 export const deleteBranch = async (req, res) => {
+    const client = await db.connect();
     try {
+        await client.query('BEGIN');
         const { id } = req.params;
 
-        const { rows: activeOrders } = await db.query(
+        const { rows: activeOrders } = await client.query(
             'SELECT id FROM orders WHERE branch_id = $1 AND status IN (\'preparing\', \'ready\') LIMIT 1',
             [id]
         );
@@ -88,7 +90,12 @@ export const deleteBranch = async (req, res) => {
         if (activeOrders.length > 0)
             throw ApiError.conflict('Cannot delete branch with active orders.');
 
-        const { rows } = await db.query(
+        await client.query(
+            'UPDATE users SET is_active = false WHERE id IN (SELECT user_id FROM staff_branches WHERE branch_id = $1)',
+            [id]
+        );
+
+        const { rows } = await client.query(
             'DELETE FROM branches WHERE id = $1 RETURNING id',
             [id]
         );
@@ -96,16 +103,21 @@ export const deleteBranch = async (req, res) => {
         if (rows.length === 0)
             throw ApiError.notFound('Branch not found.');
 
+        await client.query('COMMIT');
+
         res.status(200).json({
             success: true,
             message: 'Branch deleted successfully'
         });
     } catch (error) {
+        await client.query('ROLLBACK');
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
             success: false,
             error: error.message || 'Failed to delete branch'
         });
+    } finally {
+        client.release();
     }
 };
 
@@ -121,10 +133,18 @@ export const toggleBranchStatus = async (req, res) => {
         if (rows.length === 0)
             throw ApiError.notFound('Branch not found.');
 
+        const branch = rows[0];
+        if (!branch.is_active) {
+            await db.query(
+                'UPDATE users SET is_active = false WHERE id IN (SELECT user_id FROM staff_branches WHERE branch_id = $1)',
+                [id]
+            );
+        }
+
         res.status(200).json({
             success: true,
             message: 'Branch status toggled successfully',
-            data: rows[0]
+            data: branch
         });
     } catch (error) {
         const statusCode = error.statusCode || 500;
@@ -309,6 +329,7 @@ export const updateStaffBranch = async (req, res) => {
         });
     }
 };
+
 
 export const createProduct = async (req, res) => {
     try {
