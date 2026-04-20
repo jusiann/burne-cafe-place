@@ -4,6 +4,7 @@ import {useEffect,useState,useRef,useMemo} from 'react';
 import {useLocation,Link,useNavigate,useSearchParams} from 'react-router-dom';
 import useCartStore from '../../stores/cartStore.js';
 import {useProducts} from '../../hooks/useProducts.js';
+import {useBranches} from '../../hooks/useBranches.js';
 import useAuthStore from '../../stores/authStore.js';
 import useLocationStore from '../../stores/locationStore.js';
 import { showInfo } from '../../constants/alert.utils.js';
@@ -38,8 +39,18 @@ function Navbar() {
   const itemCount = useCartStore((state) => state.getItemCount());
   const { isAuthenticated, user, logout, openAuthModal } = useAuthStore();
   const role = isAuthenticated ? user?.role : 'guest';
-  const { name: branchName, openModal } = useLocationStore();
+  const { branchId, name: branchName, openModal, clearLocation } = useLocationStore();
+  const { branches } = useBranches();
   const isStaff = role === 'staff';
+
+  useEffect(() => {
+    if (branches && branches.length > 0 && branchId) {
+      const branchExists = branches.some(b => b.id === branchId);
+      if (!branchExists) {
+        clearLocation();
+      }
+    }
+  }, [branches, branchId, clearLocation]);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
