@@ -9,7 +9,7 @@ createRoot(document.getElementById('root')).render(
     <App />
     <Toaster 
       position="top-right" 
-      duration={3000}
+      duration={2000}
       toastOptions={{
         style: {
           background: '#F5F1EB',

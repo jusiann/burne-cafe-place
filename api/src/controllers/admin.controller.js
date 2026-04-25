@@ -338,9 +338,25 @@ export const createProduct = async (req, res) => {
             throw ApiError.badRequest('name, base_price, and category_id are required. Received: ' + JSON.stringify(req.body));
         }
 
+        if (!req.file) {
+            throw ApiError.badRequest('Product image is required.');
+        }
+
+        const parsedBasePrice = Number(base_price);
+        if (!Number.isFinite(parsedBasePrice) || parsedBasePrice < 0) {
+            throw ApiError.badRequest('base_price must be a valid positive number.');
+        }
+
+        const parsedIsAvailable =
+            is_available === undefined
+                ? true
+                : String(is_available).toLowerCase() === 'true';
+
+        const imageUrl = `/api/uploads/products/${req.file.filename}`;
+
         const { rows } = await db.query(
-            'INSERT INTO products (name, description, base_price, category_id, is_available) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [name.trim(), description?.trim() || null, base_price, category_id, is_available !== undefined ? is_available : true]
+            'INSERT INTO products (name, description, image_url, base_price, category_id, is_available) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [name.trim(), description?.trim() || null, imageUrl, parsedBasePrice, category_id, parsedIsAvailable]
         );
 
         res.status(201).json({

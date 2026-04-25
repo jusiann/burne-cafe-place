@@ -1,5 +1,7 @@
 import express from 'express';
 import 'dotenv/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import AUTH_ROUTER from './src/routes/auth.router.js';
 import PRODUCTS_ROUTER from './src/routes/products.router.js';
@@ -16,6 +18,8 @@ import cors from 'cors';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(helmet());
 app.use(cors({
@@ -23,6 +27,7 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json({ limit: '10kb' }));
+app.use('/api/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 app.use((req, res, next) => {
     const start = Date.now();

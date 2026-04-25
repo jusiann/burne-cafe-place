@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import api from '../../services/api';
-import { Plus, Edit2, Trash2, Package, Tag, Loader2, ChevronDown, ChevronRight, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Package, Tag, Loader2, ChevronDown, ChevronRight, X, UploadCloud } from 'lucide-react';
 
 export default function AdminProductsSection() {
     const [categories, setCategories] = useState([]); 
@@ -13,6 +13,9 @@ export default function AdminProductsSection() {
     const [modalState, setModalState] = useState({ isOpen: false, mode: 'create', data: null });
     const [modalLoading, setModalLoading] = useState(false);
     const [modalError, setModalError] = useState(null);
+    const imageInputRef = useRef(null);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImagePreview, setSelectedImagePreview] = useState('');
 
     const [formData, setFormData] = useState({
         name: '',
@@ -47,8 +50,21 @@ export default function AdminProductsSection() {
 
     useEffect(() => {
         fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (!selectedImage) {
+            setSelectedImagePreview('');
+            return;
+        }
+
+        const previewUrl = URL.createObjectURL(selectedImage);
+        setSelectedImagePreview(previewUrl);
+
+        return () => {
+            URL.revokeObjectURL(previewUrl);
+        };
+    }, [selectedImage]);
 
     const toggleCategory = (categoryId) => {
         setExpandedCategories((prev) => ({
@@ -60,6 +76,9 @@ export default function AdminProductsSection() {
     const handleOpenModal = (mode, product = null) => {
         setModalState({ isOpen: true, mode, data: product });
         setModalError(null);
+        setSelectedImage(null);
+        if (imageInputRef.current)
+            imageInputRef.current.value = '';
         if (mode === 'edit' && product) {
             setFormData({
                 name: product.name || '',
@@ -83,6 +102,9 @@ export default function AdminProductsSection() {
         setModalState({ isOpen: false, mode: 'create', data: null });
         setFormData({ name: '', description: '', base_price: '', category_id: '', is_available: true });
         setModalError(null);
+        setSelectedImage(null);
+        if (imageInputRef.current)
+            imageInputRef.current.value = '';
     };
 
     const handleProductSubmit = async (e) => {
@@ -90,13 +112,30 @@ export default function AdminProductsSection() {
         setModalLoading(true);
         setModalError(null);
         try {
-            const payload = {
-                ...formData,
-                base_price: parseFloat(formData.base_price)
-            };
             if (modalState.mode === 'create') {
-                await api.post('/admin/products', payload);
+                if (!selectedImage) {
+                    setModalError('Lutfen bir urun resmi secin.');
+                    return;
+                }
+
+                const payload = new FormData();
+                payload.append('name', formData.name);
+                payload.append('description', formData.description);
+                payload.append('base_price', formData.base_price);
+                payload.append('category_id', formData.category_id);
+                payload.append('is_available', String(formData.is_available));
+                payload.append('image', selectedImage);
+
+                await api.post('/admin/products', payload, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
             } else if (modalState.mode === 'edit') {
+                const payload = {
+                    ...formData,
+                    base_price: parseFloat(formData.base_price)
+                };
                 await api.put(`/admin/products/${modalState.data.id}`, payload);
             }
             await fetchData();
@@ -106,6 +145,18 @@ export default function AdminProductsSection() {
         } finally {
             setModalLoading(false);
         }
+    };
+
+    const handleImageSelect = (event) => {
+        const file = event.target.files?.[0] || null;
+        setSelectedImage(file);
+    };
+
+    const formatFileSize = (bytes) => {
+        if (!bytes || Number.isNaN(bytes)) return '0 KB';
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
     };
 
     const handleToggleAvailability = async (productId, currentStatus) => {
@@ -153,9 +204,8 @@ export default function AdminProductsSection() {
             </div>
 
             {error && (
-                <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6 flex items-start">
-                    <div className="mr-3 mt-0.5">⚠️</div>
-                    <div>{error}</div>
+                <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6">
+                    {error}
                 </div>
             )}
 
@@ -190,43 +240,56 @@ export default function AdminProductsSection() {
                                 {isExpanded && (
                                     <div className="border-t border-[#E8E0D5]">
                                         {category.items.length === 0 ? (
-                                            <div className="p-8 text-[#8B7E75] text-center bg-[#F8F6F4]/30">Bu kategoride henüz ürün bulunmuyor.</div>
+                                            <div className="text-sm text-[#8B7E75] bg-white p-4 rounded-xl border border-[#E8E0D5] text-center m-6">Bu kategoride henüz ürün bulunmuyor.</div>
                                         ) : (
-                                            <div className="w-full bg-[#F8F6F4]/10">
-                                                <div className="hidden md:grid grid-cols-12 bg-[#F8F6F4] border-b border-[#E8E0D5] px-6 py-3 text-xs font-bold text-[#8B7E75] uppercase tracking-wider">
-                                                    <div className="col-span-5">Ürün Detayı</div>
-                                                    <div className="col-span-3">Fiyat</div>
-                                                    <div className="col-span-2 text-center">Durum</div>
-                                                    <div className="col-span-2 text-right">İşlemler</div>
-                                                </div>
-                                                <div className="divide-y divide-[#E8E0D5]">
+                                            <div className="p-4 sm:p-6">
+                                                <div className="flex flex-col space-y-3">
                                                     {category.items.map((product) => (
-                                                        <div key={product.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-0 items-center px-6 py-4 hover:bg-[#F8F6F4]/50 transition-colors">
-                                                            <div className="col-span-1 md:col-span-5 flex flex-col">
-                                                                <span className="font-semibold text-[#2B1E17] text-base">{product.name}</span>
-                                                                {product.description && <span className="text-sm text-[#8B7E75] mt-1 line-clamp-2 md:w-11/12">{product.description}</span>}
+                                                        <div key={product.id} className="flex flex-col sm:flex-row sm:items-center justify-between border-b last:border-0 border-[#E8E0D5] pb-4 last:pb-0">
+                                                            <div className="flex items-start space-x-4 mb-3 sm:mb-0">
+                                                                <div className="mt-1 text-[#8B7E75]">
+                                                                    <Package size={20} />
+                                                                </div>
+                                                                <div>
+                                                                    <div className="flex items-center flex-wrap gap-2">
+                                                                        <span className="font-semibold text-[#2B1E17] text-base">{product.name}</span>
+                                                                        <span className="text-[#C46A2B] font-bold">₺{Number(product.base_price).toFixed(2)}</span>
+                                                                    </div>
+                                                                    {product.description && (
+                                                                        <div className="text-sm text-[#8B7E75] mt-0.5 line-clamp-1">{product.description}</div>
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                            <div className="col-span-1 md:col-span-3 font-semibold text-[#2B1E17] text-lg">
-                                                                ₺{Number(product.base_price).toFixed(2)}
-                                                            </div>
-                                                            <div className="col-span-1 md:col-span-2 flex md:justify-center">
+                                                            <div className="flex items-center space-x-4 sm:pl-4 self-start sm:self-center shrink-0">
+                                                                <div className="flex items-center space-x-2">
+                                                                    <span className={`text-xs font-medium ${product.is_available ? 'text-green-600' : 'text-gray-500'}`}>
+                                                                        {product.is_available ? 'Satışta' : 'Tükendi'}
+                                                                    </span>
+                                                                    <button
+                                                                        onClick={() => handleToggleAvailability(product.id, product.is_available)}
+                                                                        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${product.is_available ? 'bg-green-500' : 'bg-gray-300'}`}
+                                                                        role="switch"
+                                                                        aria-checked={product.is_available}
+                                                                    >
+                                                                        <span className="sr-only">Durum Değiştir</span>
+                                                                        <span
+                                                                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${product.is_available ? 'translate-x-2' : '-translate-x-2'}`}
+                                                                        />
+                                                                    </button>
+                                                                </div>
                                                                 <button
-                                                                    onClick={() => handleToggleAvailability(product.id, product.is_available)}
-                                                                    className={`px-4 py-1.5 text-xs uppercase font-bold rounded-full transition-colors border shadow-sm ${
-                                                                        product.is_available 
-                                                                            ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100' 
-                                                                            : 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
-                                                                    }`}
+                                                                    onClick={() => handleOpenModal('edit', product)}
+                                                                    className="text-gray-400 hover:text-[#4A3B32] transition-colors p-1"
+                                                                    title="Düzenle"
                                                                 >
-                                                                    {product.is_available ? 'Satışta' : 'Tükendi'}
+                                                                    <Edit2 size={16} />
                                                                 </button>
-                                                            </div>
-                                                            <div className="col-span-1 md:col-span-2 flex items-center md:justify-end space-x-2 mt-2 md:mt-0">
-                                                                <button onClick={() => handleOpenModal('edit', product)} className="p-2 md:px-3 md:py-1.5 md:text-sm rounded-lg border border-[#E8E0D5] bg-white text-[#4A3B32] hover:bg-gray-50 flex items-center shadow-sm">
-                                                                    <Edit2 size={16} className="md:mr-1.5" /> <span className="hidden md:inline">Düzenle</span>
-                                                                </button>
-                                                                <button onClick={() => handleDeleteProduct(product.id)} className="p-2 md:px-3 md:py-1.5 md:text-sm rounded-lg border border-red-200 bg-white text-red-600 hover:bg-red-50 flex items-center shadow-sm">
-                                                                    <Trash2 size={16} className="md:mr-1.5" /> <span className="hidden md:inline">Sil</span>
+                                                                <button
+                                                                    onClick={() => handleDeleteProduct(product.id)}
+                                                                    className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                                                                    title="Sil"
+                                                                >
+                                                                    <Trash2 size={16} />
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -256,9 +319,8 @@ export default function AdminProductsSection() {
                         </div>
                         <form onSubmit={handleProductSubmit} className="p-6 flex flex-col space-y-4">
                             {modalError && (
-                                <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm border border-red-100 flex items-start">
-                                    <div className="mr-2 mt-0.5">⚠️</div>
-                                    <div>{modalError}</div>
+                                <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm border border-red-100">
+                                    {modalError}
                                 </div>
                             )}
                             <div>
@@ -284,6 +346,50 @@ export default function AdminProductsSection() {
                                     </select>
                                 </div>
                             </div>
+                            {modalState.mode === 'create' && (
+                                <div className="bg-[#F8F6F4]/60 p-4 rounded-xl border border-[#E8E0D5] space-y-3">
+                                    <label className="block text-sm font-medium text-[#4A3B32]">Urun Resmi</label>
+                                    <input
+                                        ref={imageInputRef}
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp"
+                                        className="hidden"
+                                        onChange={handleImageSelect}
+                                    />
+                                    <div>
+                                        <button
+                                            type="button"
+                                            onClick={() => imageInputRef.current?.click()}
+                                            className="px-4 py-2 rounded-lg border border-[#E8E0D5] bg-white text-[#4A3B32] hover:bg-[#F8F6F4] transition-colors inline-flex items-center"
+                                        >
+                                            <UploadCloud size={16} className="mr-2 text-[#C46A2B]" />
+                                            Dosya Yukle
+                                        </button>
+                                    </div>
+
+                                    {selectedImage ? (
+                                        <div className="bg-white border border-[#E8E0D5] rounded-xl p-3 flex items-start gap-3">
+                                            <img
+                                                src={selectedImagePreview}
+                                                alt="Secilen urun resmi"
+                                                className="w-16 h-16 rounded-lg object-cover border border-[#E8E0D5]"
+                                            />
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-sm font-medium text-[#2B1E17] truncate">{selectedImage.name}</p>
+                                                <p className="text-xs text-[#8B7E75] mt-1">{formatFileSize(selectedImage.size)}</p>
+                                                <p className="text-xs text-[#A85A24] mt-1">Resim secildi ve gonderime hazir.</p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="text-xs text-[#8B7E75] bg-white border border-dashed border-[#D8CCBE] rounded-xl p-3">
+                                            JPG, PNG veya WEBP dosyasi secin. Maksimum 5MB.
+                                        </div>
+                                    )}
+                                    <div className="text-[11px] text-[#8B7E75]">
+                                        Not: Urun olusturma icin gorsel secimi zorunludur.
+                                    </div>
+                                </div>
+                            )}
                             <div className="pt-2 flex items-center space-x-3 bg-[#F8F6F4]/50 p-3 rounded-xl border border-[#E8E0D5]">
                                 <input type="checkbox" id="is_available" checked={formData.is_available} onChange={(e) => setFormData({ ...formData, is_available: e.target.checked })} className="w-5 h-5 accent-[#C46A2B] rounded cursor-pointer" />
                                 <label htmlFor="is_available" className="text-sm font-medium text-[#2B1E17] cursor-pointer select-none">Müşterilere Satışa Açık</label>
