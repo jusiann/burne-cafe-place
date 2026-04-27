@@ -16,10 +16,6 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone);
 
--- Auto-apply columns if running on an existing table that lacks them
-ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_code VARCHAR(10);
-ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_code_expires TIMESTAMP WITH TIME ZONE;
-
 -- Products Table
 CREATE TYPE option_type AS ENUM ('size', 'milk', 'extra');
 CREATE TABLE IF NOT EXISTS categories (

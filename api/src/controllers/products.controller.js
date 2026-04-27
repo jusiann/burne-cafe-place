@@ -20,10 +20,10 @@ export const getProducts = async (req, res) => {
         if (search) {
             querySegments.push(
                 '(p.name ILIKE $' +
-                    index +
-                    ' OR p.description ILIKE $' +
-                    index +
-                    ')',
+                index +
+                ' OR p.description ILIKE $' +
+                index +
+                ')',
             );
             queryValues.push('%' + search + '%');
             index++;

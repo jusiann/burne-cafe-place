@@ -118,7 +118,7 @@ export const createOrder = async (req, res) => {
         if (total < 0)
             throw ApiError.badRequest('Order total cannot be negative.');
 
-        const orderNumber = '#' + Date.now();
+        const orderNumber = '#' + Date.now() + '-' + Math.random().toString(16).slice(2, 6);
 
         const { rows: orderRows } = await client.query(
             'INSERT INTO orders (order_number, user_id, branch_id, customer_name, customer_phone, status, scheduled_time, payment_method, order_note, subtotal, tax, discount, coupon_id, total) VALUES ($1, $2, $3, $4, $5, $6, $7, $8::payment_method, $9, $10, $11, $12, $13, $14) RETURNING id, order_number, user_id, branch_id, customer_name, customer_phone, status, scheduled_time, payment_method, order_note, staff_note, subtotal, tax, discount, coupon_id, total, completed_by, created_at, updated_at',
@@ -219,8 +219,8 @@ const injectItemsToOrders = async (orders) => {
 
     const { rows: itemRows } = await db.query(
         'SELECT oi.id, oi.order_id, oi.product_id, oi.product_name, oi.quantity, oi.size_name, oi.size_extra_price, oi.milk_option_name, oi.milk_option_extra_price, oi.extras, oi.unit_price, oi.total_price, oi.note, p.image_url AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id IN (' +
-            placeholders +
-            ') ORDER BY oi.id ASC',
+        placeholders +
+        ') ORDER BY oi.id ASC',
         orderIds,
     );
 
@@ -239,7 +239,7 @@ const injectItemsToOrders = async (orders) => {
 export const getMyOrders = async (req, res) => {
     try {
         const userId = req.user?.id;
-        
+
         let pagination;
         try {
             pagination = getPaginationOptions(req.query, 100);

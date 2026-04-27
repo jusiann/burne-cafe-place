@@ -65,7 +65,7 @@ export const getBranches = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Branches retrieved successfully',
-            data: rows
+            branches: rows
         });
     } catch (error) {
         const statusCode = error.statusCode || 500;
@@ -440,7 +440,7 @@ export const toggleProductAvailability = async (req, res) => {
         const { is_available } = req.body;
 
         if (is_available === undefined) {
-             throw ApiError.badRequest('is_available boolean field is required.');
+            throw ApiError.badRequest('is_available boolean field is required.');
         }
 
         const { rows } = await db.query(
