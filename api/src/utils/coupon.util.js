@@ -43,11 +43,11 @@ export const calculateCouponDiscount = async ({ coupon, subtotal, productIds, ef
         }
     }
 
-    if (coupon.code.toUpperCase() === 'ILK15') {
+    if (conditions.first_order_only) {
         if (!effectiveUserId) {
             return {
                 valid: false,
-                message: 'ILK15 is only available for registered users',
+                message: 'This coupon is only available for registered users',
                 discountAmount: 0,
             };
         }
@@ -60,7 +60,7 @@ export const calculateCouponDiscount = async ({ coupon, subtotal, productIds, ef
         if ((orderCountRows[0]?.order_count || 0) > 0) {
             return {
                 valid: false,
-                message: 'ILK15 is only valid for first order',
+                message: 'This coupon is only valid for first orders',
                 discountAmount: 0,
             };
         }

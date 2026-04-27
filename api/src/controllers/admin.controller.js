@@ -262,15 +262,20 @@ export const deleteStaff = async (req, res) => {
         if (rows.length === 0)
             throw ApiError.notFound('Staff not found.');
 
+        await db.query(
+            'DELETE FROM staff_branches WHERE user_id = $1',
+            [id]
+        );
+
         res.status(200).json({
             success: true,
-            message: 'Staff deleted successfully'
+            message: 'Staff deactivated successfully'
         });
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({
             success: false,
-            error: error.message || 'Failed to delete staff'
+            error: error.message || 'Failed to deactivate staff'
         });
     }
 };

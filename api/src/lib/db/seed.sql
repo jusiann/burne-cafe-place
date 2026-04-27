@@ -369,7 +369,7 @@ INSERT INTO branches (id, name, city, district, address, is_active) VALUES
 ('d4e5f6a7-b8c9-4012-d3e4-f5a6b7c8d9e0', 'Maltepe Sahil', 'İstanbul', 'Maltepe', 'Bağdat Cd. No:200', true);
 
 INSERT INTO coupons (id, code, discount_type, discount_value, min_order_amount, conditions, description, is_active) VALUES
-('a112ab05-377a-4042-beb5-799cb3802673', 'ILK15', 'percentage', 15.00, 0, '{}', 'Sadece ilk siparişe özel %15 indirim', true),
+('a112ab05-377a-4042-beb5-799cb3802673', 'ILK15', 'percentage', 15.00, 0, '{"first_order_only": true}', 'Sadece ilk siparişe özel %15 indirim', true),
 ('bea5ffd7-0b26-4715-bbce-42121837c7f0', 'IKILIM20', 'percentage', 20.00, 0, '{"requires_products": ["dc16a1fd-a3a8-4ab0-9a7f-b626d008ebc0", "4ca5df75-c2b2-4422-ab44-8ca706f11c5f"]}', 'Americano ve Latte alımında %20 indirim', true),
 ('f22a737c-eeb5-40c8-9bca-3b7a8a7c380a', 'MIEL10', 'percentage', 10.00, 0, '{"requires_products": ["f4154f41-7382-402e-a43d-4df0010c2319"]}', 'Sepette Miel kahvesi varsa %10 indirim', true);
 

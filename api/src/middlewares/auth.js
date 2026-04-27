@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import db from '../lib/db/database.js';
 
 export const verifyToken = async (req, res, next) => {
     try {
@@ -17,7 +18,18 @@ export const verifyToken = async (req, res, next) => {
             });
         }
 
-        if (decoded.is_active === false) {
+        const { rows } = await db.query(
+            'SELECT is_active, role FROM users WHERE id = $1',
+            [decoded.userId],
+        );
+
+        if (rows.length === 0) {
+            return res.status(401).json({
+                success: false, error: 'User no longer exists'
+            });
+        }
+
+        if (rows[0].is_active === false) {
             return res.status(403).json({
                 success: false, error: 'Account is deactivated'
             });
@@ -28,8 +40,8 @@ export const verifyToken = async (req, res, next) => {
             name: decoded.name,
             email: decoded.email,
             phone: decoded.phone,
-            role: decoded.role,
-            is_active: decoded.is_active
+            role: rows[0].role,
+            is_active: rows[0].is_active
         };
         
         next();
