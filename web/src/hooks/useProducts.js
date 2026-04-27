@@ -14,7 +14,7 @@ export const useProducts = (params = {}) => {
             const response = await getProducts(params);
             setProducts(response.products || response || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Ürünler yüklenemedi.');
+            setError(err.response?.data?.error || 'Ürünler yüklenemedi.');
         } finally {
             setIsLoading(false);
         }
@@ -47,7 +47,7 @@ export const useProduct = (id) => {
             const response = await getProductById(id);
             setProduct(response.product || response);
         } catch (err) {
-            setError(err.response?.data?.message || 'Ürün bulunamadı.');
+            setError(err.response?.data?.error || 'Ürün bulunamadı.');
         } finally {
             setIsLoading(false);
         }

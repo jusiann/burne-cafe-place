@@ -35,7 +35,7 @@ function OrderHistorySection() {
             showSuccess('Sipariş başarıyla iptal edildi.');
             refetch();
         } catch (err) {
-            showError(err.response?.data?.message || 'Sipariş iptal edilemedi.');
+            showError(err.response?.data?.error || 'Sipariş iptal edilemedi.');
         } finally {
             closeConfirmation();
         }

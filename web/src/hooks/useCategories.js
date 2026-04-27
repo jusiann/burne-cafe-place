@@ -14,7 +14,7 @@ export const useCategories = () => {
             const response = await getCategories();
             setCategories(response.categories || response || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Kategoriler yüklenemedi.');
+            setError(err.response?.data?.error || 'Kategoriler yüklenemedi.');
         } finally {
             setIsLoading(false);
         }

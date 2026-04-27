@@ -34,7 +34,7 @@ const useCartStore = create((set, get) => ({
         } catch (error) {
             return {
                 success: false,
-                message: error.response?.data?.message || 'Sepete eklenemedi.',
+                message: error.response?.data?.error || 'Sepete eklenemedi.',
             };
         }
     },
@@ -46,7 +46,7 @@ const useCartStore = create((set, get) => ({
         } catch (error) {
             return {
                 success: false,
-                message: error.response?.data?.message || 'Ürün kaldırılamadı.',
+                message: error.response?.data?.error || 'Ürün kaldırılamadı.',
             };
         }
     },
@@ -61,7 +61,7 @@ const useCartStore = create((set, get) => ({
         } catch (error) {
             return {
                 success: false,
-                message: error.response?.data?.message || 'Ürün güncellenemedi.',
+                message: error.response?.data?.error || 'Ürün güncellenemedi.',
             };
         }
     },
@@ -76,7 +76,7 @@ const useCartStore = create((set, get) => ({
         } catch (error) {
             return {
                 success: false,
-                message: error.response?.data?.message || 'Miktar güncellenemedi.',
+                message: error.response?.data?.error || 'Miktar güncellenemedi.',
             };
         }
     },
@@ -90,7 +90,7 @@ const useCartStore = create((set, get) => ({
         } catch (error) {
             return {
                 success: false,
-                message: error.response?.data?.message || 'Sepet temizlenemedi.',
+                message: error.response?.data?.error || 'Sepet temizlenemedi.',
             };
         }
     },
@@ -102,7 +102,7 @@ const useCartStore = create((set, get) => ({
         } catch (error) {
             return {
                 success: false,
-                message: error.response?.data?.message || 'Kupon geçersiz.',
+                message: error.response?.data?.error || 'Kupon geçersiz.',
             };
         }
     },

@@ -24,7 +24,7 @@ function StaffOrdersSection() {
             const response = await orderService.getOrders({ branchId, limit: 100 });
             setOrders(response.orders || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Siparişler yüklenemedi.');
+            setError(err.response?.data?.error || 'Siparişler yüklenemedi.');
         } finally {
             setIsLoading(false);
         }
@@ -43,7 +43,7 @@ function StaffOrdersSection() {
             showSuccess('Sipariş durumu güncellendi.');
             fetchOrders();
         } catch (err) {
-            showError(err.response?.data?.message || 'Durum güncellenemedi.');
+            showError(err.response?.data?.error || 'Durum güncellenemedi.');
         }
     };
 
@@ -57,7 +57,7 @@ function StaffOrdersSection() {
             showSuccess('Sipariş başarıyla iptal edildi.');
             fetchOrders();
         } catch (err) {
-            showError(err.response?.data?.message || 'Sipariş iptal edilemedi.');
+            showError(err.response?.data?.error || 'Sipariş iptal edilemedi.');
         }
     };
 

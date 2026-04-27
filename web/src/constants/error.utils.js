@@ -15,6 +15,8 @@ export const getErrorMessage = (error) => {
         return ERROR_MESSAGES.NETWORK;
 
     const { status, data } = error.response;
+    if (data?.error)
+        return data.error;
     if (data?.message)
         return data.message;
 

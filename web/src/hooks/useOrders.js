@@ -14,7 +14,7 @@ export const useMyOrders = () => {
             const response = await getMyOrders();
             setOrders(response.orders || response || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Siparişler yüklenemedi.');
+            setError(err.response?.data?.error || 'Siparişler yüklenemedi.');
         } finally {
             setIsLoading(false);
         }
@@ -47,7 +47,7 @@ export const useOrder = (id) => {
             const response = await getOrderById(id);
             setOrder(response.order || response);
         } catch (err) {
-            setError(err.response?.data?.message || 'Sipariş bulunamadı.');
+            setError(err.response?.data?.error || 'Sipariş bulunamadı.');
         } finally {
             setIsLoading(false);
         }

@@ -13,7 +13,7 @@ export const useBranches = (params = {}) => {
             const response = await getBranches(params);
             setBranches(response.branches || response || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Şubeler yüklenemedi.');
+            setError(err.response?.data?.error || 'Şubeler yüklenemedi.');
         } finally {
             setIsLoading(false);
         }
@@ -46,7 +46,7 @@ export const useBranch = (id) => {
             const response = await getBranchById(id);
             setBranch(response.branch || response);
         } catch (err) {
-            setError(err.response?.data?.message || 'Şube bulunamadı.');
+            setError(err.response?.data?.error || 'Şube bulunamadı.');
         } finally {
             setIsLoading(false);
         }

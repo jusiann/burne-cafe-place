@@ -29,7 +29,7 @@ function ForgotPasswordSection() {
             setSuccess('Doğrulama kodu e-posta adresinize gönderildi.');
             setStep(2);
         } catch (err) {
-            setError(err.response?.data?.message || 'Bir hata oluştu.');
+            setError(err.response?.data?.error || 'Bir hata oluştu.');
         } finally {
             setIsLoading(false);
         }
@@ -49,7 +49,7 @@ function ForgotPasswordSection() {
             setSuccess('Kod doğrulandı! Yeni şifrenizi belirleyin.');
             setStep(3);
         } catch (err) {
-            setError(err.response?.data?.message || 'Geçersiz veya süresi dolmuş kod.');
+            setError(err.response?.data?.error || 'Geçersiz veya süresi dolmuş kod.');
         } finally {
             setIsLoading(false);
         }
@@ -69,7 +69,7 @@ function ForgotPasswordSection() {
             setSuccess('Şifreniz başarıyla sıfırlandı! Giriş yapabilirsiniz.');
             setTimeout(() => openAuthModal('signIn'), 2000);
         } catch (err) {
-            setError(err.response?.data?.message || 'Şifre sıfırlama başarısız.');
+            setError(err.response?.data?.error || 'Şifre sıfırlama başarısız.');
         } finally {
             setIsLoading(false);
         }

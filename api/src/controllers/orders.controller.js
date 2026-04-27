@@ -299,9 +299,6 @@ export const getOrders = async (req, res) => {
         if (date && Number.isNaN(Date.parse(date)))
             throw ApiError.badRequest('date must be a valid date.');
 
-        let query =
-            'SELECT o.id, o.order_number, o.user_id, o.branch_id, o.customer_name, o.customer_phone, o.status, o.scheduled_time, o.payment_method, o.order_note, o.staff_note, o.subtotal, o.tax, o.discount, o.coupon_id, o.total, o.completed_by, o.created_at, o.updated_at, b.name AS branch_name FROM orders o LEFT JOIN branches b ON o.branch_id = b.id';
-
         const conditions = [];
         const values = [];
 
@@ -330,13 +327,24 @@ export const getOrders = async (req, res) => {
             conditions.push('DATE(o.created_at) = $' + values.length + '::date');
         }
 
-        if (conditions.length > 0)
-            query += ' WHERE ' + conditions.join(' AND ');
+        const whereClause = conditions.length > 0
+            ? ' WHERE ' + conditions.join(' AND ')
+            : '';
 
-        query += ' ORDER BY o.created_at DESC';
-        
+        const countValues = [...values];
+        const { rows: totalRows } = await db.query(
+            'SELECT COUNT(*)::int AS total_count FROM orders o' + whereClause,
+            countValues,
+        );
+
+        const limitIdx = values.length + 1;
+        const offsetIdx = values.length + 2;
         values.push(limit, offset);
-        query += ' LIMIT $' + (values.length - 1) + ' OFFSET $' + values.length;
+
+        const query =
+            'SELECT o.id, o.order_number, o.user_id, o.branch_id, o.customer_name, o.customer_phone, o.status, o.scheduled_time, o.payment_method, o.order_note, o.staff_note, o.subtotal, o.tax, o.discount, o.coupon_id, o.total, o.completed_by, o.created_at, o.updated_at, b.name AS branch_name FROM orders o LEFT JOIN branches b ON o.branch_id = b.id' +
+            whereClause +
+            ' ORDER BY o.created_at DESC LIMIT $' + limitIdx + ' OFFSET $' + offsetIdx;
 
         const { rows: orderRows } = await db.query(query, values);
 
@@ -345,6 +353,7 @@ export const getOrders = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Orders fetched successfully',
+            pagination: getPaginationResult(totalRows[0]?.total_count || 0, page, limit),
             orders,
         });
     } catch (error) {

@@ -84,7 +84,7 @@ function ProfileSection() {
             await logout();
             navigate('/');
         } catch (err) {
-            setStatus({ type: 'error', message: err.response?.data?.message || 'Hesap silinemedi.' });
+            setStatus({ type: 'error', message: err.response?.data?.error || 'Hesap silinemedi.' });
             setDeleteModal(false);
         } finally {
             setIsDeleting(false);

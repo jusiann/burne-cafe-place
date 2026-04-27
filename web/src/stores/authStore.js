@@ -34,7 +34,7 @@ const useAuthStore = create((set, get) => ({
             set({ isLoading: false });
             return {
                 success: false,
-                message: error.response?.data?.message || 'Kayıt başarısız.',
+                message: error.response?.data?.error || 'Kayıt başarısız.',
             };
         }
     },
@@ -62,7 +62,7 @@ const useAuthStore = create((set, get) => ({
             set({ isLoading: false });
             return {
                 success: false,
-                message: error.response?.data?.message || 'Giriş başarısız.',
+                message: error.response?.data?.error || 'Giriş başarısız.',
             };
         }
     },
@@ -142,7 +142,7 @@ const useAuthStore = create((set, get) => ({
             set({ isLoading: false });
             return {
                 success: false,
-                message: error.response?.data?.message || 'Profil güncellenemedi.',
+                message: error.response?.data?.error || 'Profil güncellenemedi.',
             };
         }
     },
