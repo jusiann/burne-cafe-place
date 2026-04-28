@@ -164,7 +164,12 @@ function CheckoutSection() {
             
             await clearCart();
             showSuccess('Sipariş başarıyla oluşturuldu');
-            navigate('/order-confirmation', { state: { orderId: response.order.id } });
+            
+            if (user?.role === 'staff') {
+                navigate('/orders');
+            } else {
+                navigate('/order-confirmation', { state: { orderId: response.order.id } });
+            }
         } catch (error) {
             console.error('Order creation failed:', error);
             const errorMsg = error.response?.data?.error || 'Sipariş oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.';
