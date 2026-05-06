@@ -53,6 +53,11 @@ api.interceptors.response.use(
             }
         }
 
+        // Vercel serverless hatalarındaki { error: { code, message } } nesnesini string'e çevir.
+        if (error.response?.data?.error && typeof error.response.data.error === 'object') {
+            error.response.data.error = error.response.data.error.message || JSON.stringify(error.response.data.error);
+        }
+
         return Promise.reject(error);
     },
 );
