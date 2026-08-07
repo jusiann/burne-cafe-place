@@ -65,7 +65,7 @@ export const getBranches = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Branches retrieved successfully',
-            branches: rows
+            data: rows
         });
     } catch (error) {
         const statusCode = error.statusCode || 500;
